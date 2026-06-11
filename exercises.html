@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>第二十四章 · 配套练习题</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: linear-gradient(135deg, #1D3557 0%, #457B9D 100%);
+    min-height: 100vh; padding: 12px;
+  }
+  .container { max-width: 680px; margin: 0 auto; }
+  h1 { text-align: center; color: #fff; font-size: 1.35em; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.85); font-size: 0.85em; margin-bottom: 14px; }
+
+  .section {
+    background: #fff; border-radius: 14px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+  }
+  .section h2 {
+    font-size: 1.15em; color: #1D3557;
+    border-left: 5px solid #E63946; padding-left: 12px; margin-bottom: 10px;
+  }
+
+  .problem {
+    border: 1px solid #E0E0E0; border-radius: 10px; padding: 14px; margin-bottom: 12px;
+    background: #FAFBFC;
+  }
+  .problem h3 { font-size: 1em; color: #1D3557; margin-bottom: 8px; }
+  .problem h3 .num { background: #E63946; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.85em; margin-right: 6px; }
+  .problem .q { font-size: 0.9em; color: #333; line-height: 1.7; white-space: pre-line; margin-bottom: 8px; }
+  .problem .q b { color: #1D3557; }
+
+  .solution-toggle {
+    display: inline-block; margin-top: 4px; padding: 6px 16px;
+    background: #E5F0FF; color: #1565C0; border: none; border-radius: 16px;
+    font-size: 0.8em; font-weight: bold; cursor: pointer;
+  }
+  .solution-toggle:active { background: #457B9D; color: #fff; }
+
+  .solution {
+    display: none; margin-top: 10px; padding: 12px;
+    background: #F5FFF5; border-radius: 8px; border-left: 3px solid #2A9D8F;
+    font-size: 0.83em; color: #333; line-height: 1.7;
+    white-space: pre-line;
+  }
+  .solution.show { display: block; }
+  .solution b { color: #E63946; }
+
+  .img-wrap { text-align: center; margin-top: 8px; }
+  .img-wrap img { max-width: 100%; height: auto; border-radius: 8px; cursor: pointer; }
+
+  .back-link {
+    display: block; text-align: center; color: #fff; font-size: 0.85em;
+    padding: 12px; margin-bottom: 16px;
+  }
+  .back-link a { color: #fff; }
+
+  /* lightbox for images */
+  .lightbox {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.92); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .lightbox.active { opacity: 1; pointer-events: auto; }
+  .lightbox img { max-width: 98vw; max-height: 98vh; object-fit: contain; border-radius: 6px; transform: scale(0.9); transition: transform 0.3s; }
+  .lightbox.active img { transform: scale(1); }
+  .lightbox-close {
+    position: absolute; top: 12px; right: 14px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); color: #fff;
+    font-size: 22px; line-height: 36px; text-align: center;
+    cursor: pointer; border: none; z-index: 10001;
+  }
+
+  .footer { text-align: center; color: rgba(255,255,255,0.6); font-size: 0.72em; padding: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>第二十四章《数据的分析》</h1>
+<p class="subtitle">4个知识点 × 2题 = 8道练习题 · 点击显示解答</p>
+<p class="back-link"><a href="index.html">← 返回动画演示首页</a></p>
+
+<!-- ============================================================ -->
+<!-- 一、集中趋势 -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2>一、数据的集中趋势</h2>
+
+  <div class="problem">
+    <h3><span class="num">1</span> 平均数 / 中位数 / 众数</h3>
+    <div class="q">某班 <b>10 名</b>学生的数学测验成绩如下（单位：分）：
+
+    <b>78, 82, 85, 90, 88, 76, 95, 88, 84, 90</b>
+
+    (1) 求这组数据的算术平均数；
+    (2) 求中位数；
+    (3) 求众数。</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1) 平均数</b> = (78+82+85+90+88+76+95+88+84+90) ÷ 10 = 856 ÷ 10 = <b>85.6（分）</b>
+
+    <b>(2) 中位数</b>：先排序 → 76, 78, 82, 84, 85, 88, 88, 90, 90, 95
+      n=10 为偶数，中位数取第5、6个的平均数 → (85+88)÷2 = <b>86.5（分）</b>
+
+    <b>(3) 众数</b>：88 出现 2 次，90 出现 2 次 → 众数为 <b>88 和 90</b>
+
+    💡 思考：平均数 85.6 < 中位数 86.5，因为偏低的数据（76,78）拉低了平均数。</div>
+  </div>
+
+  <div class="problem">
+    <h3><span class="num">2</span> 加权平均数</h3>
+    <div class="q">某同学本学期数学各项成绩如下：
+
+    | 项目 | 分数 | 权重 |
+    |------|------|------|
+    | 平时作业 | 88分 | 15% |
+    | 课堂表现 | 92分 | 15% |
+    | 期中考试 | 78分 | 30% |
+    | 期末考试 | 85分 | 40% |
+
+    求该同学的<b>加权平均分</b>（期末总评）。</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>加权平均数</b> = (88×0.15 + 92×0.15 + 78×0.30 + 85×0.40) / 1.0
+      = (13.2 + 13.8 + 23.4 + 34.0) / 1.0
+      = <b>84.4（分）</b>
+
+    若用简单平均数 = (88+92+78+85)÷4 = 85.75 分
+
+    加权平均 <b>低于</b>简单平均，因为权重高的期中考试(78分)和期末考试(85分)中，期中成绩较低，拉低了加权结果。这体现了"重要程度不同，贡献也不同"。</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 二、离散程度 -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2>二、数据的离散程度</h2>
+
+  <div class="problem">
+    <h3><span class="num">3</span> 方差对比</h3>
+    <div class="q">甲、乙两名射击运动员各进行 <b>5 次</b>射击，成绩如下（单位：环）：
+
+      <b>甲：8, 9, 10, 9, 9</b>
+      <b>乙：10, 7, 10, 8, 10</b>
+
+    (1) 分别求甲、乙的平均数；
+    (2) 分别求甲、乙的方差；
+    (3) 哪名运动员的成绩<b>更稳定</b>？为什么？</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1) 平均数：</b>
+      甲 = (8+9+10+9+9)÷5 = 45÷5 = <b>9（环）</b>
+      乙 = (10+7+10+8+10)÷5 = 45÷5 = <b>9（环）</b>
+      两人平均成绩相同！
+
+    <b>(2) 方差：</b>
+      甲方差：离差 = -1, 0, 1, 0, 0
+        Q甲 = 1+0+1+0+0 = 2
+        s²甲 = 2÷5 = <b>0.40</b>
+
+      乙方差：离差 = 1, -2, 1, -1, 1
+        Q乙 = 1+4+1+1+1 = 8
+        s²乙 = 8÷5 = <b>1.60</b>
+
+    <b>(3) 甲方差(0.40) < 乙方差(1.60)，甲更稳定。</b>
+      虽然平均成绩相同(9环)，但甲各次成绩集中在9附近，乙的成绩波动大(7~10)。方差很好地反映了这一差异。</div>
+  </div>
+
+  <div class="problem">
+    <h3><span class="num">4</span> 离差平方和 / 标准差</h3>
+    <div class="q">已知一组数据：<b>70, 75, 80, 85, 90</b>
+
+    (1) 求这组数据的平均数；
+    (2) 求离差平方和 Q；
+    (3) 求方差 s² 和标准差 s（保留两位小数）。</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1) 平均数</b> = (70+75+80+85+90)÷5 = 400÷5 = <b>80</b>
+
+    <b>(2) 离差和离差平方：</b>
+      70-80=-10 → (-10)²=100
+      75-80=-5  → (-5)²=25
+      80-80=0   → 0²=0
+      85-80=5   → 5²=25
+      90-80=10  → 10²=100
+
+      Q = 100+25+0+25+100 = <b>250</b>
+
+    <b>(3) 方差 s²</b> = Q÷n = 250÷5 = <b>50.00</b>
+      <b>标准差 s</b> = √50 ≈ <b>7.07</b>
+
+    📌 含义：平均分80分，数据的平均偏离程度约7.07分。</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 三、四分位数与箱线图 -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2>三、四分位数与箱线图 <span style="color:#D93025;font-size:0.7em;">★ 新课标</span></h2>
+
+  <div class="problem">
+    <h3><span class="num">5</span> 四分位数计算 + 箱线图</h3>
+    <div class="q">将下列 <b>11 个</b>数据从小到大排列：
+
+    <b>3, 7, 8, 10, 12, 15, 16, 18, 20, 22, 25</b>
+
+    (1) 求 Q1、Q2（中位数）、Q3；
+    (2) 求四分位距 IQR；
+    (3) 判断数据 3 是否为异常值。</div>
+    <div class="img-wrap"><img src="exercise_boxplot.png" alt="箱线图" onclick="openLightbox(this.src)"></div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1)</b> n=11（奇数）
+      Q2 位置 = (11+1)÷2 = 第6个 → <b>Q2 = 15</b>
+      Q1：前5个数(3,7,8,10,12)的中位数 → <b>Q1 = 8</b>
+      Q3：后5个数(16,18,20,22,25)的中位数 → <b>Q3 = 20</b>
+
+    <b>(2) IQR</b> = Q3 − Q1 = 20 − 8 = <b>12</b>
+
+    <b>(3)</b> 异常值下界 = Q1 − 1.5×IQR = 8 − 18 = <b>−10</b>
+      min = 3 > −10，所以 <b>3 不是异常值</b>。
+
+    💡 只有当数据小于 −10 或大于 Q3+1.5×IQR=38 时才视为异常。</div>
+  </div>
+
+  <div class="problem">
+    <h3><span class="num">6</span> 多组箱线图对比</h3>
+    <div class="q">甲、乙两班某次测验成绩的<b>五数概括</b>如下：
+
+      <b>甲班：</b>min=48, Q1=62, Q2=74, Q3=85, max=96
+      <b>乙班：</b>min=55, Q1=68, Q2=73, Q3=78, max=92
+
+    (1) 哪个班的中位数更高？
+    (2) 哪个班的成绩分布更"集中"？从哪些数据可以看出来？
+    (3) 哪个班可能存在更多低分学生？</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1)</b> 甲班中位数 74 > 乙班 73，甲班略高（差距很小）。
+
+    <b>(2) 乙班更集中。</b> 依据：
+      • 乙班 IQR = 78−68 = <b>10</b>，甲班 IQR = 85−62 = <b>23</b>
+      • 乙班 max−min = 92−55 = <b>37</b>，甲班 = 96−48 = <b>48</b>
+      乙班的箱体更窄、须线更短，中间50%和整体的离散程度都更小。
+
+    <b>(3) 甲班可能存在更多低分学生。</b>
+      甲班 min=48 < 乙班 min=55，且甲班 Q1=62 < 乙班 Q1=68，
+      说明甲班后25%的学生成绩更差。</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 四、数据分组 -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2>四、数据的分组</h2>
+
+  <div class="problem">
+    <h3><span class="num">7</span> 频数分布表</h3>
+    <div class="q">以下是某班 <b>30 名</b>学生的数学测验成绩（单位：分）：
+
+    62, 68, 71, 73, 75, 76, 78, 79, 80, 81,
+    82, 83, 84, 85, 85, 86, 87, 88, 88, 89,
+    90, 91, 91, 92, 93, 94, 95, 96, 97, 98
+
+    (1) 以 10 分为组距，将数据分组；
+    (2) 列出<b>频数分布表</b>（含频数和频率）；
+    (3) 成绩在 <b>80 分及以上</b>的学生占百分之几？</div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1)</b> 组距=10，分为6组：40~50, 50~60, 60~70, 70~80, 80~90, 90~100
+
+    <b>(2) 频数分布表：</b>
+      40~50: 0人, 频率=0.00
+      50~60: 0人, 频率=0.00
+      60~70: <b>2人</b>(62,68), 频率≈0.07
+      70~80: <b>6人</b>, 频率=0.20
+      80~90: <b>12人</b>, 频率=0.40
+      90~100: <b>10人</b>, 频率≈0.33
+      合计: 30人, 频率=1.00
+
+    <b>(3)</b> 80分及以上 = 12+10 = 22人
+      占比 = 22÷30 ≈ <b>73.3%</b>
+
+    📌 大部分同学集中在 80~100 分段，整体成绩较好。</div>
+  </div>
+
+  <div class="problem">
+    <h3><span class="num">8</span> 直方图 + 加权估计</h3>
+    <div class="q">某班 <b>40 名</b>学生成绩分组统计如下表：
+
+    | 分数段 | 40-50 | 50-60 | 60-70 | 70-80 | 80-90 | 90-100 |
+    |--------|-------|-------|-------|-------|-------|--------|
+    | 频数   |   1   |   3   |   8   |  15   |  10   |   3    |
+
+    (1) 画出频数分布直方图的大致形状；
+    (2) 用组中值估计全班的<b>平均分</b>；
+    (3) 频数最多的组是哪个？说明了什么？</div>
+    <div class="img-wrap"><img src="exercise_histogram.png" alt="直方图" onclick="openLightbox(this.src)"></div>
+    <button class="solution-toggle" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? '▲ 隐藏解答' : '▼ 显示解答'">▼ 显示解答</button>
+    <div class="solution"><b>(1)</b> 直方图见上图，频数折线呈"中间高、两边低"的形态。
+
+    <b>(2)</b> 用组中值估计：
+      45×1 + 55×3 + 65×8 + 75×15 + 85×10 + 95×3
+      = 45+165+520+1125+850+285 = 2990
+
+      估计平均分 = 2990÷40 = <b>74.75（分）</b>
+
+    <b>(3)</b> 频数最多的组是 <b>70~80（15人）</b>。
+      说明大部分学生成绩在70~80分之间，分布呈"中间多、两头少"的特点，近似正态分布。</div>
+  </div>
+</div>
+
+<p class="footer">第二十四章《数据的分析》配套练习 · 4知识点×2题<br><a href="index.html" style="color:#fff;">返回动画首页</a></p>
+
+</div>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('active')">&times;</button>
+  <img id="lightboxImg" src="">
+</div>
+
+<script>
+function openLightbox(src) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('active');
+});
+</script>
+</body>
+</html>
