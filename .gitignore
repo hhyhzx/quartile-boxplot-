@@ -1,0 +1,14 @@
+# Files not needed for GitHub Pages deployment
+*.docx
+*.jpg
+*.zip
+test_view.png
+graph.png
+ques*_graph.png
+期末_*.png
+变换_*.png
+gen_*.py
+*.py
+!quartile_boxplot_animation.py
+1.docx
+CLAUDE.md

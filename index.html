@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四分位数与箱线图 — 动画演示</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 16px;
+  }
+  .container { max-width: 640px; margin: 0 auto; }
+  h1 {
+    text-align: center; color: #fff; font-size: 1.5em;
+    margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .subtitle {
+    text-align: center; color: rgba(255,255,255,0.85);
+    font-size: 0.9em; margin-bottom: 20px;
+  }
+  .card {
+    background: #fff; border-radius: 14px; padding: 16px;
+    margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+  .card h2 {
+    font-size: 1.1em; color: #1D3557;
+    border-left: 4px solid #E63946; padding-left: 10px; margin-bottom: 12px;
+  }
+  .card p { font-size: 0.85em; color: #666; margin-bottom: 8px; line-height: 1.5; }
+  img { width: 100%; height: auto; border-radius: 8px; display: block; }
+  .footer {
+    text-align: center; color: rgba(255,255,255,0.7);
+    font-size: 0.75em; margin-top: 20px; padding-bottom: 20px;
+  }
+  .footer a { color: #fff; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>四分位数与箱线图</h1>
+<p class="subtitle">人教版八年级数学下册 · 动画演示</p>
+
+<div class="card">
+  <h2>一、动画演示 (GIF)</h2>
+  <p>上半部分：数据从小到大排列，逐步标出 Q1 / Q2（中位数）/ Q3，并用不同颜色区分四个分区。<br>
+  下半部分：箱线图分四步构建 —— 端点 → 箱体 → 中位线 → 须线。</p>
+  <img src="quartile_animation.gif" alt="四分位数动画">
+</div>
+
+<div class="card">
+  <h2>二、四分位数计算方法</h2>
+  <p>n=15 个数据（奇数），Q2 取第 8 个，Q1 取前 7 个的中位数（第 4 个），Q3 取后 7 个的中位数（第 12 个）。如果 n 为偶数，Q2 取中间两数的平均数。</p>
+  <img src="quartile_calculation.png" alt="计算详解">
+</div>
+
+<div class="card">
+  <h2>三、多组数据对比箱线图</h2>
+  <p>四个班级的数学成绩箱线图并列展示。箱体 = Q1~Q3，中间粗线 = 中位数，菱形 = 平均数，两端须线 = min~max。</p>
+  <img src="quartile_multi_boxplot.png" alt="多组对比">
+</div>
+
+<div class="card">
+  <h2>关键概念速查</h2>
+  <p><b>五数概括：</b>最小值、Q1（第25百分位）、Q2（中位数/第50百分位）、Q3（第75百分位）、最大值</p>
+  <p><b>四分位距 IQR：</b>Q3 − Q1（箱体的宽度，反映中间 50% 数据的分散程度）</p>
+  <p><b>箱线图结构：</b>中间的矩形（箱体）覆盖 Q1~Q3，箱内粗线是 Q2，两端延伸出的"须"连到最小值和最大值</p>
+</div>
+
+<p class="footer">
+  源代码: <a href="quartile_boxplot_animation.py">quartile_boxplot_animation.py</a>
+  &nbsp;|&nbsp;
+  Powered by matplotlib + GitHub Pages
+</p>
+
+</div>
+</body>
+</html>
