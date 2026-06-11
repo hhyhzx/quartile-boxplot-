@@ -30,7 +30,7 @@ def clamp(v):
 # ============================================================
 # Figure 1: 四分位数概念演示 + 箱线图构建动画
 # ============================================================
-fig1, (ax_data, ax_box) = plt.subplots(2, 1, figsize=(12, 8), gridspec_kw={'height_ratios': [1.2, 1]})
+fig1, (ax_data, ax_box) = plt.subplots(2, 1, figsize=(8, 5.5), gridspec_kw={'height_ratios': [1.2, 1]})
 fig1.patch.set_facecolor('#FEFEFE')
 
 # --- 数据轴 ---
@@ -114,7 +114,7 @@ subtitle = ax_box.text(80, 1.2, '', fontsize=12, ha='center', color='#666666', a
 # ============================================================
 # 动画帧
 # ============================================================
-total_frames = 120
+total_frames = 90
 
 def animate(frame):
     t = frame / total_frames
@@ -402,7 +402,7 @@ fig2.savefig(f'{base}/quartile_multi_boxplot.png', dpi=150, bbox_inches='tight')
 fig3.savefig(f'{base}/quartile_calculation.png', dpi=150, bbox_inches='tight')
 
 # 保存动画为 GIF
-ani.save(f'{base}/quartile_animation.gif', writer='pillow', fps=12, dpi=120)
+ani.save(f'{base}/quartile_animation.gif', writer='pillow', fps=10, dpi=72)
 print('Done! Output files:')
 print('  quartile_animation.gif')
 print('  quartile_boxplot_anim_frame.png')
