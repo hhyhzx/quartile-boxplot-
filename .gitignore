@@ -7,11 +7,14 @@ graph.png
 ques*_graph.png
 期末_*.png
 变换_*.png
+1.docx
+CLAUDE.md
+
+# Python scripts (only allow specific ones)
 gen_*.py
 *.py
 !quartile_boxplot_animation.py
 !stats_01_central.py
 !stats_02_dispersion.py
 !stats_04_grouping.py
-1.docx
-CLAUDE.md
+!gen_narrated_videos.py
