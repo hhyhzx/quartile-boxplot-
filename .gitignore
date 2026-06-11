@@ -10,5 +10,8 @@ ques*_graph.png
 gen_*.py
 *.py
 !quartile_boxplot_animation.py
+!stats_01_central.py
+!stats_02_dispersion.py
+!stats_04_grouping.py
 1.docx
 CLAUDE.md

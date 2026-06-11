@@ -3,77 +3,232 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>四分位数与箱线图 — 动画演示</title>
+<title>八年级数学下册 · 第二十四章 数据的分析 · 动画演示全集</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 16px;
+    background: linear-gradient(135deg, #1D3557 0%, #457B9D 100%);
+    min-height: 100vh; padding: 12px;
   }
-  .container { max-width: 640px; margin: 0 auto; }
-  h1 {
-    text-align: center; color: #fff; font-size: 1.5em;
-    margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  .container { max-width: 680px; margin: 0 auto; }
+  h1 { text-align: center; color: #fff; font-size: 1.4em; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .subtitle { text-align: center; color: rgba(255,255,255,0.85); font-size: 0.85em; margin-bottom: 16px; }
+
+  .toc {
+    background: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
   }
-  .subtitle {
-    text-align: center; color: rgba(255,255,255,0.85);
-    font-size: 0.9em; margin-bottom: 20px;
+  .toc a {
+    background: #E5F0FF; color: #1D3557; text-decoration: none;
+    padding: 6px 12px; border-radius: 16px; font-size: 0.82em; font-weight: bold;
+    white-space: nowrap;
   }
+  .toc a:hover { background: #457B9D; color: #fff; }
+
+  .section {
+    background: #fff; border-radius: 14px; padding: 18px; margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+  }
+  .section h2 {
+    font-size: 1.2em; color: #1D3557;
+    border-left: 5px solid #E63946; padding-left: 12px; margin-bottom: 4px;
+  }
+  .section .desc { font-size: 0.85em; color: #666; margin-bottom: 10px; line-height: 1.5; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .card-grid { grid-template-columns: 1fr; } }
+
   .card {
-    background: #fff; border-radius: 14px; padding: 16px;
-    margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid #E8E8E8; border-radius: 10px; overflow: hidden;
+    background: #FAFAFA;
   }
-  .card h2 {
-    font-size: 1.1em; color: #1D3557;
-    border-left: 4px solid #E63946; padding-left: 10px; margin-bottom: 12px;
+  .card-full { grid-column: 1 / -1; }
+  .card h3 { font-size: 0.9em; padding: 8px 10px; background: #F0F4F8; color: #1D3557; margin: 0; }
+  .card img { width: 100%; height: auto; display: block; }
+  .card .note { font-size: 0.75em; color: #888; padding: 6px 10px; line-height: 1.4; }
+
+  .tag {
+    display: inline-block; font-size: 0.7em; padding: 2px 7px; border-radius: 10px;
+    margin-left: 4px; font-weight: bold;
   }
-  .card p { font-size: 0.85em; color: #666; margin-bottom: 8px; line-height: 1.5; }
-  img { width: 100%; height: auto; border-radius: 8px; display: block; }
-  .footer {
-    text-align: center; color: rgba(255,255,255,0.7);
-    font-size: 0.75em; margin-top: 20px; padding-bottom: 20px;
-  }
+  .tag-gif { background: #FFE5E5; color: #D93025; }
+  .tag-img { background: #E5F0FF; color: #1565C0; }
+
+  .footer { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.75em; padding: 20px 0; }
   .footer a { color: #fff; }
 </style>
 </head>
 <body>
 <div class="container">
 
-<h1>四分位数与箱线图</h1>
-<p class="subtitle">人教版八年级数学下册 · 动画演示</p>
+<h1>第二十四章 · 数据的分析</h1>
+<p class="subtitle">人教版八年级数学下册 · 全章动画演示</p>
 
-<div class="card">
-  <h2>一、动画演示 (GIF)</h2>
-  <p>上半部分：数据从小到大排列，逐步标出 Q1 / Q2（中位数）/ Q3，并用不同颜色区分四个分区。<br>
-  下半部分：箱线图分四步构建 —— 端点 → 箱体 → 中位线 → 须线。</p>
-  <img src="quartile_animation.gif" alt="四分位数动画">
+<nav class="toc">
+  <a href="#central">一、集中趋势</a>
+  <a href="#dispersion">二、离散程度</a>
+  <a href="#quartile">三、四分位数与箱线图</a>
+  <a href="#grouping">四、数据分组</a>
+</nav>
+
+<!-- ============================================================ -->
+<!-- 一、集中趋势 -->
+<!-- ============================================================ -->
+<div class="section" id="central">
+  <h2>一、数据的集中趋势</h2>
+  <p class="desc">描述数据"中心在哪里"：<b>平均数</b>（数据的平衡点）、<b>中位数</b>（排序后正中间的数值）、<b>众数</b>（出现次数最多的值）、<b>加权平均数</b>（带权重的平均）。</p>
+
+  <div class="card-grid">
+    <div class="card card-full">
+      <h3>动画：平均数 — 数据的"平衡点" <span class="tag tag-gif">GIF</span></h3>
+      <img src="stats_mean_animation.gif" alt="平均数动画">
+      <div class="note">所有数据之和除以个数。把每个数据到平均数的正负离差加起来 = 0，像天平一样平衡。</div>
+    </div>
+
+    <div class="card">
+      <h3>三种度量对比 <span class="tag tag-img">图</span></h3>
+      <img src="stats_compare_three.png" alt="中位数众数平均数对比">
+      <div class="note">同一组数据，三种度量结果不同。选哪个取决于数据特征和分析目的。</div>
+    </div>
+
+    <div class="card">
+      <h3>加权平均数 <span class="tag tag-img">图</span></h3>
+      <img src="stats_weighted_mean.png" alt="加权平均数">
+      <div class="note">期末总评 = 各项分数 × 对应权重。权重反映重要程度。</div>
+    </div>
+
+    <div class="card card-full">
+      <h3>平均数 vs 中位数：谁更"稳健"？ <span class="tag tag-img">图</span></h3>
+      <img src="stats_robustness.png" alt="稳健性对比">
+      <div class="note">当数据中有极端值时（如某同学考了25分），平均数被大幅拉低，而中位数几乎不受影响。这就是"稳健性"。</div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-  <h2>二、四分位数计算方法</h2>
-  <p>n=15 个数据（奇数），Q2 取第 8 个，Q1 取前 7 个的中位数（第 4 个），Q3 取后 7 个的中位数（第 12 个）。如果 n 为偶数，Q2 取中间两数的平均数。</p>
-  <img src="quartile_calculation.png" alt="计算详解">
+<!-- ============================================================ -->
+<!-- 二、离散程度 -->
+<!-- ============================================================ -->
+<div class="section" id="dispersion">
+  <h2>二、数据的离散程度</h2>
+  <p class="desc">描述数据"散得有多开"：<b>离差</b>（xi−x̄）、<b>离差平方和 Q</b>（避免正负抵消）、<b>方差 s²</b>（Q÷n）、<b>标准差 s</b>（√方差，单位与原始数据一致）。</p>
+
+  <div class="card-grid">
+    <div class="card card-full">
+      <h3>动画：离差 → 离差平方和 → 方差 <span class="tag tag-gif">GIF</span></h3>
+      <img src="stats_dispersion_animation.gif" alt="离散程度动画">
+      <div class="note">红色线 = 负离差（低于平均数），绿色线 = 正离差（高于平均数）。离差平方和 Q = Σ(xi−x̄)²，方差 s² = Q / n。</div>
+    </div>
+
+    <div class="card">
+      <h3>完整计算流程 <span class="tag tag-img">图</span></h3>
+      <img src="stats_deviation_calc.png" alt="离差计算表">
+      <div class="note">五步法：数据 → 离差 → 平方 → 求和(Q) → 除以n(方差) → 开方(标准差)。</div>
+    </div>
+
+    <div class="card">
+      <h3>两组数据对比 <span class="tag tag-img">图</span></h3>
+      <img src="stats_variance_compare.png" alt="方差对比">
+      <div class="note">两班平均分相同(80)，但A班方差小（整齐），B班方差大（参差不齐）。方差区分了离散程度。</div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-  <h2>三、多组数据对比箱线图</h2>
-  <p>四个班级的数学成绩箱线图并列展示。箱体 = Q1~Q3，中间粗线 = 中位数，菱形 = 平均数，两端须线 = min~max。</p>
-  <img src="quartile_multi_boxplot.png" alt="多组对比">
+<!-- ============================================================ -->
+<!-- 三、四分位数与箱线图 -->
+<!-- ============================================================ -->
+<div class="section" id="quartile">
+  <h2>三、四分位数与箱线图 <span style="color:#D93025;font-size:0.7em;">★ 新课标新增</span></h2>
+  <p class="desc"><b>四分位数</b>：将排序后的数据四等分的三个点 Q1 (25%)、Q2 (50%=中位数)、Q3 (75%)。<b>箱线图</b>：用五数概括（min, Q1, Q2, Q3, max）绘制的图形。<b>IQR</b> = Q3−Q1，反映中间50%数据的跨度。</p>
+
+  <div class="card-grid">
+    <div class="card card-full">
+      <h3>动画：四分位数标注 + 箱线图构建 <span class="tag tag-gif">GIF</span></h3>
+      <img src="quartile_animation.gif" alt="四分位数动画">
+      <div class="note">上半：数据分区（前25% / 25-50% / 50-75% / 后25%）。下半：箱线图四步构建（端点→箱体→中位线→须线）。</div>
+    </div>
+
+    <div class="card">
+      <h3>四分位数计算详解 <span class="tag tag-img">图</span></h3>
+      <img src="quartile_calculation.png" alt="计算详解">
+      <div class="note">n=15（奇数）：Q2 取第8个，Q1 取前7个的中位数，Q3 取后7个的中位数。</div>
+    </div>
+
+    <div class="card">
+      <h3>多组数据对比箱线图 <span class="tag tag-img">图</span></h3>
+      <img src="quartile_multi_boxplot.png" alt="多组对比">
+      <div class="note">四个班级的箱线图并列展示。箱体=Q1~Q3，粗线=中位数，菱形=平均数，须=min~max。</div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-  <h2>关键概念速查</h2>
-  <p><b>五数概括：</b>最小值、Q1（第25百分位）、Q2（中位数/第50百分位）、Q3（第75百分位）、最大值</p>
-  <p><b>四分位距 IQR：</b>Q3 − Q1（箱体的宽度，反映中间 50% 数据的分散程度）</p>
-  <p><b>箱线图结构：</b>中间的矩形（箱体）覆盖 Q1~Q3，箱内粗线是 Q2，两端延伸出的"须"连到最小值和最大值</p>
+<!-- ============================================================ -->
+<!-- 四、数据分组 -->
+<!-- ============================================================ -->
+<div class="section" id="grouping">
+  <h2>四、数据的分组</h2>
+  <p class="desc">将数据分段整理：<b>组距</b>（每段的宽度）、<b>频数</b>（每段有几个数据）、<b>频率</b>（频数÷总数）、<b>直方图</b>（图形呈现）。分组原则：<b>组内差异小，组间差异大</b>。</p>
+
+  <div class="card-grid">
+    <div class="card card-full">
+      <h3>动画：原始散点 → 分组 → 频数统计 → 直方图 <span class="tag tag-gif">GIF</span></h3>
+      <img src="stats_grouping_animation.gif" alt="数据分组动画">
+      <div class="note">50人成绩：先确定组距(10分)，再统计每组人数，最后画出直方图。组内差异小，组间差异大。</div>
+    </div>
+
+    <div class="card">
+      <h3>频数分布表 + 直方图 <span class="tag tag-img">图</span></h3>
+      <img src="stats_histogram.png" alt="频数分布">
+      <div class="note">频数分布表包含：组别、频数、频率、累计频数。红色折线为频数多边形。</div>
+    </div>
+
+    <div class="card">
+      <h3>组距对比：过大 vs 过小 vs 合适 <span class="tag tag-img">图</span></h3>
+      <img src="stats_grouping_bins.png" alt="组距对比">
+      <div class="note">组距过大→信息丢失；组距过小→太琐碎；组距合适→看清分布形态。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- Summary -->
+<!-- ============================================================ -->
+<div class="section" style="background:#E5FFF0;">
+  <h2 style="border-left-color:#2A9D8F;">全章知识结构总览</h2>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:0.85em;text-align:left;">
+    <tr style="background:#1D3557;color:#fff;">
+      <th style="padding:8px;">模块</th><th style="padding:8px;">核心概念</th><th style="padding:8px;">关键公式 / 方法</th>
+    </tr>
+    <tr style="background:#FFFAF0;">
+      <td style="padding:6px;font-weight:bold;">集中趋势</td>
+      <td style="padding:6px;">平均数、加权平均数、中位数、众数</td>
+      <td style="padding:6px;">x̄ = Σxi / n；加权 x̄ = Σ(wi·xi) / Σwi</td>
+    </tr>
+    <tr>
+      <td style="padding:6px;font-weight:bold;">离散程度</td>
+      <td style="padding:6px;">离差、离差平方和、方差、标准差</td>
+      <td style="padding:6px;">Q = Σ(xi−x̄)²；s² = Q/n；s = √(s²)</td>
+    </tr>
+    <tr style="background:#FFFAF0;">
+      <td style="padding:6px;font-weight:bold;">分布特征 ★新</td>
+      <td style="padding:6px;">四分位数(Q1/Q2/Q3)、箱线图、IQR、百分位数</td>
+      <td style="padding:6px;">IQR = Q3−Q1；五数概括(min,Q1,Q2,Q3,max)</td>
+    </tr>
+    <tr>
+      <td style="padding:6px;font-weight:bold;">数据分组</td>
+      <td style="padding:6px;">组距、频数、频率、直方图、分组原则</td>
+      <td style="padding:6px;">组距 = 极差/组数；频率 = 频数/n</td>
+    </tr>
+  </table>
+  </div>
 </div>
 
 <p class="footer">
-  源代码: <a href="quartile_boxplot_animation.py">quartile_boxplot_animation.py</a>
-  &nbsp;|&nbsp;
-  Powered by matplotlib + GitHub Pages
+  新人教版八年级数学下册 · 第二十四章《数据的分析》<br>
+  源代码: <a href="https://github.com/hhyhzx/quartile-boxplot-">GitHub</a>
+  &nbsp;|&nbsp; 由 matplotlib + GitHub Pages 驱动
 </p>
 
 </div>
