@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <title>八年级数学下册 · 第二十四章 数据的分析 · 动画演示全集</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,7 +46,23 @@
   }
   .card-full { grid-column: 1 / -1; }
   .card h3 { font-size: 0.9em; padding: 8px 10px; background: #F0F4F8; color: #1D3557; margin: 0; }
-  .card img { width: 100%; height: auto; display: block; }
+
+  /* ---- tap-to-enlarge hint ---- */
+  .img-wrap {
+    position: relative; cursor: pointer; overflow: hidden;
+  }
+  .img-wrap img { width: 100%; height: auto; display: block; transition: opacity 0.2s; }
+  .img-wrap .hint {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,0,0,0.55); color: #fff; font-size: 0.7em;
+    padding: 3px 8px; border-radius: 10px; pointer-events: none;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .img-wrap:active .hint,
+  .img-wrap:hover .hint { opacity: 1; }
+  .img-wrap:active img,
+  .img-wrap:hover img { opacity: 0.92; }
+
   .card .note { font-size: 0.75em; color: #888; padding: 6px 10px; line-height: 1.4; }
 
   .tag {
@@ -56,6 +72,50 @@
   .tag-gif { background: #FFE5E5; color: #D93025; }
   .tag-img { background: #E5F0FF; color: #1565C0; }
 
+  /* ==================== LIGHTBOX ==================== */
+  .lightbox {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.92); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .lightbox.active { opacity: 1; pointer-events: auto; }
+
+  .lightbox-img {
+    max-width: 98vw; max-height: 98vh;
+    object-fit: contain; border-radius: 6px;
+    transform: scale(0.9); transition: transform 0.3s;
+    -webkit-user-select: none; user-select: none;
+    /* allow pinch-zoom via double-tap on iOS */
+    touch-action: manipulation;
+  }
+  .lightbox.active .lightbox-img { transform: scale(1); }
+
+  .lightbox-close {
+    position: absolute; top: 12px; right: 14px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); color: #fff;
+    font-size: 22px; line-height: 36px; text-align: center;
+    cursor: pointer; border: none; z-index: 10001;
+    transition: background 0.2s;
+  }
+  .lightbox-close:active { background: rgba(255,255,255,0.35); }
+
+  .lightbox-label {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.7); font-size: 0.8em;
+    text-align: center; pointer-events: none;
+  }
+
+  /* zoom hint at bottom */
+  .lightbox-zoom-hint {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 0.7em;
+    pointer-events: none; opacity: 0; transition: opacity 0.5s;
+  }
+  .lightbox.active .lightbox-zoom-hint { opacity: 1; }
+
   .footer { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.75em; padding: 20px 0; }
   .footer a { color: #fff; }
 </style>
@@ -64,7 +124,7 @@
 <div class="container">
 
 <h1>第二十四章 · 数据的分析</h1>
-<p class="subtitle">人教版八年级数学下册 · 全章动画演示</p>
+<p class="subtitle">人教版八年级数学下册 · 全章动画演示 · 点击图片浮屏查看</p>
 
 <nav class="toc">
   <a href="#central">一、集中趋势</a>
@@ -83,25 +143,25 @@
   <div class="card-grid">
     <div class="card card-full">
       <h3>动画：平均数 — 数据的"平衡点" <span class="tag tag-gif">GIF</span></h3>
-      <img src="stats_mean_animation.gif" alt="平均数动画">
+      <div class="img-wrap"><span class="hint">🔍 点击放大</span><img src="stats_mean_animation.gif" alt="平均数动画"></div>
       <div class="note">所有数据之和除以个数。把每个数据到平均数的正负离差加起来 = 0，像天平一样平衡。</div>
     </div>
 
     <div class="card">
       <h3>三种度量对比 <span class="tag tag-img">图</span></h3>
-      <img src="stats_compare_three.png" alt="中位数众数平均数对比">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_compare_three.png" alt="中位数众数平均数对比"></div>
       <div class="note">同一组数据，三种度量结果不同。选哪个取决于数据特征和分析目的。</div>
     </div>
 
     <div class="card">
       <h3>加权平均数 <span class="tag tag-img">图</span></h3>
-      <img src="stats_weighted_mean.png" alt="加权平均数">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_weighted_mean.png" alt="加权平均数"></div>
       <div class="note">期末总评 = 各项分数 × 对应权重。权重反映重要程度。</div>
     </div>
 
     <div class="card card-full">
       <h3>平均数 vs 中位数：谁更"稳健"？ <span class="tag tag-img">图</span></h3>
-      <img src="stats_robustness.png" alt="稳健性对比">
+      <div class="img-wrap"><span class="hint">🔍 点击放大</span><img src="stats_robustness.png" alt="稳健性对比"></div>
       <div class="note">当数据中有极端值时（如某同学考了25分），平均数被大幅拉低，而中位数几乎不受影响。这就是"稳健性"。</div>
     </div>
   </div>
@@ -117,19 +177,19 @@
   <div class="card-grid">
     <div class="card card-full">
       <h3>动画：离差 → 离差平方和 → 方差 <span class="tag tag-gif">GIF</span></h3>
-      <img src="stats_dispersion_animation.gif" alt="离散程度动画">
+      <div class="img-wrap"><span class="hint">🔍 点击放大</span><img src="stats_dispersion_animation.gif" alt="离散程度动画"></div>
       <div class="note">红色线 = 负离差（低于平均数），绿色线 = 正离差（高于平均数）。离差平方和 Q = Σ(xi−x̄)²，方差 s² = Q / n。</div>
     </div>
 
     <div class="card">
       <h3>完整计算流程 <span class="tag tag-img">图</span></h3>
-      <img src="stats_deviation_calc.png" alt="离差计算表">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_deviation_calc.png" alt="离差计算表"></div>
       <div class="note">五步法：数据 → 离差 → 平方 → 求和(Q) → 除以n(方差) → 开方(标准差)。</div>
     </div>
 
     <div class="card">
       <h3>两组数据对比 <span class="tag tag-img">图</span></h3>
-      <img src="stats_variance_compare.png" alt="方差对比">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_variance_compare.png" alt="方差对比"></div>
       <div class="note">两班平均分相同(80)，但A班方差小（整齐），B班方差大（参差不齐）。方差区分了离散程度。</div>
     </div>
   </div>
@@ -145,19 +205,19 @@
   <div class="card-grid">
     <div class="card card-full">
       <h3>动画：四分位数标注 + 箱线图构建 <span class="tag tag-gif">GIF</span></h3>
-      <img src="quartile_animation.gif" alt="四分位数动画">
+      <div class="img-wrap"><span class="hint">🔍 点击放大</span><img src="quartile_animation.gif" alt="四分位数动画"></div>
       <div class="note">上半：数据分区（前25% / 25-50% / 50-75% / 后25%）。下半：箱线图四步构建（端点→箱体→中位线→须线）。</div>
     </div>
 
     <div class="card">
       <h3>四分位数计算详解 <span class="tag tag-img">图</span></h3>
-      <img src="quartile_calculation.png" alt="计算详解">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="quartile_calculation.png" alt="计算详解"></div>
       <div class="note">n=15（奇数）：Q2 取第8个，Q1 取前7个的中位数，Q3 取后7个的中位数。</div>
     </div>
 
     <div class="card">
       <h3>多组数据对比箱线图 <span class="tag tag-img">图</span></h3>
-      <img src="quartile_multi_boxplot.png" alt="多组对比">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="quartile_multi_boxplot.png" alt="多组对比"></div>
       <div class="note">四个班级的箱线图并列展示。箱体=Q1~Q3，粗线=中位数，菱形=平均数，须=min~max。</div>
     </div>
   </div>
@@ -173,19 +233,19 @@
   <div class="card-grid">
     <div class="card card-full">
       <h3>动画：原始散点 → 分组 → 频数统计 → 直方图 <span class="tag tag-gif">GIF</span></h3>
-      <img src="stats_grouping_animation.gif" alt="数据分组动画">
+      <div class="img-wrap"><span class="hint">🔍 点击放大</span><img src="stats_grouping_animation.gif" alt="数据分组动画"></div>
       <div class="note">50人成绩：先确定组距(10分)，再统计每组人数，最后画出直方图。组内差异小，组间差异大。</div>
     </div>
 
     <div class="card">
       <h3>频数分布表 + 直方图 <span class="tag tag-img">图</span></h3>
-      <img src="stats_histogram.png" alt="频数分布">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_histogram.png" alt="频数分布"></div>
       <div class="note">频数分布表包含：组别、频数、频率、累计频数。红色折线为频数多边形。</div>
     </div>
 
     <div class="card">
       <h3>组距对比：过大 vs 过小 vs 合适 <span class="tag tag-img">图</span></h3>
-      <img src="stats_grouping_bins.png" alt="组距对比">
+      <div class="img-wrap"><span class="hint">🔍</span><img src="stats_grouping_bins.png" alt="组距对比"></div>
       <div class="note">组距过大→信息丢失；组距过小→太琐碎；组距合适→看清分布形态。</div>
     </div>
   </div>
@@ -232,5 +292,85 @@
 </p>
 
 </div>
+
+<!-- ==================== LIGHTBOX OVERLAY ==================== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <div class="lightbox-zoom-hint" id="zoomHint">📌 双指可缩放</div>
+  <div class="lightbox-label" id="lightboxLabel"></div>
+</div>
+
+<script>
+(function() {
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightboxImg');
+  var lbLabel = document.getElementById('lightboxLabel');
+  var zoomHint = document.getElementById('zoomHint');
+  var closeBtn = document.getElementById('lightboxClose');
+  var activeSrc = null;
+
+  // Tap any image inside .img-wrap to open lightbox
+  document.querySelectorAll('.img-wrap img').forEach(function(img) {
+    img.addEventListener('click', function(e) {
+      e.preventDefault();
+      var src = img.getAttribute('src');
+      var alt = img.getAttribute('alt') || '';
+      // Find the closest card heading for label
+      var card = img.closest('.card');
+      var heading = card ? card.querySelector('h3') : null;
+      var labelText = heading ? heading.textContent.replace(/[🔍点击放大\s]+/g,'').trim() : alt;
+
+      lbImg.src = src;
+      lbLabel.textContent = labelText;
+      lb.classList.add('active');
+      activeSrc = src;
+      document.body.style.overflow = 'hidden';
+
+      // Hide zoom hint after 3s
+      zoomHint.style.opacity = '1';
+      clearTimeout(zoomHint._timeout);
+      zoomHint._timeout = setTimeout(function() {
+        zoomHint.style.opacity = '0';
+      }, 3000);
+    });
+  });
+
+  function close() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+    activeSrc = null;
+  }
+
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    close();
+  });
+
+  // Click on dark backdrop to close
+  lb.addEventListener('click', function(e) {
+    if (e.target === lb) close();
+  });
+
+  // Swipe down to close (mobile)
+  var touchStartY = 0;
+  lb.addEventListener('touchstart', function(e) {
+    if (e.target === lb || e.target === lbImg) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+  lb.addEventListener('touchend', function(e) {
+    if (e.target === lb || e.target === lbImg) {
+      var dy = e.changedTouches[0].clientY - touchStartY;
+      if (dy > 80) close();
+    }
+  });
+
+  // ESC key to close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
 </body>
 </html>
