@@ -534,7 +534,7 @@ function renderTask(index) {
 function doneView(index) {
   let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
     ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
-    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="goToDay(${index})">🔁 重新练习</button>
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];saveState();goToDay(${index})">🔁 重新练习</button>
   </div>`;
   if (state.sentences[index]) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
