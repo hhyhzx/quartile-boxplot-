@@ -74,6 +74,18 @@
   .role-badge.pro { background: #e8d0ff; color: #6b1fa3; }
   .role-badge.opp { background: #ffe0e0; color: #b81a1a; }
 
+  /* Pattern frame display */
+  .pattern-box {
+    background: linear-gradient(135deg, #e8f0fe, #f0e8ff); border: 2px solid #4facfe;
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; text-align: center;
+  }
+  .pattern-box .label { font-size: 0.72em; color: #4facfe; font-weight: bold; margin-bottom: 4px; }
+  .pattern-box .frame {
+    font-size: 1em; font-family: 'Times New Roman', serif; color: #0f3460;
+    line-height: 1.8; font-weight: bold;
+  }
+  .pattern-box .frame .hl { background: #ffe082; padding: 2px 5px; border-radius: 4px; }
+
   /* Chunk display */
   .chunks { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0; }
   .chunk {
@@ -188,11 +200,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '很高兴收到你的来信，询问如何学好英语的建议。',
+        pattern: "I'm glad to receive your letter asking for advice on how to...",
         model: "I'm glad to receive your letter asking for advice on how to learn English well.",
         chunks: ["I'm glad to receive your letter", "asking for advice on", "how to learn English well."],
         blanks: ['glad', 'receive', 'advice', 'learn'],
         role: '首段' },
       { cn: '首先，你最好听英文歌。其次，为什么不读一些简单的英文故事呢？',
+        pattern: "First of all, you'd better... / Secondly, why not...? / What's more, ...",
         model: "First of all, you'd better listen to English songs. Secondly, why not read some simple English stories?",
         chunks: ["First of all,", "you'd better listen to English songs.", "Secondly, why not", "read some simple English stories?"],
         blanks: ['First of all', 'better', 'Secondly', 'simple'],
@@ -207,11 +221,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '希望我的建议对你有帮助。',
+        pattern: 'I hope my advice will be helpful.',
         model: 'I hope my advice will be helpful.',
         chunks: ['I hope', 'my advice', 'will be helpful.'],
         blanks: ['hope', 'advice', 'helpful'],
         role: '结尾' },
       { cn: '只要你坚持练习，你一定会进步的。',
+        pattern: 'As long as you..., you will...',
         model: 'As long as you keep practicing, you will make progress.',
         chunks: ['As long as you keep practicing,', 'you will make progress.'],
         blanks: ['As long as', 'keep', 'practicing', 'progress'],
@@ -227,16 +243,19 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
+        pattern: 'These days, ... has become a hot topic.',
         model: 'These days, whether students should use mobile phones has become a hot topic.',
         chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
         blanks: ['These days', 'whether', 'mobile phones', 'hot topic'],
         role: '首段' },
       { cn: '有些人认为手机能帮助学生快速查阅信息。',
+        pattern: 'Some people think that... They believe that...',
         model: 'Some people think that mobile phones help students look up information quickly.',
         chunks: ['Some people think that', 'mobile phones help students', 'look up information quickly.'],
         blanks: ['think', 'help', 'look up', 'quickly'],
         role: '正方' },
       { cn: '但也有人争辩说，手机会分散学生的学习注意力。',
+        pattern: 'However, others hold the opposite view. They argue that...',
         model: 'However, others argue that mobile phones may distract students from their study.',
         chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
         blanks: ['However', 'argue', 'distract', 'study'],
@@ -251,11 +270,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '就我而言，学生可以使用手机，但必须在严格规定下。',
+        pattern: "In my opinion / As far as I'm concerned, I agree with...",
         model: "As far as I'm concerned, students can use phones, but only under strict rules.",
         chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
         blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
         role: '己见' },
       { cn: '我仍然记得我第一次参加篮球比赛的那一天。',
+        pattern: 'I still remember the day when...',
         model: 'I still remember the day when I took part in a basketball game for the first time.',
         chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
         blanks: ['remember', 'took part in', 'basketball', 'first time'],
@@ -271,11 +292,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '一开始我很紧张。然后，队友们鼓励了我。之后我越打越好，最后我们赢了！',
+        pattern: 'At first, ... Then, ... After that, ... Finally, ...',
         model: 'At first, I was very nervous. Then, my teammates encouraged me. After that, I played better and better. Finally, we won!',
         chunks: ['At first, I was very nervous.', 'Then, my teammates encouraged me.', 'After that, I played better and better.', 'Finally, we won!'],
         blanks: ['At first', 'nervous', 'encouraged', 'Finally'],
         role: '主体' },
       { cn: '我从这次经历中学到了很多——团队合作可以让不可能变为可能。',
+        pattern: 'I learned a lot from this experience.',
         model: 'I learned a lot from this experience — teamwork can make the impossible possible.',
         chunks: ['I learned a lot from this experience', '— teamwork can make', 'the impossible possible.'],
         blanks: ['learned', 'experience', 'teamwork', 'impossible'],
@@ -291,11 +314,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
+        pattern: 'The person I admire most is..., who is not only...but also...',
         model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
         chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
         blanks: ['admire', 'not only', 'but also', 'caring'],
         role: '首段' },
       { cn: '她是个热心肠的人。最让我印象深刻的是，她从不抱怨工作的辛苦。',
+        pattern: 'He/She is a ... person. What impresses me most is that...',
         model: 'She is a warm-hearted person. What impresses me most is that she never complains about her hard work.',
         chunks: ['She is a warm-hearted person.', 'What impresses me most is that', 'she never complains about her hard work.'],
         blanks: ['warm-hearted', 'impresses', 'complains', 'hard work'],
@@ -311,11 +336,13 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '她曾经彻夜不眠地照顾一位重症病人。',
+        pattern: 'He/She once... For example, ...',
         model: 'She once stayed up the whole night to take care of a seriously ill patient.',
         chunks: ['She once stayed up the whole night', 'to take care of', 'a seriously ill patient.'],
         blanks: ['once', 'stayed up', 'take care of', 'seriously'],
         role: '主体' },
       { cn: '她对我影响很大。正是她让我意识到，责任感是最重要的品质。',
+        pattern: 'He/She has a great influence on me. It is he/she who...',
         model: 'She has a great influence on me. It is she who makes me realize that responsibility is the most important quality.',
         chunks: ['She has a great influence on me.', 'It is she who makes me realize', 'that responsibility is the most important quality.'],
         blanks: ['influence', 'realize', 'responsibility', 'quality'],
@@ -331,16 +358,19 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '我写信是要告诉你下周日我们班去科技馆参观的安排。',
+        pattern: "I'm writing to tell you about... / Here is the plan for...",
         model: "I'm writing to tell you about our class trip to the Science Museum next Sunday.",
         chunks: ["I'm writing to tell you about", 'our class trip to the Science Museum', 'next Sunday.'],
         blanks: ['writing', 'tell', 'trip', 'Science Museum'],
         role: '首段' },
       { cn: '首先，我们早上8点在校门口集合。然后，我们坐大巴去那里。此外，我们还将在附近公园野餐。',
+        pattern: 'To begin with, we will... Then, we are going to... Besides, ...',
         model: 'To begin with, we will meet at the school gate at 8:00 a.m. Then, we are going to take a bus there. Besides, we will have a picnic lunch in the park nearby.',
         chunks: ['To begin with, we will meet at the school gate at 8:00 a.m.', 'Then, we are going to take a bus there.', 'Besides, we will have a picnic lunch in the park nearby.'],
         blanks: ['To begin with', 'meet', 'take a bus', 'Besides', 'picnic'],
         role: '主体' },
       { cn: '请记得穿舒适的鞋子并带一瓶水。',
+        pattern: "Please remember to... / Don't forget to...",
         model: 'Please remember to wear comfortable shoes and bring a bottle of water.',
         chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
         blanks: ['remember', 'comfortable', 'bring', 'bottle'],
@@ -356,21 +386,25 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '我相信我们会玩得很开心。期待你的到来！',
+        pattern: "I'm sure we will have a great time. / Looking forward to your coming.",
         model: "I'm sure we will have a great time. Looking forward to your coming!",
         chunks: ["I'm sure we will have a great time.", 'Looking forward to your coming!'],
         blanks: ['sure', 'great time', 'Looking forward', 'coming'],
         role: '结尾' },
       { cn: '（复习·建议信）很高兴收到你的来信，询问如何学好英语的建议。',
+        pattern: "I'm glad to receive your letter asking for advice on how to...",
         model: "I'm glad to receive your letter asking for advice on how to learn English well.",
         chunks: ["I'm glad to receive your letter", "asking for advice on", "how to learn English well."],
         blanks: ['glad', 'receive', 'advice', 'learn'],
         role: '首段' },
       { cn: '（复习·议论文）就我而言，学生可以使用手机，但必须在严格规定下。',
+        pattern: "In my opinion / As far as I'm concerned, I agree with...",
         model: "As far as I'm concerned, students can use phones, but only under strict rules.",
         chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
         blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
         role: '己见' },
       { cn: '（复习·记叙文）我仍然记得我第一次参加篮球比赛的那一天。',
+        pattern: 'I still remember the day when...',
         model: 'I still remember the day when I took part in a basketball game for the first time.',
         chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
         blanks: ['remember', 'took part in', 'basketball', 'first time'],
@@ -386,41 +420,49 @@ const DAYS = [
     type: 'sentences',
     sentences: [
       { cn: '只要你坚持练习，你一定会进步的。',
+        pattern: 'As long as you..., you will...',
         model: 'As long as you keep practicing, you will make progress.',
         chunks: ['As long as you keep practicing,', 'you will make progress.'],
         blanks: ['As long as', 'keep', 'practicing', 'progress'],
         role: '结尾' },
       { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
+        pattern: 'These days, ... has become a hot topic.',
         model: 'These days, whether students should use mobile phones has become a hot topic.',
         chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
         blanks: ['These days', 'whether', 'mobile phones', 'hot topic'],
         role: '首段' },
       { cn: '但也有人争辩说，手机会分散学生的学习注意力。',
+        pattern: 'However, others hold the opposite view. They argue that...',
         model: 'However, others argue that mobile phones may distract students from their study.',
         chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
         blanks: ['However', 'argue', 'distract', 'study'],
         role: '反方' },
       { cn: '我从这次经历中学到了很多——团队合作可以让不可能变为可能。',
+        pattern: 'I learned a lot from this experience.',
         model: 'I learned a lot from this experience — teamwork can make the impossible possible.',
         chunks: ['I learned a lot from this experience', '— teamwork can make', 'the impossible possible.'],
         blanks: ['learned', 'experience', 'teamwork', 'impossible'],
         role: '结尾' },
       { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
+        pattern: 'The person I admire most is..., who is not only...but also...',
         model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
         chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
         blanks: ['admire', 'not only', 'but also', 'caring'],
         role: '首段' },
       { cn: '她对我影响很大。正是她让我意识到，责任感是最重要的品质。',
+        pattern: 'He/She has a great influence on me. It is he/she who...',
         model: 'She has a great influence on me. It is she who makes me realize that responsibility is the most important quality.',
         chunks: ['She has a great influence on me.', 'It is she who makes me realize', 'that responsibility is the most important quality.'],
         blanks: ['influence', 'realize', 'responsibility', 'quality'],
         role: '结尾' },
       { cn: '首先，我们早上8点在校门口集合。然后，我们坐大巴去那里。此外，我们还将在附近公园野餐。',
+        pattern: 'To begin with, we will... Then, we are going to... Besides, ...',
         model: 'To begin with, we will meet at the school gate at 8:00 a.m. Then, we are going to take a bus there. Besides, we will have a picnic lunch in the park nearby.',
         chunks: ['To begin with, we will meet at the school gate at 8:00 a.m.', 'Then, we are going to take a bus there.', 'Besides, we will have a picnic lunch in the park nearby.'],
         blanks: ['To begin with', 'meet', 'take a bus', 'Besides', 'picnic'],
         role: '主体' },
       { cn: '请记得穿舒适的鞋子并带一瓶水。',
+        pattern: "Please remember to... / Don't forget to...",
         model: 'Please remember to wear comfortable shoes and bring a bottle of water.',
         chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
         blanks: ['remember', 'comfortable', 'bring', 'bottle'],
@@ -601,7 +643,15 @@ function renderSentenceStudy(index, day) {
 }
 
 function renderMemorize(s) {
-  let h = `<div class="model-card">
+  let h = '';
+  // Pattern box — show the structural frame first
+  if (s.pattern) {
+    h += `<div class="pattern-box">
+      <div class="label">📐 句型框架（先记住这个结构！）</div>
+      <div class="frame">${highlightPhrase(esc(s.pattern))}</div>
+    </div>`;
+  }
+  h += `<div class="model-card">
     <div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>
     <div class="en">${highlightPhrase(esc(s.model))}</div>
   </div>`;
