@@ -20,24 +20,18 @@
   h1 .icon { font-size: 1.3em; }
   .sub { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8em; margin-bottom: 10px; }
 
-  /* Progress */
-  .progress-wrap { background: rgba(255,255,255,0.12); border-radius: 20px; height: 22px; margin-bottom: 10px; overflow: hidden; position: relative; }
-  .progress-fill { background: linear-gradient(90deg, #f6d365, #fda085); height: 100%; border-radius: 20px; transition: width 0.5s; width: 0%; }
-  .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75em; font-weight: bold; color: #fff; }
-
-  .stars { font-size: 1.2em; letter-spacing: 3px; text-align: center; margin: 6px 0; }
-
-  /* Calendar */
-  .calendar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 12px; }
-  .day-box {
-    aspect-ratio: 1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s; font-weight: bold; border: 2px solid transparent; font-size: 0.65em;
+  /* Day navigator */
+  .day-nav {
+    display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;
   }
-  .day-box.locked { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: not-allowed; }
-  .day-box.today { background: #fff; color: #0f3460; border-color: #f6d365; box-shadow: 0 0 14px rgba(246,211,101,0.5); }
-  .day-box.done { background: #2d6a4f; color: #fff; border-color: #52b788; }
-  .day-box.done::after { content: "✓"; font-size: 1em; }
-  .day-box:not(.done):hover { border-color: #f6d365; }
+  .nav-arrow {
+    background: rgba(255,255,255,0.15); border: none; color: #fff; width: 40px; height: 40px;
+    border-radius: 50%; font-size: 1em; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: background 0.2s;
+  }
+  .nav-arrow:hover { background: rgba(255,255,255,0.3); }
+  .nav-arrow:disabled { opacity: 0.3; cursor: default; }
+  .day-label { color: #fff; font-size: 0.95em; font-weight: bold; }
 
   /* Card */
   .card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
@@ -162,8 +156,6 @@
 
   /* Responsive */
   @media (max-width: 400px) {
-    .calendar { gap: 3px; }
-    .day-box { border-radius: 8px; font-size: 0.55em; }
     .card { padding: 12px; }
     .compare { grid-template-columns: 1fr; }
     .mem-steps { gap: 3px; }
@@ -177,16 +169,14 @@
   <h1><span class="icon">📝</span> 5大作文模板万能句</h1>
   <div class="sub">10天熟记20个万能句型 · 建议信 / 议论文 / 记叙文 / 人物 / 通知</div>
 
-  <div class="progress-wrap">
-    <div class="progress-fill" id="progressBar"></div>
-    <div class="progress-text" id="progressLabel">0/10 完成</div>
+  <div class="day-nav" id="dayNav">
+    <button class="nav-arrow" id="btnPrev" title="前一天">◀</button>
+    <span class="day-label" id="dayLabel">第 1/10 天</span>
+    <button class="nav-arrow" id="btnNext" title="后一天">▶</button>
   </div>
 
-  <div class="stars" id="stars">☆☆☆☆☆☆☆☆☆☆</div>
-  <div class="calendar" id="calendar"></div>
-
   <div class="card" id="taskCard">
-    <h2 id="taskTitle">👆 点击上方日期开始学习</h2>
+    <h2 id="taskTitle">Day 1 · 模板1 · 建议信（上）</h2>
     <div id="taskContent"></div>
   </div>
 </div>
@@ -502,35 +492,20 @@ let activeStepIndex = 0;
 const STEP_LABELS = ['📖 背诵记忆', '🧩 填空练习', '✍️ 默写输出', '✅ 核对答案'];
 const TOTAL_DAYS = 10;
 
-// ==================== CALENDAR ====================
-function renderCalendar() {
-  const cal = document.getElementById('calendar');
-  cal.innerHTML = '';
-  for (let i = 0; i < TOTAL_DAYS; i++) {
-    const box = document.createElement('div');
-    box.className = 'day-box';
-    if (state.completed[i]) box.classList.add('done');
-    box.innerHTML = `<span>D${i + 1}</span>`;
-    box.onclick = () => selectDay(i);
-    cal.appendChild(box);
-  }
-}
-
-function updateProgress() {
-  const count = Object.keys(state.completed).length;
-  document.getElementById('progressBar').style.width = (count / TOTAL_DAYS * 100) + '%';
-  document.getElementById('progressLabel').textContent = count + '/' + TOTAL_DAYS + ' 完成';
-  let s = '';
-  for (let i = 0; i < TOTAL_DAYS; i++) s += state.completed[i] ? '⭐' : '☆';
-  document.getElementById('stars').textContent = s;
-}
-
-function selectDay(index) {
+// ==================== DAY NAVIGATION ====================
+function goToDay(index) {
+  if (index < 0 || index >= TOTAL_DAYS) return;
   activeDay = index;
   activeStepIndex = 0;
   window._curSentIdx = 0;
-  renderCalendar();
+  renderDayNav();
   renderTask(index);
+}
+
+function renderDayNav() {
+  document.getElementById('dayLabel').textContent = '第 ' + (activeDay + 1) + '/' + TOTAL_DAYS + ' 天';
+  document.getElementById('btnPrev').disabled = activeDay <= 0;
+  document.getElementById('btnNext').disabled = activeDay >= TOTAL_DAYS - 1;
 }
 
 // ==================== TASK RENDERING ====================
@@ -559,7 +534,7 @@ function renderTask(index) {
 function doneView(index) {
   let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
     ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
-    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="selectDay(${index})">🔁 重新练习</button>
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="goToDay(${index})">🔁 重新练习</button>
   </div>`;
   if (state.sentences[index]) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
@@ -864,8 +839,6 @@ function bindEvents(index, day) {
 function completeDay(index) {
   state.completed[index] = Date.now();
   saveState();
-  updateProgress();
-  renderCalendar();
   renderTask(index);
   launchConfetti();
 }
@@ -873,9 +846,9 @@ function completeDay(index) {
 // ==================== INIT ====================
 function init() {
   window._curSentIdx = 0;
-  updateProgress();
-  renderCalendar();
-  selectDay(0);
+  document.getElementById('btnPrev').onclick = () => goToDay(activeDay - 1);
+  document.getElementById('btnNext').onclick = () => goToDay(activeDay + 1);
+  goToDay(0);
 }
 init();
 </script>
