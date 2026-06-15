@@ -15,103 +15,138 @@
 
   h1 { text-align: center; color: #fff; font-size: 1.3em; margin: 8px 0 2px; }
   h1 .icon { font-size: 1.3em; }
-  .sub { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8em; margin-bottom: 12px; }
+  .sub { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8em; margin-bottom: 10px; }
 
-  /* Progress bar */
-  .progress-wrap { background: rgba(255,255,255,0.12); border-radius: 20px; height: 22px; margin-bottom: 12px; overflow: hidden; position: relative; }
+  /* Progress */
+  .progress-wrap { background: rgba(255,255,255,0.12); border-radius: 20px; height: 22px; margin-bottom: 10px; overflow: hidden; position: relative; }
   .progress-fill { background: linear-gradient(90deg, #f6d365, #fda085); height: 100%; border-radius: 20px; transition: width 0.5s; width: 0%; }
   .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75em; font-weight: bold; color: #fff; }
 
-  /* Calendar grid */
-  .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 14px; }
+  .stars { font-size: 1.2em; letter-spacing: 3px; text-align: center; margin: 6px 0; }
+
+  /* Calendar */
+  .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 12px; }
   .day-box {
     aspect-ratio: 1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s; position: relative; font-weight: bold;
-    border: 2px solid transparent; font-size: 0.65em;
+    cursor: pointer; transition: all 0.2s; font-weight: bold; border: 2px solid transparent; font-size: 0.6em;
   }
   .day-box.locked { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: not-allowed; }
   .day-box.today { background: #fff; color: #0f3460; border-color: #f6d365; box-shadow: 0 0 14px rgba(246,211,101,0.5); animation: pulse 2s infinite; }
   .day-box.done { background: #2d6a4f; color: #fff; border-color: #52b788; }
-  .day-box.done::after { content: "✓"; font-size: 1.1em; }
-  .day-box .day-num { font-size: 0.85em; }
+  .day-box.done::after { content: "✓"; font-size: 1em; }
   @keyframes pulse { 0%, 100% { box-shadow: 0 0 10px rgba(246,211,101,0.4); } 50% { box-shadow: 0 0 22px rgba(246,211,101,0.8); } }
 
-  /* Main card */
-  .card {
-    background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 14px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
-  }
-  .card h2 { font-size: 1.1em; color: #1a1a2e; margin-bottom: 4px; }
-  .card .tag { display: inline-block; background: #f6d365; color: #1a1a2e; padding: 3px 10px; border-radius: 12px; font-size: 0.7em; font-weight: bold; margin-bottom: 10px; }
-  .card .goal { font-size: 0.85em; color: #666; margin-bottom: 12px; line-height: 1.6; }
+  /* Card */
+  .card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+  .card h2 { font-size: 1.05em; color: #1a1a2e; margin-bottom: 2px; }
+  .card .tag { display: inline-block; background: #f6d365; color: #1a1a2e; padding: 3px 10px; border-radius: 12px; font-size: 0.7em; font-weight: bold; margin-bottom: 8px; }
+  .card .goal { font-size: 0.85em; color: #666; margin-bottom: 10px; line-height: 1.6; }
 
-  /* Task steps */
-  .step { background: #f8f9fa; border-radius: 10px; padding: 12px; margin-bottom: 10px; border-left: 4px solid #0f3460; }
-  .step h4 { font-size: 0.85em; color: #0f3460; margin-bottom: 6px; }
-  .step p { font-size: 0.8em; color: #555; line-height: 1.6; }
-  .step .en { color: #1a1a2e; font-style: italic; }
+  /* Memory step tabs */
+  .mem-steps { display: flex; gap: 6px; margin-bottom: 12px; }
+  .mem-step-tab {
+    flex: 1; text-align: center; padding: 8px 4px; border-radius: 10px; font-size: 0.7em; font-weight: bold;
+    background: #eee; color: #999; transition: all 0.2s;
+  }
+  .mem-step-tab.active { background: #0f3460; color: #fff; }
+  .mem-step-tab.done { background: #d4edda; color: #2d6a4f; }
+
+  /* Memory card - model sentence display */
+  .model-card {
+    background: linear-gradient(135deg, #fff5f5, #fff8e1); border: 2px solid #f6d365; border-radius: 14px;
+    padding: 14px; margin-bottom: 10px; text-align: center;
+  }
+  .model-card .cn { font-size: 0.9em; color: #333; margin-bottom: 8px; line-height: 1.6; }
+  .model-card .en {
+    font-size: 1em; font-family: 'Times New Roman', serif; color: #1a1a2e;
+    line-height: 1.8; padding: 8px; background: rgba(255,255,255,0.7); border-radius: 8px;
+  }
+  .model-card .en .hl { background: #f6d365; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+
+  /* Chunk display */
+  .chunks { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0; }
+  .chunk {
+    background: #fff; border: 2px solid #f6d365; border-radius: 8px; padding: 6px 10px;
+    font-size: 0.9em; font-family: 'Times New Roman', serif; font-weight: bold;
+  }
 
   /* Fill-in-blank */
-  .fill-blank { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; align-items: center; }
-  .fill-blank .word {
-    background: #e8f0fe; border: 2px dashed #0f3460; border-radius: 8px; padding: 6px 12px;
-    font-size: 0.8em; cursor: pointer; transition: all 0.2s; user-select: none;
+  .fb-sentence {
+    font-size: 1em; font-family: 'Times New Roman', serif; line-height: 2.2; padding: 10px;
+    background: #fff; border-radius: 8px; margin: 6px 0;
   }
-  .fill-blank .word.used { background: #d4edda; border-color: #52b788; }
-  .fill-blank .blank-slot {
-    display: inline-block; min-width: 80px; border-bottom: 2px solid #e63946; margin: 0 4px;
-    text-align: center; padding: 2px 8px; font-size: 0.8em; transition: all 0.2s;
+  .fb-blank {
+    display: inline-block; min-width: 60px; border-bottom: 3px solid #e63946; margin: 0 3px;
+    text-align: center; padding: 2px 4px; color: transparent; cursor: default;
   }
-  .fill-blank .blank-slot.filled { border-color: #52b788; color: #2d6a4f; font-weight: bold; }
+  .fb-blank.reveal { color: #e63946; border-color: #52b788; font-weight: bold; }
+
+  .word-bank { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .wb-word {
+    background: #e8f0fe; border: 2px solid #0f3460; border-radius: 8px; padding: 5px 10px;
+    font-size: 0.8em; cursor: pointer; user-select: none; transition: all 0.15s;
+  }
+  .wb-word:hover { background: #d0e0ff; }
+  .wb-word.used { opacity: 0.3; pointer-events: none; }
+
+  /* Dictation */
+  .dict-area { margin: 10px 0; }
+  .dict-cn { font-size: 0.95em; color: #333; text-align: center; margin-bottom: 8px; line-height: 1.6; }
+  .dict-hint { font-size: 0.75em; color: #999; text-align: center; margin-bottom: 6px; }
+  .dict-hint span { background: #e8f0fe; padding: 2px 8px; border-radius: 10px; margin: 2px; display: inline-block; }
+
+  /* Compare view */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+  .compare-col { border-radius: 10px; padding: 10px; font-size: 0.8em; line-height: 1.7; }
+  .compare-col.my { background: #e8f0fe; font-family: 'Times New Roman', serif; }
+  .compare-col.model { background: #d4edda; font-family: 'Times New Roman', serif; }
+  .compare-col h5 { font-size: 0.85em; margin-bottom: 4px; }
+  .diff { background: #ffc9c9; padding: 1px 3px; border-radius: 3px; }
+  .good { background: #b7e4c7; padding: 1px 3px; border-radius: 3px; }
+
+  /* Score */
+  .score-display {
+    text-align: center; font-size: 1.5em; margin: 6px 0;
+  }
 
   /* Textarea */
   textarea {
-    width: 100%; height: 140px; border: 2px solid #ddd; border-radius: 10px; padding: 12px;
-    font-size: 0.85em; font-family: 'Times New Roman', serif; line-height: 1.7; resize: vertical;
-    outline: none; transition: border-color 0.2s;
+    width: 100%; height: 100px; border: 2px solid #ddd; border-radius: 10px; padding: 12px;
+    font-size: 0.9em; font-family: 'Times New Roman', serif; line-height: 1.7; resize: vertical; outline: none;
   }
   textarea:focus { border-color: #0f3460; }
+  textarea.correct { border-color: #52b788; background: #f0fff4; }
+  textarea.wrong { border-color: #ff6b6b; background: #fff5f5; }
 
   /* Buttons */
   .btn {
-    display: inline-block; padding: 10px 24px; border-radius: 24px; font-size: 0.85em;
+    display: inline-block; padding: 10px 22px; border-radius: 24px; font-size: 0.82em;
     font-weight: bold; border: none; cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
   .btn-primary { background: #0f3460; color: #fff; }
-  .btn-primary:hover { background: #1a4a8a; }
   .btn-success { background: #2d6a4f; color: #fff; }
-  .btn-success:hover { background: #40916c; }
+  .btn-warning { background: #f6d365; color: #1a1a2e; }
   .btn-outline { background: #fff; color: #0f3460; border: 2px solid #0f3460; }
+  .btn-sm { padding: 5px 14px; font-size: 0.7em; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 
-  .btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
-
-  /* Stars */
-  .stars { font-size: 1.5em; letter-spacing: 4px; text-align: center; margin: 8px 0; }
-
-  /* Confetti overlay */
-  .confetti { position: fixed; pointer-events: none; z-index: 999; }
-  .confetti-piece {
-    position: absolute; width: 10px; height: 10px; border-radius: 3px;
-    animation: fall 1.5s ease-out forwards;
+  /* Review section */
+  .review-item {
+    background: #f8f9fa; border-radius: 10px; padding: 10px; margin-bottom: 8px;
+    border-left: 4px solid #f6d365;
   }
-  @keyframes fall {
-    0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-
-  /* Hint */
-  .hint {
-    background: #fff3cd; border-radius: 8px; padding: 8px 12px; margin-top: 8px;
-    font-size: 0.75em; color: #856404; display: none;
-  }
-  .hint.show { display: block; }
+  .review-item .r-cn { font-size: 0.82em; color: #555; margin-bottom: 4px; }
+  .review-item .r-en { font-size: 0.82em; font-family: 'Times New Roman', serif; color: #1a1a2e; }
 
   /* Responsive */
   @media (max-width: 400px) {
     .calendar { gap: 3px; }
-    .day-box { border-radius: 8px; font-size: 0.55em; }
-    .card { padding: 14px; }
+    .day-box { border-radius: 8px; font-size: 0.5em; }
+    .card { padding: 12px; }
+    .compare { grid-template-columns: 1fr; }
+    .mem-steps { gap: 3px; }
+    .mem-step-tab { font-size: 0.62em; padding: 6px 2px; }
   }
 </style>
 </head>
@@ -119,205 +154,220 @@
 
 <div class="container">
   <h1><span class="icon">📝</span> 英语作文打卡挑战</h1>
-  <div class="sub">14天 · 从句子到作文 · 每天进步一点点</div>
+  <div class="sub">14天 · 先背诵 → 再默写 → 最后写作文</div>
 
-  <!-- Progress -->
   <div class="progress-wrap">
     <div class="progress-fill" id="progressBar"></div>
     <div class="progress-text" id="progressLabel">0/14 完成</div>
   </div>
 
-  <!-- Stars -->
   <div class="stars" id="stars">☆☆☆☆☆☆☆☆☆☆☆☆☆☆</div>
-
-  <!-- Calendar -->
   <div class="calendar" id="calendar"></div>
 
-  <!-- Task card -->
   <div class="card" id="taskCard">
     <h2 id="taskTitle">👆 点击上方日期开始学习</h2>
-    <div id="taskContent">
-      <p class="goal" style="text-align:center;color:#999;padding:30px 0;">
-        选择一个可以访问的日期<br>（灰色=已锁定  金色=今天可学  ✓=已完成）
-      </p>
-    </div>
+    <div id="taskContent"></div>
   </div>
 </div>
 
-<!-- Confetti container -->
-<div class="confetti" id="confetti"></div>
-
 <script>
-// ==================== DATA: 14-Day Plan ====================
+// ==================== 14-DAY PLAN DATA ====================
+// Each sentence now has: cn (Chinese), model (full English answer), chunks (for 分块记忆), blanks (words to hide for fill-in-blank)
 
 const DAYS = [
   { // Day 1
-    topic: '建议信句型（一）',
-    template: '模板1 · 建议信',
-    goal: '学会3个提建议的万能句型，能用中文提示写出英文句子。',
+    topic: '建议信句型（一）', template: '模板1 · 建议信',
+    goal: '背熟3个提建议的万能句型，并能默写出来。',
     type: 'sentences',
     sentences: [
-      { cn: '如果我是你，我会和父母谈谈，告诉他们我的感受。', hint: 'If I were you, I would...' },
-      { cn: '对你来说，每天锻炼是很重要的。', hint: 'It is important for you to...' },
-      { cn: '经常锻炼是减轻压力的好方法。', hint: 'Doing sth. is a good way to...' },
+      { cn: '如果我是你，我会和父母谈谈，告诉他们我的感受。',
+        model: 'If I were you, I would talk to my parents and tell them how I feel.',
+        chunks: ['If I were you,', 'I would talk to my parents', 'and tell them', 'how I feel.'],
+        blanks: ['were', 'would', 'how'] },
+      { cn: '对你来说，保持学习和休息之间的平衡很重要。',
+        model: 'It is important for you to keep a balance between study and rest.',
+        chunks: ['It is important for you', 'to keep a balance', 'between study and rest.'],
+        blanks: ['important', 'balance', 'between'] },
+      { cn: '经常锻炼是减轻压力的好方法。',
+        model: 'Taking regular exercise is a good way to reduce stress.',
+        chunks: ['Taking regular exercise', 'is a good way', 'to reduce stress.'],
+        blanks: ['Taking', 'regular', 'reduce'] },
     ],
-    memory: '今天你学会了：If I were you, I would... / It is important for you to... / Doing sth. is a good way to...',
   },
   { // Day 2
-    topic: '建议信句型（二）',
-    template: '模板1 · 建议信',
-    goal: '继续学习2个建议句型，并用5句话组成完整的建议信。',
-    type: 'essay',
+    topic: '建议信句型（二）', template: '模板1 · 建议信',
+    goal: '复习Day 1句型 + 学新句型，写完整的建议信。',
+    type: 'sentences',
     sentences: [
-      { cn: '你应该每天按时到校。', hint: 'You are supposed to...' },
-      { cn: '我强烈建议你多喝水，因为这对你的健康有益。', hint: 'I strongly advise you to...because...' },
+      { cn: '你应该每天按时到校。',
+        model: 'You are supposed to arrive at school on time every day.',
+        chunks: ['You are supposed to', 'arrive at school on time', 'every day.'],
+        blanks: ['supposed', 'arrive', 'on time'] },
+      { cn: '我强烈建议你多喝水，因为这对你的健康有益。',
+        model: 'I strongly advise you to drink more water, because it is good for your health.',
+        chunks: ['I strongly advise you', 'to drink more water,', 'because it is good for your health.'],
+        blanks: ['strongly', 'advise', 'because'] },
     ],
-    essayPrompt: '你的朋友Tom最近总是生病。请用今天和昨天的5个句型，给他写一封简短的建议信（5-6句话）。',
-    essayHint: '开头打招呼 → If I were you... → It is important for you to... → You are supposed to... → I strongly advise you to... → 结尾祝福',
+    reviewDays: [0],
   },
   { // Day 3
-    topic: '议论文句型（一）',
-    template: '模板2 · 观点对比',
-    goal: '学会议论文开头和正反方表达的3个句型。',
+    topic: '议论文句型（一）', template: '模板2 · 观点对比',
+    goal: '背熟议论文开头和正反方表达的3个句型。',
     type: 'sentences',
     sentences: [
-      { cn: '最近，学生是否应该使用手机已经成为一个热门话题。', hint: 'These days, whether...has become a hot topic.' },
-      { cn: '有些人认为手机能帮助学生快速查阅信息。', hint: 'Some people think that...' },
-      { cn: '但也有人争辩说，手机会分散学生的注意力。', hint: 'However, others argue that...' },
+      { cn: '最近，学生是否应该使用手机已经成为一个热门话题。',
+        model: 'These days, whether students should use mobile phones has become a hot topic.',
+        chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
+        blanks: ['whether', 'become', 'hot topic'] },
+      { cn: '有些人认为手机能帮助学生快速查阅信息。',
+        model: 'Some people think that mobile phones help students look up information quickly.',
+        chunks: ['Some people think that', 'mobile phones help students', 'look up information quickly.'],
+        blanks: ['look up', 'quickly'] },
+      { cn: '但也有人争辩说，手机会分散学生的注意力。',
+        model: 'However, others argue that mobile phones may distract students from their study.',
+        chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
+        blanks: ['argue', 'distract', 'from'] },
     ],
-    memory: '今天你学会了：These days, whether...has become a hot topic. / Some people think that... / However, others argue that...',
   },
   { // Day 4
-    topic: '议论文句型（二）',
-    template: '模板2 · 观点对比',
-    goal: '学习表达自己观点的句型，并完成一段完整的议论文。',
-    type: 'essay',
-    sentences: [
-      { cn: '就我而言，学生可以使用手机，但必须在严格规定下。', hint: 'As far as I\'m concerned, ...' },
-      { cn: '我不同意的原因是，太多作业占用了我们锻炼的时间。', hint: 'The reason why I disagree is that...' },
-    ],
-    essayPrompt: '请以"中学生是否应该做家务"为题，写一段议论文（5-6句话），包含正反观点和你的看法。',
-    essayHint: '开头引入话题 → Some people think... → However, others argue... → As far as I\'m concerned... → The reason why...is that...',
-  },
-  { // Day 5
-    topic: '记叙文句型',
-    template: '模板3 · 经历描述',
-    goal: '学会写经历的时间顺序句型，用5句话描述一件事。',
-    type: 'essay',
-    sentences: [
-      { cn: '当我放学走路回家时，我看到一个小女孩在路边哭泣。', hint: 'While I was walking home, I saw...' },
-      { cn: '我正要放弃，这时我最好的朋友出现了。', hint: 'I was about to give up when...' },
-    ],
-    essayPrompt: '请描写一件你帮助别人的小事（5-6句话）。用While I was doing...和I was about to...when...来串联时间线。',
-    essayHint: '开头交代时间地点 → While I was... → I saw... → I decided to... → 结尾写感受',
-  },
-  { // Day 6
-    topic: '人物描写句型',
-    template: '模板4 · 人物介绍',
-    goal: '学会描写人物的句型，介绍你心中的榜样。',
+    topic: '议论文句型（二）', template: '模板2 · 观点对比',
+    goal: '学会表达自己观点的句型，背熟并默写。',
     type: 'sentences',
     sentences: [
-      { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位慈爱的母亲。', hint: 'The person I admire most is..., who is not only...but also...' },
-      { cn: '我敬佩我爸爸，不是因为他的钱，而是因为他的善良和正直。', hint: 'I admire him not because of..., but because of...' },
-      { cn: '没有英语老师的鼓励，我不可能取得这么大的进步。', hint: 'Without her encouragement, I couldn\'t have...' },
+      { cn: '就我而言，学生可以使用手机，但必须在严格规定下。',
+        model: 'As far as I\'m concerned, students can use phones, but only under strict rules.',
+        chunks: ['As far as I\'m concerned,', 'students can use phones,', 'but only under strict rules.'],
+        blanks: ['concerned', 'strict', 'rules'] },
     ],
-    memory: '今天你学会了：The person I admire most is...who is... / I admire...not because of...but because of... / Without...I couldn\'t have...',
+    reviewDays: [2],
+  },
+  { // Day 5
+    topic: '记叙文句型', template: '模板3 · 经历描述',
+    goal: '掌握时间顺序句型，学会描述事件经过。',
+    type: 'sentences',
+    sentences: [
+      { cn: '当我放学走路回家时，我看到一个小女孩在路边哭泣。',
+        model: 'While I was walking home after school, I saw a little girl crying by the roadside.',
+        chunks: ['While I was walking home after school,', 'I saw a little girl', 'crying by the roadside.'],
+        blanks: ['While', 'walking', 'crying'] },
+      { cn: '我正要放弃，这时我最好的朋友出现了，主动提出帮助我。',
+        model: 'I was about to give up when my best friend showed up and offered to help me.',
+        chunks: ['I was about to give up', 'when my best friend showed up', 'and offered to help me.'],
+        blanks: ['about to', 'showed up', 'offered'] },
+    ],
+  },
+  { // Day 6
+    topic: '人物描写句型', template: '模板4 · 人物介绍',
+    goal: '学会描写人物，背熟3个核心句型。',
+    type: 'sentences',
+    sentences: [
+      { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
+        model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
+        chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
+        blanks: ['admire', 'not only', 'but also'] },
+      { cn: '我敬佩我爸爸，不是因为他的钱，而是因为他的善良和正直。',
+        model: 'I admire my father not because of his money, but because of his kindness and honesty.',
+        chunks: ['I admire my father', 'not because of his money,', 'but because of his kindness and honesty.'],
+        blanks: ['not because of', 'but because of', 'honesty'] },
+    ],
   },
   { // Day 7
-    topic: '活动通知句型',
-    template: '模板5 · 计划通知',
-    goal: '学会写活动通知，完整描述一次活动安排。',
-    type: 'essay',
+    topic: '活动通知句型', template: '模板5 · 计划通知',
+    goal: '学会写活动通知，背熟通知类句型。',
+    type: 'sentences',
     sentences: [
-      { cn: '我们将在周五下午在学校图书馆举办一次图书分享活动。', hint: 'We are going to hold a...activity on...in...' },
-      { cn: '欢迎任何对中国传统文化感兴趣的人加入我们。', hint: 'Anyone who is interested in...is welcome.' },
+      { cn: '我们将在周五下午在学校图书馆举办一次图书分享活动。',
+        model: 'We are going to hold a book-sharing activity on Friday afternoon in the school library.',
+        chunks: ['We are going to hold', 'a book-sharing activity', 'on Friday afternoon', 'in the school library.'],
+        blanks: ['hold', 'book-sharing', 'library'] },
+      { cn: '欢迎任何对中国传统文化感兴趣的人加入我们。',
+        model: 'Anyone who is interested in Chinese traditional culture is welcome to join us.',
+        chunks: ['Anyone who is interested in', 'Chinese traditional culture', 'is welcome to join us.'],
+        blanks: ['interested in', 'traditional', 'welcome'] },
     ],
-    essayPrompt: '请为班级写一则周末志愿者活动的通知（5-6句话）。包含：时间地点、活动内容、注意事项。',
-    essayHint: 'I\'m writing to tell you about... → We are going to... → There will be... → Please remember to... → Looking forward to...',
+    reviewDays: [0, 5],
   },
+  // --- Week 2: Full essays ---
   { // Day 8
-    topic: '完整作文：建议信',
-    template: '复习模板1',
-    goal: '用Day 1-2学的句型，独立完成一封完整的建议信。',
+    topic: '完整作文：建议信', template: '复习模板1',
+    goal: '独立写一封80词的建议信，运用Day 1-2学过的句型。',
     type: 'essay',
     sentences: [],
     essayPrompt: '你的朋友李明最近学习压力很大，总是熬夜。请写一封80词左右的建议信，给他3条具体建议。',
-    essayHint: 'Dear Li Ming, → I\'m sorry to hear that... → First of all, you\'d better... → Secondly, why not...? → What\'s more, it\'s important to... → I hope my advice will be helpful. → Yours, [Your name]',
+    essayHint: 'Dear Li Ming, → I\'m sorry to hear that... → First of all, you\'d better... → Secondly, why not...? → What\'s more, it\'s important to... → I hope my advice will be helpful. → Yours, ...',
+    reviewDays: [0, 1],
   },
   { // Day 9
-    topic: '完整作文：志愿者经历',
-    template: '复习模板3',
-    goal: '独立完成一篇关于志愿者经历的记叙文。',
+    topic: '完整作文：志愿者经历', template: '复习模板3',
+    goal: '独立写一篇志愿者经历记叙文。',
     type: 'essay',
     sentences: [],
-    essayPrompt: '请以"A Meaningful Volunteer Experience"为题，写一篇80词左右的短文。描述你参加的一次志愿者活动。',
-    essayHint: 'Last Saturday, I volunteered to... → We arrived at... → Some of us...while others... → Seeing the smiles on their faces, I felt... → From this experience, I learned that...',
+    essayPrompt: '请以"A Meaningful Volunteer Experience"为题，写一篇80词左右的短文。',
+    essayHint: 'Last Saturday, I volunteered to... → We arrived at... → Some of us...while others... → Seeing the smiles on their faces, I felt... → From this experience, I learned...',
+    reviewDays: [4],
   },
   { // Day 10
-    topic: '完整作文：家务劳动',
-    template: '复习模板2',
-    goal: '独立完成一篇关于家务劳动的议论文。',
+    topic: '完整作文：家务劳动', template: '复习模板2',
+    goal: '独立写一篇关于家务劳动的议论文。',
     type: 'essay',
     sentences: [],
-    essayPrompt: '请以"Should Middle School Students Do Chores?"为题，写一篇80词左右的短文，包含正反观点和你的看法。',
-    essayHint: 'These days...has become a hot topic. → Some people think that... → However, others argue that... → In my opinion... → First...Second... → All in all...',
+    essayPrompt: '请以"Should Middle School Students Do Chores?"为题，写一篇80词左右的短文。',
+    essayHint: 'These days...has become a hot topic. → Some people think... → However, others argue... → In my opinion... → First...Second... → All in all...',
+    reviewDays: [2, 3],
   },
   { // Day 11
-    topic: '完整作文：难忘经历',
-    template: '复习模板3',
-    goal: '独立完成一篇关于难忘经历的记叙文。',
+    topic: '完整作文：难忘经历', template: '复习模板3',
+    goal: '独立写一篇难忘经历的记叙文。',
     type: 'essay',
     sentences: [],
     essayPrompt: '请以"An Unforgettable Experience"为题，写一篇80词左右的短文。',
     essayHint: 'I still remember the day when... → At first... → Then... → After that... → Finally... → I learned a lot from this experience.',
+    reviewDays: [4],
   },
   { // Day 12
-    topic: '完整作文：我心中的英雄',
-    template: '复习模板4',
-    goal: '独立完成一篇人物描写作文。',
+    topic: '完整作文：我心中的英雄', template: '复习模板4',
+    goal: '独立写一篇人物描写作文。',
     type: 'essay',
     sentences: [],
-    essayPrompt: '请以"My Hero"为题，写一篇80词左右的短文，介绍你心中的英雄。',
+    essayPrompt: '请以"My Hero"为题，写一篇80词左右的短文。',
     essayHint: 'The person I admire most is..., who is not only...but also... → She/He is a...person. → She/He once... → She/He has a great influence on me. → I hope that one day...',
+    reviewDays: [5],
   },
   { // Day 13
-    topic: '完整作文：我的暑假计划',
-    template: '复习模板5',
-    goal: '独立完成一篇假期计划作文。',
+    topic: '完整作文：我的暑假计划', template: '复习模板5',
+    goal: '独立写一篇假期计划作文。',
     type: 'essay',
     sentences: [],
-    essayPrompt: '期末考试后你打算如何度过暑假？请以"My Summer Vacation Plan"为题，写一篇80词左右的短文。',
+    essayPrompt: '请以"My Summer Vacation Plan"为题，写一篇80词左右的短文。',
     essayHint: 'The summer vacation is around the corner. → First of all, I plan to... → After that, I will... → Besides, I have decided to... → All in all, I think...',
+    reviewDays: [6],
   },
   { // Day 14
-    topic: '终极挑战：综合写作',
-    template: '全部模板总复习',
-    goal: '从两个题目中任选一个，独立完成一篇100词左右的作文，综合运用所学句型。',
+    topic: '终极挑战：综合写作', template: '全部模板总复习',
+    goal: '二选一，独立完成一篇100词作文，综合运用所学句型。',
     type: 'essay',
     sentences: [],
-    essayPrompt: '选题1：给一年后的自己写一封信，说说现在的烦恼和对未来的期待。\n\n选题2：你认为什么样的人是"成功的人"？请描述并举例说明。\n\n要求：至少使用3种从句（定语从句/状语从句/名词性从句），2个倒装或强调句型。',
-    essayHint: '仔细审题 → 选好话题 → 列3-4个要点 → 用上学过的句型 → 检查拼写和语法 → 大声朗读一遍',
+    essayPrompt: '选题1：给一年后的自己写一封信，说说现在的烦恼和对未来的期待。\n\n选题2：什么样的人是"成功的人"？请描述并举例说明。\n\n要求：至少使用3种从句 + 2个倒装或强调句型。',
+    essayHint: '仔细审题 → 选好话题 → 列要点 → 用上学过的句型 → 检查语法和拼写 → 大声朗读一遍',
+    reviewDays: [0, 1, 2, 3, 4, 5, 6],
   },
 ];
 
 // ==================== STATE ====================
-const STORAGE_KEY = 'essay_checkin_v3';
+const STORAGE_KEY = 'essay_checkin_v5';
 let state = loadState();
 
 function defaultState() {
   return {
-    completed: {},    // { dayIndex: timestamp }
-    sentences: {},    // { dayIndex: [user answers] }
-    essays: {},       // { dayIndex: "essay text" }
-    fills: {},        // { dayIndex: { stepIndex: [filled words] } }
+    completed: {},      // { day: timestamp }
+    sentences: {},      // { day: [user answers for each sentence dictation] }
+    essays: {},         // { day: "essay text" }
+    sentenceDone: {},   // { day: { sentenceIndex: true } } — per-sentence completion
   };
 }
 
 function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
+  try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
   return defaultState();
 }
 
@@ -327,13 +377,12 @@ function saveState() {
 
 // ==================== RENDER ====================
 let activeDay = null;
+let activeStepIndex = 0; // 0=背诵, 1=填空, 2=默写, 3=核对
+const STEP_LABELS = ['📖 背诵记忆', '🧩 填空练习', '✍️ 默写输出', '✅ 核对答案'];
 
 function getTodayIndex() {
-  // Find the first uncompleted day, or today based on progress
-  for (let i = 0; i < 14; i++) {
-    if (!state.completed[i]) return i;
-  }
-  return 13; // all done
+  for (let i = 0; i < 14; i++) { if (!state.completed[i]) return i; }
+  return 13;
 }
 
 function renderCalendar() {
@@ -343,18 +392,14 @@ function renderCalendar() {
   for (let i = 0; i < 14; i++) {
     const box = document.createElement('div');
     box.className = 'day-box';
-    const isDone = !!state.completed[i];
-    const isLocked = i > today && !isDone;
-    const isToday = i === today && !isDone;
-
-    if (isDone) box.classList.add('done');
+    const done = !!state.completed[i];
+    const locked = i > today && !done;
+    const isToday = i === today && !done;
+    if (done) box.classList.add('done');
     else if (isToday) box.classList.add('today');
-    else if (isLocked) box.classList.add('locked');
-
-    box.innerHTML = `<span class="day-num">D${i + 1}</span><span>${isDone ? '' : (isLocked ? '🔒' : '')}</span>`;
-    if (!isLocked || isDone) {
-      box.onclick = () => selectDay(i);
-    }
+    else if (locked) box.classList.add('locked');
+    box.innerHTML = `<span>D${i + 1}</span>${locked ? '<span>🔒</span>' : ''}`;
+    if (!locked || done) box.onclick = () => selectDay(i);
     cal.appendChild(box);
   }
 }
@@ -362,177 +407,414 @@ function renderCalendar() {
 function updateProgress() {
   const count = Object.keys(state.completed).length;
   document.getElementById('progressBar').style.width = (count / 14 * 100) + '%';
-  document.getElementById('progressLabel').textContent = count + '/14 完成';
-  // Stars
-  let starStr = '';
-  for (let i = 0; i < 14; i++) {
-    starStr += state.completed[i] ? '⭐' : '☆';
-  }
-  document.getElementById('stars').textContent = starStr;
+  document.getElementById('progressLabel').textContent = count + '/14';
+  let s = '';
+  for (let i = 0; i < 14; i++) s += state.completed[i] ? '⭐' : '☆';
+  document.getElementById('stars').textContent = s;
 }
 
 function selectDay(index) {
   activeDay = index;
+  activeStepIndex = 0;
   renderCalendar();
   renderTask(index);
 }
 
 function renderTask(index) {
   const day = DAYS[index];
-  const isDone = !!state.completed[index];
+  const done = !!state.completed[index];
   const card = document.getElementById('taskCard');
-
   document.getElementById('taskTitle').textContent = 'Day ' + (index + 1) + ' · ' + day.topic;
 
   let html = `<div class="tag">${day.template}</div>`;
   html += `<div class="goal">🎯 ${day.goal}</div>`;
 
-  if (isDone) {
-    html += `<div style="background:#d4edda;border-radius:10px;padding:14px;text-align:center;color:#2d6a4f;">
-      ✅ 本日任务已完成！完成于 ${new Date(state.completed[index]).toLocaleString('zh-CN')}
-      <br><br><button class="btn btn-outline" onclick="selectDay(${index})" style="font-size:0.8em;">🔁 重新练习</button>
-    </div>`;
-    if (state.essays[index]) {
-      html += `<div style="margin-top:10px;background:#f8f9fa;border-radius:10px;padding:12px;">
-        <h4 style="font-size:0.85em;color:#0f3460;">📄 你的作文：</h4>
-        <p style="font-size:0.82em;white-space:pre-wrap;line-height:1.8;font-family:'Times New Roman',serif;">${escapeHTML(state.essays[index])}</p>
-      </div>`;
-    }
+  if (done) {
+    html += doneView(index);
   } else {
+    if (day.reviewDays && day.reviewDays.length > 0) {
+      html += renderReview(day.reviewDays);
+    }
     if (day.type === 'sentences') {
-      // Sentence practice
-      html += renderSentencePractice(index, day);
-    } else if (day.type === 'essay') {
-      // Full essay writing
+      html += renderSentenceStudy(index, day);
+    } else {
       html += renderEssayPractice(index, day);
     }
   }
 
   document.getElementById('taskContent').innerHTML = html;
-
-  // Bind events
   bindEvents(index, day);
 }
 
-function renderSentencePractice(index, day) {
-  let html = '';
-  day.sentences.forEach((s, si) => {
-    html += `<div class="step">
-      <h4>📌 句型 ${si + 1}</h4>
-      <p>🇨🇳 中文提示：${s.cn}</p>
-      <p style="color:#999;font-size:0.75em;">💡 提示词：${s.hint}</p>
-      <textarea id="sent_${si}" placeholder="在这里写出你的英文句子..."></textarea>
+function doneView(index) {
+  let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
+    ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="selectDay(${index})">🔁 重新练习</button>
+  </div>`;
+  if (state.essays[index]) {
+    h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
+      <h4 style="font-size:0.82em;color:#0f3460;">📄 你的作文：</h4>
+      <p style="font-size:0.78em;white-space:pre-wrap;line-height:1.8;font-family:'Times New Roman',serif;">${esc(state.essays[index])}</p>
+    </div>`;
+  } else if (state.sentences[index]) {
+    h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
+      <h4 style="font-size:0.82em;color:#0f3460;">📝 你的默写：</h4>`;
+    DAYS[index].sentences.forEach((s, si) => {
+      const usr = (state.sentences[index] || [])[si] || '';
+      h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${s.cn}</span><br><span style="font-family:'Times New Roman',serif;font-size:0.78em;">${esc(usr)}</span></div>`;
+    });
+    h += `</div>`;
+  }
+  return h;
+}
+
+// ==================== REVIEW (复习之前学过的句子) ====================
+function renderReview(dayIndices) {
+  let reviewSentences = [];
+  dayIndices.forEach(di => {
+    if (DAYS[di] && DAYS[di].sentences) {
+      DAYS[di].sentences.forEach(s => reviewSentences.push(s));
+    }
+  });
+  if (reviewSentences.length === 0) return '';
+
+  let h = `<div style="background:#fff8e1;border-radius:10px;padding:10px;margin-bottom:10px;border-left:4px solid #f6d365;">
+    <h4 style="font-size:0.8em;color:#856404;margin-bottom:6px;">📚 复习已背句型（点击查看答案）</h4>`;
+  reviewSentences.forEach((s, i) => {
+    h += `<div class="review-item" id="review_${i}">
+      <div class="r-cn">${s.cn}</div>
+      <div class="r-en" id="reviewEn_${i}" style="display:none;">${esc(s.model)}</div>
+      <button class="btn btn-outline btn-sm" style="margin-top:4px;" onclick="document.getElementById('reviewEn_${i}').style.display='block';this.style.display='none';">👀 显示答案</button>
     </div>`;
   });
-  if (day.memory) {
-    html += `<div class="step" style="background:#e8f0fe;border-left-color:#0f3460;">
-      <h4>🧠 今日背诵</h4><p class="en">${day.memory}</p>
-    </div>`;
-  }
-  html += `<div class="btn-row">
-    <button class="btn btn-primary" id="btnCheckSent">✅ 提交并打卡</button>
-    <button class="btn btn-outline" id="btnHint">💡 看答案提示</button>
-  </div>`;
-  html += `<div class="hint" id="hintBox"></div>`;
-  return html;
+  h += `</div>`;
+  return h;
 }
 
-function renderEssayPractice(index, day) {
-  let html = '';
-  // Sentence warm-up if any
-  if (day.sentences && day.sentences.length > 0) {
-    day.sentences.forEach((s, si) => {
-      html += `<div class="step">
-        <h4>📌 热身句型 ${si + 1}</h4>
-        <p>${s.cn}</p>
-        <p style="color:#999;font-size:0.75em;">💡 ${s.hint}</p>
-        <textarea id="sent_${si}" placeholder="写出英文句子..." style="height:60px;"></textarea>
-      </div>`;
-    });
+// ==================== SENTENCE STUDY (3-step: 背诵→填空→默写→核对) ====================
+function renderSentenceStudy(index, day) {
+  let h = '';
+
+  // Step tabs
+  h += `<div class="mem-steps">`;
+  STEP_LABELS.forEach((l, si) => {
+    let cls = 'mem-step-tab';
+    if (si === activeStepIndex) cls += ' active';
+    if (si < activeStepIndex) cls += ' done';
+    h += `<div class="${cls}" onclick="activeStepIndex=${si};renderTask(${index})">${l}</div>`;
+  });
+  h += `</div>`;
+
+  // Show current sentence indicator
+  const totalS = day.sentences.length;
+  h += `<div style="text-align:center;font-size:0.75em;color:#999;margin-bottom:8px;">
+    共 ${totalS} 个句型 | 当前第 <span id="curSentNum">1</span> 个
+  </div>`;
+
+  // Render current sentence based on step
+  const curIdx = window._curSentIdx || 0;
+  const s = day.sentences[curIdx];
+  h += `<div id="sentenceWorkArea">`;
+
+  if (activeStepIndex === 0) {
+    // STEP 0: 背诵记忆 — show model sentence, chunks, phrase highlights
+    h += renderMemorize(s);
+  } else if (activeStepIndex === 1) {
+    // STEP 1: 填空练习 — fill in key words
+    h += renderFillBlank(s, index, curIdx);
+  } else if (activeStepIndex === 2) {
+    // STEP 2: 默写 — only Chinese + keyword hints
+    h += renderDictation(s, index, curIdx);
+  } else if (activeStepIndex === 3) {
+    // STEP 3: 核对 — compare user answer with model
+    h += renderCompare(s, index, curIdx);
   }
 
-  html += `<div class="step" style="background:#fff8e1;border-left-color:#f6d365;">
-    <h4>✍️ 今日作文</h4>
-    <p style="white-space:pre-wrap;">${day.essayPrompt}</p>
-  </div>`;
-  html += `<textarea id="essayText" placeholder="在这里写你的作文...&#10;&#10;提示：${day.essayHint}"></textarea>`;
+  h += `</div>`;
 
-  html += `<div class="btn-row">
-    <button class="btn btn-success" id="btnSubmitEssay">✅ 提交并打卡</button>
-    <button class="btn btn-outline" id="btnEssayHint">💡 写作框架</button>
-  </div>`;
-  html += `<div class="hint" id="hintBox">📋 ${day.essayHint}</div>`;
+  // Navigation buttons
+  h += `<div class="btn-row">`;
+  if (curIdx > 0) {
+    h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderTask(${index})">⬅ 上一句</button>`;
+  }
+  h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${index}, ${curIdx})" id="btnAdvance">${
+    activeStepIndex === 3 ? '➡ 下一句' : '下一步 ➡'
+  }</button>`;
+  h += `</div>`;
 
-  return html;
+  return h;
 }
 
-function bindEvents(index, day) {
-  if (state.completed[index]) return;
+function renderMemorize(s) {
+  let h = `<div class="model-card">
+    <div class="cn">🇨🇳 ${s.cn}</div>
+    <div class="en">${highlightPhrase(esc(s.model))}</div>
+  </div>`;
+  // Chunks
+  if (s.chunks) {
+    h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">📦 分块记忆：</div>`;
+    h += `<div class="chunks">`;
+    s.chunks.forEach(c => { h += `<div class="chunk">${esc(c)}</div>`; });
+    h += `</div>`;
+  }
+  h += `<p style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">👆 大声朗读3遍，试着盖住英文，看中文说出英文句。</p>`;
+  return h;
+}
 
-  if (day.type === 'sentences') {
-    document.getElementById('btnCheckSent').onclick = () => checkSentences(index, day);
-    document.getElementById('btnHint').onclick = () => showSentenceHints(day);
-  } else if (day.type === 'essay') {
-    document.getElementById('btnSubmitEssay').onclick = () => submitEssay(index, day);
-    const hintBtn = document.getElementById('btnEssayHint');
-    if (hintBtn) {
-      hintBtn.onclick = () => {
-        const box = document.getElementById('hintBox');
-        box.classList.toggle('show');
-      };
+function renderFillBlank(s, index, curIdx) {
+  // Create fill-in-blank version
+  let words = s.blanks || [];
+  let sentence = s.model;
+  let fbHtml = sentence;
+  words.forEach(w => {
+    fbHtml = fbHtml.replace(new RegExp('\\b' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b'), `<span class="fb-blank" data-word="${esc(w)}">____</span>`);
+  });
+
+  let h = `<div class="model-card"><div class="cn">🇨🇳 ${s.cn}</div></div>`;
+  h += `<div class="fb-sentence">${fbHtml}</div>`;
+  h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">👇 点击下方单词填入空格</div>`;
+  // Shuffled word bank
+  let shuffled = [...words].sort(() => Math.random() - 0.5);
+  h += `<div class="word-bank" id="wordBank">`;
+  shuffled.forEach(w => {
+    h += `<span class="wb-word" data-word="${esc(w)}" onclick="fillBlank(this)">${esc(w)}</span>`;
+  });
+  h += `</div>`;
+  h += `<div style="text-align:center;margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="revealAllBlanks()">👀 显示答案</button></div>`;
+  return h;
+}
+
+function fillBlank(el) {
+  const word = el.dataset.word;
+  // Find first empty blank
+  const blanks = document.querySelectorAll('.fb-blank:not(.reveal)');
+  for (let b of blanks) {
+    if (b.dataset.word === word && !b.classList.contains('reveal')) {
+      b.textContent = word;
+      b.classList.add('reveal');
+      el.classList.add('used');
+      // Check if all filled
+      if (document.querySelectorAll('.fb-blank:not(.reveal)').length === 0) {
+        setTimeout(() => { if (confirm('全部填完！太棒了！✅ 准备进入默写了吗？')) advanceStepDirect(); }, 300);
+      }
+      return;
     }
   }
 }
 
-// Sentence check
-function checkSentences(index, day) {
-  let allFilled = true;
-  day.sentences.forEach((s, si) => {
-    const ta = document.getElementById('sent_' + si);
-    if (!ta || !ta.value.trim()) allFilled = false;
+function revealAllBlanks() {
+  document.querySelectorAll('.fb-blank').forEach(b => {
+    b.textContent = b.dataset.word;
+    b.classList.add('reveal');
   });
-
-  if (!allFilled) {
-    if (!confirm('还有句子没写完，确定要提交吗？')) return;
-  }
-
-  // Save sentences
-  const answers = day.sentences.map((s, si) => {
-    const ta = document.getElementById('sent_' + si);
-    return ta ? ta.value.trim() : '';
-  });
-  state.sentences[index] = answers;
-
-  completeDay(index);
+  document.querySelectorAll('.wb-word').forEach(w => w.classList.add('used'));
 }
 
-function showSentenceHints(day) {
-  const box = document.getElementById('hintBox');
-  let hints = day.sentences.map((s, i) => {
-    const partial = s.hint.replace('...', '________');
-    return `${i+1}. ${s.cn}<br>  ➜ ${partial}`;
-  });
-  box.innerHTML = hints.join('<br><br>');
-  box.classList.toggle('show');
-}
-
-// Essay submit
-function submitEssay(index, day) {
-  const ta = document.getElementById('essayText');
-  if (!ta || !ta.value.trim()) {
-    alert('请先写完作文再提交哦！📝');
-    return;
-  }
-  // Save any warm-up sentences
-  if (day.sentences && day.sentences.length > 0) {
-    const answers = day.sentences.map((s, si) => {
-      const st = document.getElementById('sent_' + si);
-      return st ? st.value.trim() : '';
+function renderDictation(s, index, curIdx) {
+  let h = `<div class="dict-area">
+    <div class="dict-cn">🇨🇳 ${s.cn}</div>`;
+  if (s.chunks) {
+    h += `<div class="dict-hint">💡 关键词提示：`;
+    // Show first word of each chunk as hint
+    s.chunks.forEach(c => {
+      const firstWord = c.trim().split(/\s+/)[0].replace(/[,.]/g, '');
+      h += `<span>${firstWord}</span>`;
     });
-    state.sentences[index] = answers;
+    h += `</div>`;
   }
-  state.essays[index] = ta.value.trim();
-  completeDay(index);
+  h += `<textarea id="dictText" placeholder="不看原文，凭记忆写出英文句子..."></textarea>`;
+  h += `<div class="btn-row">
+    <button class="btn btn-outline btn-sm" id="btnPeek">偷偷看一眼 👀</button>
+    <button class="btn btn-primary btn-sm" id="btnCheckDict">✅ 提交核对</button>
+  </div>`;
+  h += `<div id="peekArea" style="display:none;margin-top:8px;">
+    <div class="model-card"><div class="en">${esc(s.model)}</div></div>
+  </div>`;
+  h += `<div id="dictResult"></div>`;
+  h += `</div>`;
+  return h;
+}
+
+function renderCompare(s, index, curIdx) {
+  const userAnswer = (state.sentences[index] || [])[curIdx] || '';
+  let h = `<div class="compare">
+    <div class="compare-col my">
+      <h5>✏️ 我的默写</h5>
+      <div>${esc(userAnswer) || '<em style="color:#999;">（未填写）</em>'}</div>
+    </div>
+    <div class="compare-col model">
+      <h5>📋 标准答案</h5>
+      <div>${esc(s.model)}</div>
+    </div>
+  </div>`;
+  // Simple diff score
+  if (userAnswer) {
+    const score = simpleScore(userAnswer, s.model);
+    h += `<div class="score-display">${score >= 80 ? '🎉' : score >= 50 ? '👍' : '💪'} 相似度: ${score}%</div>`;
+    if (score >= 90) h += `<p style="text-align:center;color:#2d6a4f;font-size:0.85em;">完美！你已经记住这个句子了！</p>`;
+    else if (score >= 60) h += `<p style="text-align:center;color:#f6a623;font-size:0.85em;">还不错！再练习一下拼写吧。</p>`;
+    else h += `<p style="text-align:center;color:#e63946;font-size:0.85em;">差距较大，建议回第一步重新背诵。</p>`;
+  }
+  return h;
+}
+
+function simpleScore(user, model) {
+  const uWords = user.toLowerCase().replace(/[.,;!?]/g, '').split(/\s+/).filter(Boolean);
+  const mWords = model.toLowerCase().replace(/[.,;!?]/g, '').split(/\s+/).filter(Boolean);
+  if (uWords.length === 0) return 0;
+  let match = 0;
+  const mSet = new Set(mWords);
+  uWords.forEach(w => { if (mSet.has(w)) match++; });
+  return Math.round((match / Math.max(uWords.length, mWords.length)) * 100);
+}
+
+function highlightPhrase(text) {
+  // Highlight common phrases
+  const phrases = [
+    'If I were you', 'I would', 'not only', 'but also', 'as long as', 'give up',
+    'in my opinion', 'as far as', 'take care of', 'look up', 'look forward to',
+    'be supposed to', 'had better', 'why not', 'first of all', 'in the end',
+    'make a difference', 'around the corner', 'instead of', 'depend on',
+    'be interested in', 'because of', 'in front of', 'along the way',
+    'it is important', 'a good way to', 'advise you to', 'manage to',
+    'by myself', 'stay up late', 'a balanced diet', 'keep healthy',
+    'volunteer to', 'take action', 'learn from', 'be willing to',
+  ];
+  let result = text;
+  phrases.forEach(p => {
+    const escaped = p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    result = result.replace(new RegExp('(' + escaped + ')', 'gi'), '<span class="hl">$1</span>');
+  });
+  return result;
+}
+
+function advanceStep(index, curIdx) {
+  const day = DAYS[index];
+  const maxSent = day.sentences.length;
+
+  if (activeStepIndex === 2) {
+    // Coming from dictation, save answer first
+    const ta = document.getElementById('dictText');
+    if (ta) {
+      if (!state.sentences[index]) state.sentences[index] = [];
+      state.sentences[index][curIdx] = ta.value.trim();
+      saveState();
+    }
+  }
+
+  if (activeStepIndex < 3) {
+    activeStepIndex++;
+    renderTask(index);
+  } else {
+    // Move to next sentence or complete
+    if (curIdx < maxSent - 1) {
+      window._curSentIdx = curIdx + 1;
+      activeStepIndex = 0;
+      renderTask(index);
+    } else {
+      // All sentences done
+      completeDay(index);
+    }
+  }
+}
+
+function advanceStepDirect() {
+  // Called from fill-blank completion
+  activeStepIndex++;
+  renderTask(activeDay);
+}
+
+// ==================== ESSAY PRACTICE ====================
+function renderEssayPractice(index, day) {
+  let h = '';
+  if (day.sentences && day.sentences.length > 0) {
+    day.sentences.forEach((s, si) => {
+      h += `<div class="model-card" style="text-align:left;margin-bottom:8px;">
+        <div class="cn" style="text-align:left;font-size:0.82em;">${esc(s.cn)}</div>
+        <div class="en" style="text-align:left;font-size:0.9em;">${highlightPhrase(esc(s.model))}</div>
+        <p style="font-size:0.7em;color:#999;margin-top:4px;">👆 先背熟这个句型，再写作文</p>
+      </div>`;
+    });
+    // Quick dictation check
+    h += `<div style="margin-bottom:10px;text-align:center;">
+      <button class="btn btn-outline btn-sm" onclick="toggleQuickDict(${index})">📝 快速默写检测</button>
+    </div>`;
+    h += `<div id="quickDictArea" style="display:none;"></div>`;
+  }
+
+  h += `<div style="background:#fff8e1;border-radius:10px;padding:12px;margin:10px 0;border-left:4px solid #f6d365;">
+    <h4 style="font-size:0.85em;color:#856404;">✍️ 今日作文</h4>
+    <p style="white-space:pre-wrap;font-size:0.82em;color:#333;">${esc(day.essayPrompt)}</p>
+  </div>`;
+
+  h += `<textarea id="essayText" placeholder="在这里写你的作文..."></textarea>`;
+  h += `<div class="btn-row">
+    <button class="btn btn-outline btn-sm" id="btnEssayHint">💡 写作框架</button>
+    <button class="btn btn-success" id="btnSubmitEssay">✅ 提交并打卡</button>
+  </div>`;
+  h += `<div id="essayHintBox" style="display:none;background:#e8f0fe;border-radius:8px;padding:10px;margin-top:8px;font-size:0.8em;line-height:1.8;color:#0f3460;">📋 ${esc(day.essayHint)}</div>`;
+  return h;
+}
+
+function toggleQuickDict(index) {
+  const area = document.getElementById('quickDictArea');
+  if (area.style.display === 'none') {
+    const day = DAYS[index];
+    let h = '';
+    (day.sentences || []).forEach((s, si) => {
+      h += `<div style="margin-bottom:8px;">
+        <p style="font-size:0.8em;color:#333;">${si+1}. ${s.cn}</p>
+        <textarea id="qd_${si}" style="height:40px;font-size:0.78em;" placeholder="默写..."></textarea>
+      </div>`;
+    });
+    h += `<button class="btn btn-primary btn-sm" onclick="checkQuickDict(${index})">✅ 检查答案</button>`;
+    h += `<div id="qdResult"></div>`;
+    area.innerHTML = h;
+    area.style.display = 'block';
+  } else {
+    area.style.display = 'none';
+  }
+}
+
+function checkQuickDict(index) {
+  const day = DAYS[index];
+  let h = '';
+  (day.sentences || []).forEach((s, si) => {
+    const ua = (document.getElementById('qd_' + si)?.value || '').trim();
+    const score = simpleScore(ua, s.model);
+    const emoji = score >= 80 ? '✅' : score >= 50 ? '⚠️' : '❌';
+    h += `<div style="font-size:0.78em;margin:4px 0;">${emoji} ${si+1}. 相似度 ${score}% — 答案：${esc(s.model)}</div>`;
+  });
+  document.getElementById('qdResult').innerHTML = h;
+}
+
+// ==================== EVENT BINDING ====================
+function bindEvents(index, day) {
+  if (state.completed[index]) return;
+
+  if (day.type === 'sentences') {
+    // Peek button
+    const peekBtn = document.getElementById('btnPeek');
+    if (peekBtn) peekBtn.onclick = () => { document.getElementById('peekArea').style.display = 'block'; };
+    // Check dictation
+    const checkBtn = document.getElementById('btnCheckDict');
+    if (checkBtn) checkBtn.onclick = () => { advanceStep(index, window._curSentIdx || 0); };
+  } else {
+    // Essay hint
+    const hintBtn = document.getElementById('btnEssayHint');
+    if (hintBtn) hintBtn.onclick = () => {
+      const box = document.getElementById('essayHintBox');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    };
+    // Submit essay
+    const submitBtn = document.getElementById('btnSubmitEssay');
+    if (submitBtn) submitBtn.onclick = () => {
+      const ta = document.getElementById('essayText');
+      if (!ta || !ta.value.trim()) { alert('请先写完作文再提交哦！📝'); return; }
+      state.essays[index] = ta.value.trim();
+      completeDay(index);
+    };
+  }
 }
 
 function completeDay(index) {
@@ -546,37 +828,29 @@ function completeDay(index) {
 
 // ==================== CONFETTI ====================
 function launchConfetti() {
-  const container = document.getElementById('confetti');
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;pointer-events:none;z-index:999;top:0;left:0;width:100%;height:100%;';
+  document.body.appendChild(container);
   const colors = ['#f6d365','#fda085','#f093fb','#4facfe','#43e97b','#fa709a','#fee140','#30cfd0','#ff6b6b'];
   for (let i = 0; i < 60; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.left = Math.random() * 100 + '%';
-    piece.style.top = -(Math.random() * 40 + 10) + 'px';
-    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.animationDelay = Math.random() * 0.8 + 's';
-    piece.style.animationDuration = (Math.random() * 1.2 + 1.2) + 's';
-    container.appendChild(piece);
-    setTimeout(() => piece.remove(), 2500);
+    const p = document.createElement('div');
+    p.style.cssText = `position:absolute;left:${Math.random()*100}%;top:-${Math.random()*40+10}px;width:10px;height:10px;border-radius:3px;background:${colors[Math.floor(Math.random()*colors.length)]};animation:fall ${Math.random()*1.2+1.2}s ease-out forwards;animation-delay:${Math.random()*0.8}s;`;
+    container.appendChild(p);
   }
+  setTimeout(() => container.remove(), 3000);
 }
 
-// ==================== UTILS ====================
-function escapeHTML(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+function esc(s) {
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
 // ==================== INIT ====================
 function init() {
+  window._curSentIdx = 0;
   updateProgress();
   renderCalendar();
-  // Auto-select today
-  const today = getTodayIndex();
-  selectDay(today);
+  selectDay(getTodayIndex());
 }
-
 init();
 </script>
 
