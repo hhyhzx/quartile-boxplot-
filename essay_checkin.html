@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>英语作文打卡 · 14天挑战</title>
+<title>5大作文模板 · 10天句型熟记</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -25,16 +25,16 @@
   .stars { font-size: 1.2em; letter-spacing: 3px; text-align: center; margin: 6px 0; }
 
   /* Calendar */
-  .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 12px; }
+  .calendar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 12px; }
   .day-box {
     aspect-ratio: 1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s; font-weight: bold; border: 2px solid transparent; font-size: 0.6em;
+    cursor: pointer; transition: all 0.2s; font-weight: bold; border: 2px solid transparent; font-size: 0.65em;
   }
   .day-box.locked { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); cursor: not-allowed; }
-  .day-box.today { background: #fff; color: #0f3460; border-color: #f6d365; box-shadow: 0 0 14px rgba(246,211,101,0.5); animation: pulse 2s infinite; }
+  .day-box.today { background: #fff; color: #0f3460; border-color: #f6d365; box-shadow: 0 0 14px rgba(246,211,101,0.5); }
   .day-box.done { background: #2d6a4f; color: #fff; border-color: #52b788; }
   .day-box.done::after { content: "✓"; font-size: 1em; }
-  @keyframes pulse { 0%, 100% { box-shadow: 0 0 10px rgba(246,211,101,0.4); } 50% { box-shadow: 0 0 22px rgba(246,211,101,0.8); } }
+  .day-box:not(.done):hover { border-color: #f6d365; }
 
   /* Card */
   .card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
@@ -51,7 +51,7 @@
   .mem-step-tab.active { background: #0f3460; color: #fff; }
   .mem-step-tab.done { background: #d4edda; color: #2d6a4f; }
 
-  /* Memory card - model sentence display */
+  /* Model card */
   .model-card {
     background: linear-gradient(135deg, #fff5f5, #fff8e1); border: 2px solid #f6d365; border-radius: 14px;
     padding: 14px; margin-bottom: 10px; text-align: center;
@@ -62,6 +62,17 @@
     line-height: 1.8; padding: 8px; background: rgba(255,255,255,0.7); border-radius: 8px;
   }
   .model-card .en .hl { background: #f6d365; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+
+  /* Role badge */
+  .role-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em;
+    font-weight: bold; margin-right: 6px; vertical-align: middle;
+  }
+  .role-badge.open { background: #d0e8ff; color: #1d5fa3; }
+  .role-badge.body { background: #ffe8cc; color: #b8680a; }
+  .role-badge.close { background: #d4edda; color: #1e6f3f; }
+  .role-badge.pro { background: #e8d0ff; color: #6b1fa3; }
+  .role-badge.opp { background: #ffe0e0; color: #b81a1a; }
 
   /* Chunk display */
   .chunks { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0; }
@@ -101,8 +112,6 @@
   .compare-col.my { background: #e8f0fe; font-family: 'Times New Roman', serif; }
   .compare-col.model { background: #d4edda; font-family: 'Times New Roman', serif; }
   .compare-col h5 { font-size: 0.85em; margin-bottom: 4px; }
-  .diff { background: #ffc9c9; padding: 1px 3px; border-radius: 3px; }
-  .good { background: #b7e4c7; padding: 1px 3px; border-radius: 3px; }
 
   /* Score */
   .score-display {
@@ -115,8 +124,6 @@
     font-size: 0.9em; font-family: 'Times New Roman', serif; line-height: 1.7; resize: vertical; outline: none;
   }
   textarea:focus { border-color: #0f3460; }
-  textarea.correct { border-color: #52b788; background: #f0fff4; }
-  textarea.wrong { border-color: #ff6b6b; background: #fff5f5; }
 
   /* Buttons */
   .btn {
@@ -125,7 +132,6 @@
   }
   .btn-primary { background: #0f3460; color: #fff; }
   .btn-success { background: #2d6a4f; color: #fff; }
-  .btn-warning { background: #f6d365; color: #1a1a2e; }
   .btn-outline { background: #fff; color: #0f3460; border: 2px solid #0f3460; }
   .btn-sm { padding: 5px 14px; font-size: 0.7em; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -142,7 +148,7 @@
   /* Responsive */
   @media (max-width: 400px) {
     .calendar { gap: 3px; }
-    .day-box { border-radius: 8px; font-size: 0.5em; }
+    .day-box { border-radius: 8px; font-size: 0.55em; }
     .card { padding: 12px; }
     .compare { grid-template-columns: 1fr; }
     .mem-steps { gap: 3px; }
@@ -153,15 +159,15 @@
 <body>
 
 <div class="container">
-  <h1><span class="icon">📝</span> 英语作文打卡挑战</h1>
-  <div class="sub">14天 · Week 1 攻克25个模板句 · Week 2 写出6篇满分作文</div>
+  <h1><span class="icon">📝</span> 5大作文模板万能句</h1>
+  <div class="sub">10天熟记20个万能句型 · 建议信 / 议论文 / 记叙文 / 人物 / 通知</div>
 
   <div class="progress-wrap">
     <div class="progress-fill" id="progressBar"></div>
-    <div class="progress-text" id="progressLabel">0/14 完成</div>
+    <div class="progress-text" id="progressLabel">0/10 完成</div>
   </div>
 
-  <div class="stars" id="stars">☆☆☆☆☆☆☆☆☆☆☆☆☆☆</div>
+  <div class="stars" id="stars">☆☆☆☆☆☆☆☆☆☆</div>
   <div class="calendar" id="calendar"></div>
 
   <div class="card" id="taskCard">
@@ -171,252 +177,268 @@
 </div>
 
 <script>
-// ==================== 14-DAY PLAN DATA ====================
-// Each sentence: cn (中文), model (英文答案), chunks (分块记忆), blanks (挖空词)
+// ==================== 10-DAY PLAN DATA ====================
+// Each sentence: cn (中文), model (英文), chunks (分块记忆), blanks (挖空词), role (首段/主体/结尾等)
 
 const DAYS = [
-  // ==================== WEEK 1: 25 TEMPLATE SENTENCES ====================
-  { // Day 1
-    topic: '模板1 · 建议信句型（上）', template: '优先级最高 ⭐',
-    goal: '背熟4个建议信核心句型：If I were you / It is important / Doing sth. is a good way / You are supposed to',
+  // ===== Day 1: 建议信 — 首段/主体 =====
+  {
+    topic: '模板1 · 建议信（上）', template: '建议信',
+    goal: '背熟建议信的开头和主体句型：如何回应来信 + 如何分条给建议',
     type: 'sentences',
     sentences: [
-      { cn: '如果我是你，我会和父母谈谈，告诉他们我的感受。',
-        model: 'If I were you, I would talk to my parents and tell them how I feel.',
-        chunks: ['If I were you,', 'I would talk to my parents', 'and tell them how I feel.'],
-        blanks: ['were', 'would', 'parents', 'feel'] },
-      { cn: '对你来说，每天锻炼是很重要的。',
-        model: 'It is important for you to take exercise every day.',
-        chunks: ['It is important for you', 'to take exercise', 'every day.'],
-        blanks: ['important', 'exercise', 'every'] },
-      { cn: '经常锻炼是减轻压力的好方法。',
-        model: 'Taking regular exercise is a good way to reduce stress.',
-        chunks: ['Taking regular exercise', 'is a good way', 'to reduce stress.'],
-        blanks: ['Taking', 'regular', 'reduce', 'stress'] },
-      { cn: '你应该每天按时到校。',
-        model: 'You are supposed to arrive at school on time every day.',
-        chunks: ['You are supposed to', 'arrive at school on time', 'every day.'],
-        blanks: ['supposed', 'arrive', 'on time'] },
+      { cn: '很高兴收到你的来信，询问如何学好英语的建议。',
+        model: "I'm glad to receive your letter asking for advice on how to learn English well.",
+        chunks: ["I'm glad to receive your letter", "asking for advice on", "how to learn English well."],
+        blanks: ['glad', 'receive', 'advice', 'learn'],
+        role: '首段' },
+      { cn: '首先，你最好听英文歌。其次，为什么不读一些简单的英文故事呢？',
+        model: "First of all, you'd better listen to English songs. Secondly, why not read some simple English stories?",
+        chunks: ["First of all,", "you'd better listen to English songs.", "Secondly, why not", "read some simple English stories?"],
+        blanks: ['First of all', 'better', 'Secondly', 'simple'],
+        role: '主体' },
     ],
   },
-  { // Day 2
-    topic: '模板1+2 · 建议信（下）+ 议论文（上）', template: '优先级最高 ⭐',
-    goal: '完成建议信最后1句 + 议论文前3句：Every coin has two sides / There are two reasons / I can\'t agree more',
+
+  // ===== Day 2: 建议信 — 结尾（巩固）=====
+  {
+    topic: '模板1 · 建议信（下）', template: '建议信',
+    goal: '背熟建议信结尾句型，复习前一天的句型。',
     type: 'sentences',
     sentences: [
-      { cn: '我强烈建议你多喝水，因为这对你的健康有益。',
-        model: 'I strongly advise you to drink more water, because it is good for your health.',
-        chunks: ['I strongly advise you', 'to drink more water,', 'because it is good for your health.'],
-        blanks: ['strongly', 'advise', 'health'] },
-      { cn: '凡事都有两面性。',
-        model: 'Every coin has two sides.',
-        chunks: ['Every coin', 'has two sides.'],
-        blanks: ['coin', 'sides'] },
-      { cn: '这有两个主要原因。第一，运动帮我们放松。第二，运动让我们保持健康。',
-        model: 'There are two main reasons for this. First, doing sports helps us relax. Second, it keeps us healthy.',
-        chunks: ['There are two main reasons for this.', 'First, doing sports helps us relax.', 'Second, it keeps us healthy.'],
-        blanks: ['main', 'reasons', 'relax', 'healthy'] },
-      { cn: '我完全同意这个观点，因为我们都看到了过度使用电子屏幕的危害。',
-        model: 'I can\'t agree more with this opinion because we have all seen the harm of too much screen time.',
-        chunks: ['I can\'t agree more with this opinion', 'because we have all seen the harm', 'of too much screen time.'],
-        blanks: ['agree', 'because', 'harm', 'screen'] },
+      { cn: '希望我的建议对你有帮助。',
+        model: 'I hope my advice will be helpful.',
+        chunks: ['I hope', 'my advice', 'will be helpful.'],
+        blanks: ['hope', 'advice', 'helpful'],
+        role: '结尾' },
+      { cn: '只要你坚持练习，你一定会进步的。',
+        model: 'As long as you keep practicing, you will make progress.',
+        chunks: ['As long as you keep practicing,', 'you will make progress.'],
+        blanks: ['As long as', 'keep', 'practicing', 'progress'],
+        role: '结尾' },
+    ],
+    reviewDays: [0],
+  },
+
+  // ===== Day 3: 议论文 — 首段/正方/反方 =====
+  {
+    topic: '模板2 · 议论文（上）', template: '议论文',
+    goal: '背熟议论文的开头、正方和反方句型，学会"先陈述观点再反驳"的结构。',
+    type: 'sentences',
+    sentences: [
+      { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
+        model: 'These days, whether students should use mobile phones has become a hot topic.',
+        chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
+        blanks: ['These days', 'whether', 'mobile phones', 'hot topic'],
+        role: '首段' },
+      { cn: '有些人认为手机能帮助学生快速查阅信息。',
+        model: 'Some people think that mobile phones help students look up information quickly.',
+        chunks: ['Some people think that', 'mobile phones help students', 'look up information quickly.'],
+        blanks: ['think', 'help', 'look up', 'quickly'],
+        role: '正方' },
+      { cn: '但也有人争辩说，手机会分散学生的学习注意力。',
+        model: 'However, others argue that mobile phones may distract students from their study.',
+        chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
+        blanks: ['However', 'argue', 'distract', 'study'],
+        role: '反方' },
     ],
   },
-  { // Day 3
-    topic: '模板2 · 议论文句型（下）', template: '优先级最高 ⭐',
-    goal: '议论文最后2句 + 记叙文前2句：From my point of view / The reason why / When...sth happened / I was about to...when',
+
+  // ===== Day 4: 议论文-己见 + 记叙文-开头 =====
+  {
+    topic: '模板2+3 · 议论文（下）+ 记叙文（上）', template: '议论文+记叙文',
+    goal: '议论文收尾句型 + 记叙文开头句型，学会引出自己的经历。',
     type: 'sentences',
     sentences: [
-      { cn: '在我看来，学生只应该被允许在周末使用手机。',
-        model: 'From my point of view, students should be allowed to use mobile phones only on weekends.',
-        chunks: ['From my point of view,', 'students should be allowed to use mobile phones', 'only on weekends.'],
-        blanks: ['point of view', 'allowed', 'weekends'] },
-      { cn: '我不同意的原因是，太多作业占用了我们锻炼的时间。',
-        model: 'The reason why I disagree is that too much homework takes away our time to exercise.',
-        chunks: ['The reason why I disagree', 'is that too much homework', 'takes away our time to exercise.'],
-        blanks: ['reason', 'disagree', 'takes away', 'exercise'] },
-      { cn: '当我放学走路回家时，我看到一个小女孩在路边哭泣。',
-        model: 'While I was walking home after school, I saw a little girl crying by the roadside.',
-        chunks: ['While I was walking home after school,', 'I saw a little girl', 'crying by the roadside.'],
-        blanks: ['While', 'walking', 'crying', 'roadside'] },
-      { cn: '我正要放弃，这时我最好的朋友出现了，主动提出帮助我。',
-        model: 'I was about to give up when my best friend showed up and offered to help me.',
-        chunks: ['I was about to give up', 'when my best friend showed up', 'and offered to help me.'],
-        blanks: ['about to', 'showed up', 'offered'] },
-    ],
-    reviewDays: [0, 1],
-  },
-  { // Day 4
-    topic: '模板3 · 记叙文句型', template: '优先级最高 ⭐',
-    goal: '记叙文全部5句：It was the first time / Hardly had I...when / What a...experience',
-    type: 'sentences',
-    sentences: [
-      { cn: '那是我第一次面对面和外国人讲英语。',
-        model: 'It was the first time that I had spoken English with a foreigner face to face.',
-        chunks: ['It was the first time', 'that I had spoken English with a foreigner', 'face to face.'],
-        blanks: ['first time', 'spoken', 'foreigner', 'face to face'] },
-      { cn: '我刚睡着，闹钟就又响了。',
-        model: 'Hardly had I fallen asleep when the alarm clock rang again.',
-        chunks: ['Hardly had I fallen asleep', 'when the alarm clock', 'rang again.'],
-        blanks: ['Hardly', 'fallen asleep', 'rang'] },
-      { cn: '那是多么有意义又难忘的一次经历啊！',
-        model: 'What a meaningful and unforgettable experience it was!',
-        chunks: ['What a meaningful', 'and unforgettable experience', 'it was!'],
-        blanks: ['meaningful', 'unforgettable', 'experience'] },
+      { cn: '就我而言，学生可以使用手机，但必须在严格规定下。',
+        model: "As far as I'm concerned, students can use phones, but only under strict rules.",
+        chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
+        blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
+        role: '己见' },
+      { cn: '我仍然记得我第一次参加篮球比赛的那一天。',
+        model: 'I still remember the day when I took part in a basketball game for the first time.',
+        chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
+        blanks: ['remember', 'took part in', 'basketball', 'first time'],
+        role: '首段' },
     ],
     reviewDays: [2],
   },
-  { // Day 5
-    topic: '模板4 · 人物描写句型', template: '优先级最高 ⭐',
-    goal: '人物描写全部5句：He/She is someone who / I admire...not because of / sets a good example / Without... / What he did deeply moved me',
+
+  // ===== Day 5: 记叙文 — 经过/结尾 =====
+  {
+    topic: '模板3 · 记叙文（下）', template: '记叙文',
+    goal: '背熟记叙文的经过和结尾句型，学会按时间顺序描述经历。',
     type: 'sentences',
     sentences: [
-      { cn: '我妈妈是一个总是把家庭放在自己之前的人。',
-        model: 'My mother is someone who always puts her family before herself.',
-        chunks: ['My mother is someone', 'who always puts her family', 'before herself.'],
-        blanks: ['someone', 'puts', 'herself'] },
-      { cn: '我敬佩我爸爸，不是因为他的钱，而是因为他的善良和正直。',
-        model: 'I admire my father not because of his money, but because of his kindness and honesty.',
-        chunks: ['I admire my father', 'not because of his money,', 'but because of his kindness and honesty.'],
-        blanks: ['admire', 'not because of', 'but because of', 'honesty'] },
-      { cn: '我们的班长总是无私地帮助别人，她为我们树立了一个好榜样。',
-        model: 'Our class monitor always helps others without expecting anything. She sets a good example for us to follow.',
-        chunks: ['Our class monitor always helps others', 'without expecting anything.', 'She sets a good example for us to follow.'],
-        blanks: ['without', 'expecting', 'sets', 'example', 'follow'] },
-      { cn: '没有英语老师的鼓励，我不可能取得这么大的进步。',
-        model: 'Without my English teacher\'s encouragement, I couldn\'t have made such great progress.',
-        chunks: ['Without my English teacher\'s encouragement,', 'I couldn\'t have made', 'such great progress.'],
-        blanks: ['Without', 'encouragement', 'couldn\'t', 'progress'] },
-      { cn: '我最好的朋友在我最困难的日子里为我所做的，深深感动了我。',
-        model: 'What my best friend did for me during my hardest days deeply moved me.',
-        chunks: ['What my best friend did for me', 'during my hardest days', 'deeply moved me.'],
-        blanks: ['What', 'during', 'hardest', 'deeply'] },
+      { cn: '一开始我很紧张。然后，队友们鼓励了我。之后我越打越好，最后我们赢了！',
+        model: 'At first, I was very nervous. Then, my teammates encouraged me. After that, I played better and better. Finally, we won!',
+        chunks: ['At first, I was very nervous.', 'Then, my teammates encouraged me.', 'After that, I played better and better.', 'Finally, we won!'],
+        blanks: ['At first', 'nervous', 'encouraged', 'Finally'],
+        role: '主体' },
+      { cn: '我从这次经历中学到了很多——团队合作可以让不可能变为可能。',
+        model: 'I learned a lot from this experience — teamwork can make the impossible possible.',
+        chunks: ['I learned a lot from this experience', '— teamwork can make', 'the impossible possible.'],
+        blanks: ['learned', 'experience', 'teamwork', 'impossible'],
+        role: '结尾' },
     ],
-    reviewDays: [1, 3],
-  },
-  { // Day 6
-    topic: '模板5 · 活动通知句型', template: '优先级最高 ⭐',
-    goal: '活动通知全部5句：We are going to hold / There will be / The purpose is to / Anyone who is interested / Please arrive on time',
-    type: 'sentences',
-    sentences: [
-      { cn: '我们将在周五下午在学校图书馆举办一次图书分享活动。',
-        model: 'We are going to hold a book-sharing activity on Friday afternoon in the school library.',
-        chunks: ['We are going to hold', 'a book-sharing activity', 'on Friday afternoon', 'in the school library.'],
-        blanks: ['hold', 'book-sharing', 'library'] },
-      { cn: '将有各种各样的活动，如唱歌、跳舞和游戏，最后还有抽奖环节。',
-        model: 'There will be various activities such as singing, dancing and games, including a lucky draw at the end.',
-        chunks: ['There will be various activities', 'such as singing, dancing and games,', 'including a lucky draw at the end.'],
-        blanks: ['various', 'including', 'lucky'] },
-      { cn: '这次活动的目的是为贫困地区的孩子们筹款。',
-        model: 'The purpose of this activity is to raise money for the children in poor areas.',
-        chunks: ['The purpose of this activity', 'is to raise money', 'for the children in poor areas.'],
-        blanks: ['purpose', 'raise', 'poor'] },
-      { cn: '欢迎任何对中国传统文化感兴趣的人加入我们。',
-        model: 'Anyone who is interested in Chinese traditional culture is welcome to join us.',
-        chunks: ['Anyone who is interested in', 'Chinese traditional culture', 'is welcome to join us.'],
-        blanks: ['interested in', 'traditional', 'welcome'] },
-      { cn: '请准时到达，并随身携带笔记本和笔。',
-        model: 'Please arrive on time and bring a notebook and a pen with you.',
-        chunks: ['Please arrive on time', 'and bring a notebook and a pen', 'with you.'],
-        blanks: ['arrive', 'bring', 'notebook'] },
-    ],
-  },
-  { // Day 7
-    topic: 'Week 1 总复习 · 25句模板大检测', template: '综合复习',
-    goal: '随机抽取10句模板句型默写，检验一周背诵成果。全部通过才算过关！',
-    type: 'sentences',
-    sentences: [
-      { cn: '如果我是你，我会和父母谈谈。', model: 'If I were you, I would talk to my parents.', chunks: ['If I were you,', 'I would talk to my parents.'], blanks: ['were', 'would'] },
-      { cn: '凡事都有两面性。', model: 'Every coin has two sides.', chunks: ['Every coin', 'has two sides.'], blanks: ['coin', 'sides'] },
-      { cn: '我正要放弃，这时我最好的朋友出现了。', model: 'I was about to give up when my best friend showed up.', chunks: ['I was about to give up', 'when my best friend showed up.'], blanks: ['about to', 'showed up'] },
-      { cn: '我敬佩他不是因为他的钱，而是因为他的善良。', model: 'I admire him not because of his money, but because of his kindness.', chunks: ['I admire him', 'not because of his money,', 'but because of his kindness.'], blanks: ['admire', 'not because of', 'but because of'] },
-      { cn: '你应该每天按时到校。', model: 'You are supposed to arrive at school on time every day.', chunks: ['You are supposed to', 'arrive at school on time', 'every day.'], blanks: ['supposed', 'arrive', 'on time'] },
-      { cn: '我不同意的原因是太多作业占用了锻炼时间。', model: 'The reason why I disagree is that too much homework takes away our time to exercise.', chunks: ['The reason why I disagree', 'is that too much homework', 'takes away our time to exercise.'], blanks: ['reason', 'disagree', 'exercise'] },
-      { cn: '我刚睡着，闹钟就又响了。', model: 'Hardly had I fallen asleep when the alarm clock rang again.', chunks: ['Hardly had I fallen asleep', 'when the alarm clock', 'rang again.'], blanks: ['Hardly', 'asleep', 'rang'] },
-      { cn: '那是我第一次面对面和外国人讲英语。', model: 'It was the first time that I had spoken English with a foreigner face to face.', chunks: ['It was the first time', 'that I had spoken English with a foreigner', 'face to face.'], blanks: ['first time', 'foreigner', 'face to face'] },
-      { cn: '欢迎对中国传统文化感兴趣的人加入。', model: 'Anyone who is interested in Chinese traditional culture is welcome to join us.', chunks: ['Anyone who is interested in', 'Chinese traditional culture', 'is welcome to join us.'], blanks: ['interested in', 'traditional', 'welcome'] },
-      { cn: '请准时到达，并带笔记本和笔。', model: 'Please arrive on time and bring a notebook and a pen with you.', chunks: ['Please arrive on time', 'and bring a notebook and a pen', 'with you.'], blanks: ['arrive', 'bring', 'notebook'] },
-    ],
-    reviewDays: [0, 1, 2, 3, 4, 5],
-  },
-  // ==================== WEEK 2: REVIEW + FULL ESSAYS ====================
-  { // Day 8
-    topic: '完整作文：建议信', template: '模板1应用',
-    goal: '用模板1的5个句型，写一封80词的建议信。先默写句型再写作文。',
-    type: 'essay',
-    sentences: [
-      { cn: '对你来说，保持学习和休息之间的平衡很重要。', model: 'It is important for you to keep a balance between study and rest.', chunks: ['It is important for you', 'to keep a balance', 'between study and rest.'], blanks: ['important', 'balance', 'between'] },
-    ],
-    essayPrompt: '你的朋友李明最近学习压力很大，总是熬夜。请写一封80词左右的建议信，给他3条具体建议。',
-    essayHint: 'Dear Li Ming, → I\'m sorry to hear that... → If I were you, I would... → It is important for you to... → You are supposed to... → I strongly advise you to... → I hope... → Yours, ...',
-    reviewDays: [0, 1],
-  },
-  { // Day 9
-    topic: '完整作文：议论文', template: '模板2应用',
-    goal: '用模板2的5个句型，写一篇"中学生是否该做家务"的议论文。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '请以"Should Middle School Students Do Chores?"为题，写一篇80词左右的议论文，包含正反观点和你的看法。',
-    essayHint: 'These days...has become a hot topic. → Some people think... → However, others argue... → From my point of view... → The reason why...is that... → All in all...',
-    reviewDays: [1, 2],
-  },
-  { // Day 10
-    topic: '完整作文：志愿者经历', template: '模板3应用',
-    goal: '用模板3的句型，写一篇志愿者经历的记叙文。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '请以"A Meaningful Volunteer Experience"为题，写一篇80词左右的记叙文。',
-    essayHint: 'Last Saturday, I volunteered to... → While I was... → I was about to...when... → It was the first time that I had... → What a meaningful experience!',
     reviewDays: [3],
   },
-  { // Day 11
-    topic: '完整作文：难忘经历', template: '模板3应用',
-    goal: '再练一篇记叙文，用上Hardly had...when和What a...句型。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '请以"An Unforgettable Experience"为题，写一篇80词左右的记叙文。',
-    essayHint: 'I still remember the day when... → At first... → Hardly had I...when... → After that... → I learned from this experience that... → What an unforgettable day!',
-    reviewDays: [3],
+
+  // ===== Day 6: 人物描写 — 开头/性格/事迹 =====
+  {
+    topic: '模板4 · 人物描写（上）', template: '人物描写',
+    goal: '背熟人物描写的开头和性格句式，学会 not only...but also 和 What impresses me 等高级表达。',
+    type: 'sentences',
+    sentences: [
+      { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
+        model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
+        chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
+        blanks: ['admire', 'not only', 'but also', 'caring'],
+        role: '首段' },
+      { cn: '她是个热心肠的人。最让我印象深刻的是，她从不抱怨工作的辛苦。',
+        model: 'She is a warm-hearted person. What impresses me most is that she never complains about her hard work.',
+        chunks: ['She is a warm-hearted person.', 'What impresses me most is that', 'she never complains about her hard work.'],
+        blanks: ['warm-hearted', 'impresses', 'complains', 'hard work'],
+        role: '主体' },
+    ],
+    reviewDays: [0, 2],
   },
-  { // Day 12
-    topic: '完整作文：我心中的英雄', template: '模板4应用',
-    goal: '用模板4的5个句型，写一篇人物描写。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '请以"My Hero"为题，写一篇80词左右的短文。',
-    essayHint: 'The person I admire most is..., who is not only...but also... → She/He is someone who always... → I admire her/him not because of...but because of... → Without her/his..., I couldn\'t have... → What she/he did deeply moved me.',
-    reviewDays: [4],
-  },
-  { // Day 13
-    topic: '完整作文：我的暑假计划', template: '模板5应用',
-    goal: '用模板5的句型，写一篇暑假计划。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '请以"My Summer Vacation Plan"为题，写一篇80词左右的暑假计划。',
-    essayHint: 'The summer vacation is around the corner. → First of all, I plan to... → We are going to... → There will be... → Anyone who...is welcome. → All in all, I think...',
+
+  // ===== Day 7: 人物描写 — 事迹/影响 =====
+  {
+    topic: '模板4 · 人物描写（下）', template: '人物描写',
+    goal: '学会用具体事迹支撑人物形象，并用"It is...who..."强调句型收尾。',
+    type: 'sentences',
+    sentences: [
+      { cn: '她曾经彻夜不眠地照顾一位重症病人。',
+        model: 'She once stayed up the whole night to take care of a seriously ill patient.',
+        chunks: ['She once stayed up the whole night', 'to take care of', 'a seriously ill patient.'],
+        blanks: ['once', 'stayed up', 'take care of', 'seriously'],
+        role: '主体' },
+      { cn: '她对我影响很大。正是她让我意识到，责任感是最重要的品质。',
+        model: 'She has a great influence on me. It is she who makes me realize that responsibility is the most important quality.',
+        chunks: ['She has a great influence on me.', 'It is she who makes me realize', 'that responsibility is the most important quality.'],
+        blanks: ['influence', 'realize', 'responsibility', 'quality'],
+        role: '结尾' },
+    ],
     reviewDays: [5],
   },
-  { // Day 14
-    topic: '终极挑战：综合写作', template: '全部模板总复习',
-    goal: '二选一，写一篇100词作文，必须使用至少3个模板句型。',
-    type: 'essay',
-    sentences: [],
-    essayPrompt: '选题1：给一年后的自己写一封信，说出烦恼和期待。\n\n选题2：什么样的人是"成功的"？请描述并举例。\n\n要求：至少使用3个模板句型 + 2种从句。',
-    essayHint: '仔细审题 → 选好话题 → 回想学过的25个模板句 → 选3-4句嵌入作文 → 加上自己的话串联 → 检查语法 → 大声朗读',
-    reviewDays: [0, 1, 2, 3, 4, 5, 6],
+
+  // ===== Day 8: 活动通知 — 开头/内容/注意事项 =====
+  {
+    topic: '模板5 · 活动通知（上）', template: '活动通知',
+    goal: '背熟活动通知的完整结构：开头说明目的、中间列活动内容、结尾提醒注意事项。',
+    type: 'sentences',
+    sentences: [
+      { cn: '我写信是要告诉你下周日我们班去科技馆参观的安排。',
+        model: "I'm writing to tell you about our class trip to the Science Museum next Sunday.",
+        chunks: ["I'm writing to tell you about", 'our class trip to the Science Museum', 'next Sunday.'],
+        blanks: ['writing', 'tell', 'trip', 'Science Museum'],
+        role: '首段' },
+      { cn: '首先，我们早上8点在校门口集合。然后，我们坐大巴去那里。此外，我们还将在附近公园野餐。',
+        model: 'To begin with, we will meet at the school gate at 8:00 a.m. Then, we are going to take a bus there. Besides, we will have a picnic lunch in the park nearby.',
+        chunks: ['To begin with, we will meet at the school gate at 8:00 a.m.', 'Then, we are going to take a bus there.', 'Besides, we will have a picnic lunch in the park nearby.'],
+        blanks: ['To begin with', 'meet', 'take a bus', 'Besides', 'picnic'],
+        role: '主体' },
+      { cn: '请记得穿舒适的鞋子并带一瓶水。',
+        model: 'Please remember to wear comfortable shoes and bring a bottle of water.',
+        chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
+        blanks: ['remember', 'comfortable', 'bring', 'bottle'],
+        role: '结尾' },
+    ],
+    reviewDays: [1, 4],
+  },
+
+  // ===== Day 9: 活动通知-结尾 + 前四个模板复习 =====
+  {
+    topic: '模板5 · 活动通知（下）+ 综合复习', template: '活动通知+复习',
+    goal: '学完最后一个结尾句型，然后回顾模板1-4的3个核心句型，查漏补缺。',
+    type: 'sentences',
+    sentences: [
+      { cn: '我相信我们会玩得很开心。期待你的到来！',
+        model: "I'm sure we will have a great time. Looking forward to your coming!",
+        chunks: ["I'm sure we will have a great time.", 'Looking forward to your coming!'],
+        blanks: ['sure', 'great time', 'Looking forward', 'coming'],
+        role: '结尾' },
+      { cn: '（复习·建议信）很高兴收到你的来信，询问如何学好英语的建议。',
+        model: "I'm glad to receive your letter asking for advice on how to learn English well.",
+        chunks: ["I'm glad to receive your letter", "asking for advice on", "how to learn English well."],
+        blanks: ['glad', 'receive', 'advice', 'learn'],
+        role: '首段' },
+      { cn: '（复习·议论文）就我而言，学生可以使用手机，但必须在严格规定下。',
+        model: "As far as I'm concerned, students can use phones, but only under strict rules.",
+        chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
+        blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
+        role: '己见' },
+      { cn: '（复习·记叙文）我仍然记得我第一次参加篮球比赛的那一天。',
+        model: 'I still remember the day when I took part in a basketball game for the first time.',
+        chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
+        blanks: ['remember', 'took part in', 'basketball', 'first time'],
+        role: '首段' },
+    ],
+    reviewDays: [7],
+  },
+
+  // ===== Day 10: 终极大检测 — 随机8句 =====
+  {
+    topic: '终极大检测 · 全5个模板', template: '综合检测',
+    goal: '从20个万能句型中随机抽取8句默写。全部通过才算完成挑战！',
+    type: 'sentences',
+    sentences: [
+      { cn: '只要你坚持练习，你一定会进步的。',
+        model: 'As long as you keep practicing, you will make progress.',
+        chunks: ['As long as you keep practicing,', 'you will make progress.'],
+        blanks: ['As long as', 'keep', 'practicing', 'progress'],
+        role: '结尾' },
+      { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
+        model: 'These days, whether students should use mobile phones has become a hot topic.',
+        chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
+        blanks: ['These days', 'whether', 'mobile phones', 'hot topic'],
+        role: '首段' },
+      { cn: '但也有人争辩说，手机会分散学生的学习注意力。',
+        model: 'However, others argue that mobile phones may distract students from their study.',
+        chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
+        blanks: ['However', 'argue', 'distract', 'study'],
+        role: '反方' },
+      { cn: '我从这次经历中学到了很多——团队合作可以让不可能变为可能。',
+        model: 'I learned a lot from this experience — teamwork can make the impossible possible.',
+        chunks: ['I learned a lot from this experience', '— teamwork can make', 'the impossible possible.'],
+        blanks: ['learned', 'experience', 'teamwork', 'impossible'],
+        role: '结尾' },
+      { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
+        model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
+        chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
+        blanks: ['admire', 'not only', 'but also', 'caring'],
+        role: '首段' },
+      { cn: '她对我影响很大。正是她让我意识到，责任感是最重要的品质。',
+        model: 'She has a great influence on me. It is she who makes me realize that responsibility is the most important quality.',
+        chunks: ['She has a great influence on me.', 'It is she who makes me realize', 'that responsibility is the most important quality.'],
+        blanks: ['influence', 'realize', 'responsibility', 'quality'],
+        role: '结尾' },
+      { cn: '首先，我们早上8点在校门口集合。然后，我们坐大巴去那里。此外，我们还将在附近公园野餐。',
+        model: 'To begin with, we will meet at the school gate at 8:00 a.m. Then, we are going to take a bus there. Besides, we will have a picnic lunch in the park nearby.',
+        chunks: ['To begin with, we will meet at the school gate at 8:00 a.m.', 'Then, we are going to take a bus there.', 'Besides, we will have a picnic lunch in the park nearby.'],
+        blanks: ['To begin with', 'meet', 'take a bus', 'Besides', 'picnic'],
+        role: '主体' },
+      { cn: '请记得穿舒适的鞋子并带一瓶水。',
+        model: 'Please remember to wear comfortable shoes and bring a bottle of water.',
+        chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
+        blanks: ['remember', 'comfortable', 'bring', 'bottle'],
+        role: '结尾' },
+    ],
+    reviewDays: [0, 2, 3, 5, 6, 7, 8],
   },
 ];
 
 // ==================== STATE ====================
-const STORAGE_KEY = 'essay_checkin_v5';
+const STORAGE_KEY = 'essay_checkin_10day_v1';
 let state = loadState();
 
 function defaultState() {
   return {
-    completed: {},      // { day: timestamp }
-    sentences: {},      // { day: [user answers for each sentence dictation] }
-    essays: {},         // { day: "essay text" }
-    sentenceDone: {},   // { day: { sentenceIndex: true } } — per-sentence completion
+    completed: {},
+    sentences: {},
+    sentenceDone: {},
   };
 }
 
@@ -431,49 +453,42 @@ function saveState() {
 
 // ==================== RENDER ====================
 let activeDay = null;
-let activeStepIndex = 0; // 0=背诵, 1=填空, 2=默写, 3=核对
+let activeStepIndex = 0;
 const STEP_LABELS = ['📖 背诵记忆', '🧩 填空练习', '✍️ 默写输出', '✅ 核对答案'];
+const TOTAL_DAYS = 10;
 
-function getTodayIndex() {
-  for (let i = 0; i < 14; i++) { if (!state.completed[i]) return i; }
-  return 13;
-}
-
+// ==================== CALENDAR ====================
 function renderCalendar() {
   const cal = document.getElementById('calendar');
   cal.innerHTML = '';
-  const today = getTodayIndex();
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < TOTAL_DAYS; i++) {
     const box = document.createElement('div');
     box.className = 'day-box';
-    const done = !!state.completed[i];
-    const locked = i > today && !done;
-    const isToday = i === today && !done;
-    if (done) box.classList.add('done');
-    else if (isToday) box.classList.add('today');
-    else if (locked) box.classList.add('locked');
-    box.innerHTML = `<span>D${i + 1}</span>${locked ? '<span>🔒</span>' : ''}`;
-    if (!locked || done) box.onclick = () => selectDay(i);
+    if (state.completed[i]) box.classList.add('done');
+    box.innerHTML = `<span>D${i + 1}</span>`;
+    box.onclick = () => selectDay(i);
     cal.appendChild(box);
   }
 }
 
 function updateProgress() {
   const count = Object.keys(state.completed).length;
-  document.getElementById('progressBar').style.width = (count / 14 * 100) + '%';
-  document.getElementById('progressLabel').textContent = count + '/14';
+  document.getElementById('progressBar').style.width = (count / TOTAL_DAYS * 100) + '%';
+  document.getElementById('progressLabel').textContent = count + '/' + TOTAL_DAYS + ' 完成';
   let s = '';
-  for (let i = 0; i < 14; i++) s += state.completed[i] ? '⭐' : '☆';
+  for (let i = 0; i < TOTAL_DAYS; i++) s += state.completed[i] ? '⭐' : '☆';
   document.getElementById('stars').textContent = s;
 }
 
 function selectDay(index) {
   activeDay = index;
   activeStepIndex = 0;
+  window._curSentIdx = 0;
   renderCalendar();
   renderTask(index);
 }
 
+// ==================== TASK RENDERING ====================
 function renderTask(index) {
   const day = DAYS[index];
   const done = !!state.completed[index];
@@ -489,11 +504,7 @@ function renderTask(index) {
     if (day.reviewDays && day.reviewDays.length > 0) {
       html += renderReview(day.reviewDays);
     }
-    if (day.type === 'sentences') {
-      html += renderSentenceStudy(index, day);
-    } else {
-      html += renderEssayPractice(index, day);
-    }
+    html += renderSentenceStudy(index, day);
   }
 
   document.getElementById('taskContent').innerHTML = html;
@@ -505,24 +516,19 @@ function doneView(index) {
     ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
     <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="selectDay(${index})">🔁 重新练习</button>
   </div>`;
-  if (state.essays[index]) {
-    h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
-      <h4 style="font-size:0.82em;color:#0f3460;">📄 你的作文：</h4>
-      <p style="font-size:0.78em;white-space:pre-wrap;line-height:1.8;font-family:'Times New Roman',serif;">${esc(state.essays[index])}</p>
-    </div>`;
-  } else if (state.sentences[index]) {
+  if (state.sentences[index]) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
       <h4 style="font-size:0.82em;color:#0f3460;">📝 你的默写：</h4>`;
     DAYS[index].sentences.forEach((s, si) => {
       const usr = (state.sentences[index] || [])[si] || '';
-      h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${s.cn}</span><br><span style="font-family:'Times New Roman',serif;font-size:0.78em;">${esc(usr)}</span></div>`;
+      h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${roleBadge(s.role)}${s.cn}</span><br><span style="font-family:'Times New Roman',serif;font-size:0.78em;">${esc(usr)}</span></div>`;
     });
     h += `</div>`;
   }
   return h;
 }
 
-// ==================== REVIEW (复习之前学过的句子) ====================
+// ==================== REVIEW ====================
 function renderReview(dayIndices) {
   let reviewSentences = [];
   dayIndices.forEach(di => {
@@ -536,7 +542,7 @@ function renderReview(dayIndices) {
     <h4 style="font-size:0.8em;color:#856404;margin-bottom:6px;">📚 复习已背句型（点击查看答案）</h4>`;
   reviewSentences.forEach((s, i) => {
     h += `<div class="review-item" id="review_${i}">
-      <div class="r-cn">${s.cn}</div>
+      <div class="r-cn">${roleBadge(s.role)}${s.cn}</div>
       <div class="r-en" id="reviewEn_${i}" style="display:none;">${esc(s.model)}</div>
       <button class="btn btn-outline btn-sm" style="margin-top:4px;" onclick="document.getElementById('reviewEn_${i}').style.display='block';this.style.display='none';">👀 显示答案</button>
     </div>`;
@@ -545,7 +551,7 @@ function renderReview(dayIndices) {
   return h;
 }
 
-// ==================== SENTENCE STUDY (3-step: 背诵→填空→默写→核对) ====================
+// ==================== SENTENCE STUDY ====================
 function renderSentenceStudy(index, day) {
   let h = '';
 
@@ -559,34 +565,29 @@ function renderSentenceStudy(index, day) {
   });
   h += `</div>`;
 
-  // Show current sentence indicator
   const totalS = day.sentences.length;
-  h += `<div style="text-align:center;font-size:0.75em;color:#999;margin-bottom:8px;">
-    共 ${totalS} 个句型 | 当前第 <span id="curSentNum">1</span> 个
-  </div>`;
-
-  // Render current sentence based on step
   const curIdx = window._curSentIdx || 0;
   const s = day.sentences[curIdx];
+
+  h += `<div style="text-align:center;font-size:0.75em;color:#999;margin-bottom:8px;">
+    共 ${totalS} 个句型 | ${roleBadge(s.role)} 当前第 ${curIdx + 1} 个
+  </div>`;
+
   h += `<div id="sentenceWorkArea">`;
 
   if (activeStepIndex === 0) {
-    // STEP 0: 背诵记忆 — show model sentence, chunks, phrase highlights
     h += renderMemorize(s);
   } else if (activeStepIndex === 1) {
-    // STEP 1: 填空练习 — fill in key words
     h += renderFillBlank(s, index, curIdx);
   } else if (activeStepIndex === 2) {
-    // STEP 2: 默写 — only Chinese + keyword hints
     h += renderDictation(s, index, curIdx);
   } else if (activeStepIndex === 3) {
-    // STEP 3: 核对 — compare user answer with model
     h += renderCompare(s, index, curIdx);
   }
 
   h += `</div>`;
 
-  // Navigation buttons
+  // Navigation
   h += `<div class="btn-row">`;
   if (curIdx > 0) {
     h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderTask(${index})">⬅ 上一句</button>`;
@@ -601,10 +602,9 @@ function renderSentenceStudy(index, day) {
 
 function renderMemorize(s) {
   let h = `<div class="model-card">
-    <div class="cn">🇨🇳 ${s.cn}</div>
+    <div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>
     <div class="en">${highlightPhrase(esc(s.model))}</div>
   </div>`;
-  // Chunks
   if (s.chunks) {
     h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">📦 分块记忆：</div>`;
     h += `<div class="chunks">`;
@@ -616,7 +616,6 @@ function renderMemorize(s) {
 }
 
 function renderFillBlank(s, index, curIdx) {
-  // Create fill-in-blank version
   let words = s.blanks || [];
   let sentence = s.model;
   let fbHtml = sentence;
@@ -624,10 +623,9 @@ function renderFillBlank(s, index, curIdx) {
     fbHtml = fbHtml.replace(new RegExp('\\b' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b'), `<span class="fb-blank" data-word="${esc(w)}">____</span>`);
   });
 
-  let h = `<div class="model-card"><div class="cn">🇨🇳 ${s.cn}</div></div>`;
+  let h = `<div class="model-card"><div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div></div>`;
   h += `<div class="fb-sentence">${fbHtml}</div>`;
   h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">👇 点击下方单词填入空格</div>`;
-  // Shuffled word bank
   let shuffled = [...words].sort(() => Math.random() - 0.5);
   h += `<div class="word-bank" id="wordBank">`;
   shuffled.forEach(w => {
@@ -640,14 +638,12 @@ function renderFillBlank(s, index, curIdx) {
 
 function fillBlank(el) {
   const word = el.dataset.word;
-  // Find first empty blank
   const blanks = document.querySelectorAll('.fb-blank:not(.reveal)');
   for (let b of blanks) {
     if (b.dataset.word === word && !b.classList.contains('reveal')) {
       b.textContent = word;
       b.classList.add('reveal');
       el.classList.add('used');
-      // Check if all filled
       if (document.querySelectorAll('.fb-blank:not(.reveal)').length === 0) {
         setTimeout(() => { if (confirm('全部填完！太棒了！✅ 准备进入默写了吗？')) advanceStepDirect(); }, 300);
       }
@@ -666,10 +662,9 @@ function revealAllBlanks() {
 
 function renderDictation(s, index, curIdx) {
   let h = `<div class="dict-area">
-    <div class="dict-cn">🇨🇳 ${s.cn}</div>`;
+    <div class="dict-cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>`;
   if (s.chunks) {
     h += `<div class="dict-hint">💡 关键词提示：`;
-    // Show first word of each chunk as hint
     s.chunks.forEach(c => {
       const firstWord = c.trim().split(/\s+/)[0].replace(/[,.]/g, '');
       h += `<span>${firstWord}</span>`;
@@ -697,11 +692,10 @@ function renderCompare(s, index, curIdx) {
       <div>${esc(userAnswer) || '<em style="color:#999;">（未填写）</em>'}</div>
     </div>
     <div class="compare-col model">
-      <h5>📋 标准答案</h5>
+      <h5>📋 标准答案 ${roleBadge(s.role)}</h5>
       <div>${esc(s.model)}</div>
     </div>
   </div>`;
-  // Simple diff score
   if (userAnswer) {
     const score = simpleScore(userAnswer, s.model);
     h += `<div class="score-display">${score >= 80 ? '🎉' : score >= 50 ? '👍' : '💪'} 相似度: ${score}%</div>`;
@@ -713,8 +707,8 @@ function renderCompare(s, index, curIdx) {
 }
 
 function simpleScore(user, model) {
-  const uWords = user.toLowerCase().replace(/[.,;!?]/g, '').split(/\s+/).filter(Boolean);
-  const mWords = model.toLowerCase().replace(/[.,;!?]/g, '').split(/\s+/).filter(Boolean);
+  const uWords = user.toLowerCase().replace(/[.,;!?—]/g, '').split(/\s+/).filter(Boolean);
+  const mWords = model.toLowerCase().replace(/[.,;!?—]/g, '').split(/\s+/).filter(Boolean);
   if (uWords.length === 0) return 0;
   let match = 0;
   const mSet = new Set(mWords);
@@ -723,16 +717,20 @@ function simpleScore(user, model) {
 }
 
 function highlightPhrase(text) {
-  // Highlight common phrases
   const phrases = [
-    'If I were you', 'I would', 'not only', 'but also', 'as long as', 'give up',
-    'in my opinion', 'as far as', 'take care of', 'look up', 'look forward to',
-    'be supposed to', 'had better', 'why not', 'first of all', 'in the end',
-    'make a difference', 'around the corner', 'instead of', 'depend on',
-    'be interested in', 'because of', 'in front of', 'along the way',
-    'it is important', 'a good way to', 'advise you to', 'manage to',
-    'by myself', 'stay up late', 'a balanced diet', 'keep healthy',
-    'volunteer to', 'take action', 'learn from', 'be willing to',
+    "I'm glad to", 'receive your letter', 'asking for advice', 'how to learn',
+    "you'd better", 'why not', 'First of all', 'As long as',
+    'These days', 'has become a hot topic', 'Some people think that',
+    'However, others argue that', 'As far as', "I'm concerned",
+    'I still remember the day when', 'took part in', 'for the first time',
+    'At first', 'After that', 'Finally', 'learned a lot',
+    'teamwork can make', 'the impossible possible',
+    'The person I admire most', 'not only', 'but also',
+    'What impresses me most', 'warm-hearted',
+    'stayed up', 'take care of', 'seriously ill',
+    'has a great influence on me', 'It is she who',
+    "I'm writing to tell you", 'To begin with',
+    'Please remember to', 'Looking forward to',
   ];
   let result = text;
   phrases.forEach(p => {
@@ -747,7 +745,6 @@ function advanceStep(index, curIdx) {
   const maxSent = day.sentences.length;
 
   if (activeStepIndex === 2) {
-    // Coming from dictation, save answer first
     const ta = document.getElementById('dictText');
     if (ta) {
       if (!state.sentences[index]) state.sentences[index] = [];
@@ -760,124 +757,31 @@ function advanceStep(index, curIdx) {
     activeStepIndex++;
     renderTask(index);
   } else {
-    // Move to next sentence or complete
     if (curIdx < maxSent - 1) {
       window._curSentIdx = curIdx + 1;
       activeStepIndex = 0;
       renderTask(index);
     } else {
-      // All sentences done
       completeDay(index);
     }
   }
 }
 
 function advanceStepDirect() {
-  // Called from fill-blank completion
   activeStepIndex++;
   renderTask(activeDay);
 }
 
-// ==================== ESSAY PRACTICE ====================
-function renderEssayPractice(index, day) {
-  let h = '';
-  if (day.sentences && day.sentences.length > 0) {
-    day.sentences.forEach((s, si) => {
-      h += `<div class="model-card" style="text-align:left;margin-bottom:8px;">
-        <div class="cn" style="text-align:left;font-size:0.82em;">${esc(s.cn)}</div>
-        <div class="en" style="text-align:left;font-size:0.9em;">${highlightPhrase(esc(s.model))}</div>
-        <p style="font-size:0.7em;color:#999;margin-top:4px;">👆 先背熟这个句型，再写作文</p>
-      </div>`;
-    });
-    // Quick dictation check
-    h += `<div style="margin-bottom:10px;text-align:center;">
-      <button class="btn btn-outline btn-sm" onclick="toggleQuickDict(${index})">📝 快速默写检测</button>
-    </div>`;
-    h += `<div id="quickDictArea" style="display:none;"></div>`;
-  }
-
-  h += `<div style="background:#fff8e1;border-radius:10px;padding:12px;margin:10px 0;border-left:4px solid #f6d365;">
-    <h4 style="font-size:0.85em;color:#856404;">✍️ 今日作文</h4>
-    <p style="white-space:pre-wrap;font-size:0.82em;color:#333;">${esc(day.essayPrompt)}</p>
-  </div>`;
-
-  h += `<textarea id="essayText" placeholder="在这里写你的作文..."></textarea>`;
-  h += `<div class="btn-row">
-    <button class="btn btn-outline btn-sm" id="btnEssayHint">💡 写作框架</button>
-    <button class="btn btn-success" id="btnSubmitEssay">✅ 提交并打卡</button>
-  </div>`;
-  h += `<div id="essayHintBox" style="display:none;background:#e8f0fe;border-radius:8px;padding:10px;margin-top:8px;font-size:0.8em;line-height:1.8;color:#0f3460;">📋 ${esc(day.essayHint)}</div>`;
-  return h;
+// ==================== UTILS ====================
+function roleBadge(role) {
+  if (!role) return '';
+  const clsMap = { '首段': 'open', '主体': 'body', '结尾': 'close', '正方': 'pro', '反方': 'opp', '己见': 'pro', '开头': 'open', '经过': 'body', '性格': 'pro', '事迹': 'body', '影响': 'close', '内容': 'body', '注意事项': 'close' };
+  const cls = clsMap[role] || 'body';
+  return `<span class="role-badge ${cls}">${role}</span>`;
 }
 
-function toggleQuickDict(index) {
-  const area = document.getElementById('quickDictArea');
-  if (area.style.display === 'none') {
-    const day = DAYS[index];
-    let h = '';
-    (day.sentences || []).forEach((s, si) => {
-      h += `<div style="margin-bottom:8px;">
-        <p style="font-size:0.8em;color:#333;">${si+1}. ${s.cn}</p>
-        <textarea id="qd_${si}" style="height:40px;font-size:0.78em;" placeholder="默写..."></textarea>
-      </div>`;
-    });
-    h += `<button class="btn btn-primary btn-sm" onclick="checkQuickDict(${index})">✅ 检查答案</button>`;
-    h += `<div id="qdResult"></div>`;
-    area.innerHTML = h;
-    area.style.display = 'block';
-  } else {
-    area.style.display = 'none';
-  }
-}
-
-function checkQuickDict(index) {
-  const day = DAYS[index];
-  let h = '';
-  (day.sentences || []).forEach((s, si) => {
-    const ua = (document.getElementById('qd_' + si)?.value || '').trim();
-    const score = simpleScore(ua, s.model);
-    const emoji = score >= 80 ? '✅' : score >= 50 ? '⚠️' : '❌';
-    h += `<div style="font-size:0.78em;margin:4px 0;">${emoji} ${si+1}. 相似度 ${score}% — 答案：${esc(s.model)}</div>`;
-  });
-  document.getElementById('qdResult').innerHTML = h;
-}
-
-// ==================== EVENT BINDING ====================
-function bindEvents(index, day) {
-  if (state.completed[index]) return;
-
-  if (day.type === 'sentences') {
-    // Peek button
-    const peekBtn = document.getElementById('btnPeek');
-    if (peekBtn) peekBtn.onclick = () => { document.getElementById('peekArea').style.display = 'block'; };
-    // Check dictation
-    const checkBtn = document.getElementById('btnCheckDict');
-    if (checkBtn) checkBtn.onclick = () => { advanceStep(index, window._curSentIdx || 0); };
-  } else {
-    // Essay hint
-    const hintBtn = document.getElementById('btnEssayHint');
-    if (hintBtn) hintBtn.onclick = () => {
-      const box = document.getElementById('essayHintBox');
-      box.style.display = box.style.display === 'none' ? 'block' : 'none';
-    };
-    // Submit essay
-    const submitBtn = document.getElementById('btnSubmitEssay');
-    if (submitBtn) submitBtn.onclick = () => {
-      const ta = document.getElementById('essayText');
-      if (!ta || !ta.value.trim()) { alert('请先写完作文再提交哦！📝'); return; }
-      state.essays[index] = ta.value.trim();
-      completeDay(index);
-    };
-  }
-}
-
-function completeDay(index) {
-  state.completed[index] = Date.now();
-  saveState();
-  updateProgress();
-  renderCalendar();
-  renderTask(index);
-  launchConfetti();
+function esc(s) {
+  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
 // ==================== CONFETTI ====================
@@ -894,8 +798,23 @@ function launchConfetti() {
   setTimeout(() => container.remove(), 3000);
 }
 
-function esc(s) {
-  const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+// ==================== EVENT BINDING ====================
+function bindEvents(index, day) {
+  if (state.completed[index]) return;
+
+  const peekBtn = document.getElementById('btnPeek');
+  if (peekBtn) peekBtn.onclick = () => { document.getElementById('peekArea').style.display = 'block'; };
+  const checkBtn = document.getElementById('btnCheckDict');
+  if (checkBtn) checkBtn.onclick = () => { advanceStep(index, window._curSentIdx || 0); };
+}
+
+function completeDay(index) {
+  state.completed[index] = Date.now();
+  saveState();
+  updateProgress();
+  renderCalendar();
+  renderTask(index);
+  launchConfetti();
 }
 
 // ==================== INIT ====================
@@ -903,7 +822,7 @@ function init() {
   window._curSentIdx = 0;
   updateProgress();
   renderCalendar();
-  selectDay(getTodayIndex());
+  selectDay(0);
 }
 init();
 </script>
