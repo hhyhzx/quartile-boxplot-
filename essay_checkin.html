@@ -99,6 +99,33 @@
     50% { box-shadow: 0 0 0 8px rgba(15,52,96,0); }
   }
 
+  /* Mic button */
+  .mic-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; border: 2px solid #e63946;
+    background: #fff; cursor: pointer; font-size: 0.9em; transition: all 0.15s;
+    vertical-align: middle; margin-left: 4px; flex-shrink: 0;
+  }
+  .mic-btn:active { background: #ffe0e0; }
+  .mic-btn.listening {
+    background: #e63946; color: #fff;
+    animation: micPulse 0.8s ease-in-out infinite;
+  }
+  @keyframes micPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(230,57,70,0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(230,57,70,0); }
+  }
+  .mic-btn.success { background: #2d6a4f; border-color: #2d6a4f; color: #fff; animation: none; }
+  .mic-result {
+    text-align: center; margin-top: 8px; padding: 8px; border-radius: 10px;
+    font-size: 0.8em; line-height: 1.6; min-height: 20px;
+  }
+  .mic-result.listening { background: #fff5f5; color: #e63946; }
+  .mic-result.match { background: #d4edda; color: #2d6a4f; }
+  .mic-result.nomatch { background: #fff8e1; color: #b8680a; }
+  .mic-result .match-word { color: #2d6a4f; font-weight: bold; }
+  .mic-result .miss-word { color: #e63946; text-decoration: line-through; }
+
   /* Role badge */
   .role-badge {
     display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em;
@@ -644,9 +671,10 @@ function renderSentenceStudy(idx, mod) {
   if (curIdx > 0) {
     h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderModule()">⬅ 上一句</button>`;
   }
-  const step0Locked = activeStepIndex === 0 && getReadCount() < 3;
+  const hasSR = !!((window.SpeechRecognition || window.webkitSpeechRecognition));
+  const step0Locked = activeStepIndex === 0 && hasSR && getReadCount() < 3;
   h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${idx}, ${curIdx})" id="btnAdvance"${step0Locked ? ' disabled' : ''}>${
-    activeStepIndex === 3 ? '➡ 下一句' : (step0Locked ? '🔒 需听3遍' : '下一步 ➡')
+    activeStepIndex === 3 ? '➡ 下一句' : (step0Locked ? '🔒 需开口读3遍' : '下一步 ➡')
   }</button>`;
   h += `</div>`;
 
@@ -662,9 +690,10 @@ function renderMemorize(s) {
       <div class="frame">${highlightPhrase(esc(s.pattern))}</div>
     </div>`;
   }
+  const hasSR = !!((window.SpeechRecognition || window.webkitSpeechRecognition));
   h += `<div class="model-card">
     <div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>
-    <div class="en">${highlightPhrase(esc(s.model))}<button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button></div>
+    <div class="en">${highlightPhrase(esc(s.model))}<button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="听范读">🔊</button><button class="mic-btn" id="micBtn" onclick="event.stopPropagation();startSpeechRecog()" title="开口读">🎤</button></div>
   </div>`;
   if (s.chunks) {
     h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">📦 分块记忆：</div>`;
@@ -672,12 +701,17 @@ function renderMemorize(s) {
     s.chunks.forEach(c => { h += `<div class="chunk">${esc(c)}</div>`; });
     h += `</div>`;
   }
+  h += `<div class="mic-result" id="micResult"></div>`;
   const rc = getReadCount();
   const done = rc >= 3;
-  h += `<div id="readCounter" style="text-align:center;font-size:0.8em;margin-top:6px;${done ? 'color:#2d6a4f;' : 'color:#e67e22;'}">${
-    done ? '✅ 已读 ' + rc + '/3 遍' : '🔊 已听 <b>' + rc + '</b>/<b>3</b> 遍（需听3遍）'
+  h += `<div id="readCounter" style="text-align:center;font-size:0.84em;margin-top:4px;font-weight:bold;${done ? 'color:#2d6a4f;' : 'color:#e67e22;'}">${
+    done ? '✅ 已开口朗读 ' + rc + '/3 遍' : '🎤 已开口朗读 <b>' + rc + '</b>/<b>3</b> 遍'
   }</div>`;
-  h += `<p style="text-align:center;font-size:0.75em;color:#999;margin-top:4px;">👆 点击🔊听3遍，大声跟读英文句子。</p>`;
+  if (!hasSR) {
+    h += `<p style="text-align:center;font-size:0.72em;color:#e63946;margin-top:4px;">⚠️ 您的浏览器不支持语音识别，请用 Chrome 打开。</p>`;
+  } else {
+    h += `<p style="text-align:center;font-size:0.73em;color:#999;margin-top:4px;">👆 先点🔊听范读，再点🎤开口朗读，需匹配3次</p>`;
+  }
   return h;
 }
 
@@ -843,11 +877,12 @@ function advanceStep(index, curIdx) {
 
   // === PASS GATE: check current step before advancing ===
 
-  // Step 0 (memorize): must listen 3 times
+  // Step 0 (memorize): must speak 3 times
   if (activeStepIndex === 0) {
+    const hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
     const cnt = getReadCount();
-    if (cnt < 3) {
-      showToast('请先点击🔊听读3遍英文句子');
+    if (hasSR && cnt < 3) {
+      showToast('请先点击🎤开口朗读3遍，匹配成功即可通过');
       return;
     }
   }
@@ -990,6 +1025,132 @@ function speakSentence(btnEl) {
 
   // Speak immediately — must be synchronous from user click for iOS
   synth.speak(utter);
+}
+
+// ==================== SPEECH RECOGNITION ====================
+let srRecognition = null;
+
+function startSpeechRecog() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('浏览器不支持语音识别，请用Chrome打开'); return; }
+
+  // Stop if already listening
+  if (srRecognition) {
+    srRecognition.stop();
+    srRecognition = null;
+    return;
+  }
+
+  const micBtn = document.getElementById('micBtn');
+  const resultEl = document.getElementById('micResult');
+
+  const recognition = new SR();
+  recognition.lang = 'en-GB';
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  srRecognition = recognition;
+
+  if (micBtn) micBtn.classList.add('listening');
+  if (resultEl) {
+    resultEl.className = 'mic-result listening';
+    resultEl.innerHTML = '🎤 正在聆听...请大声朗读英文句子';
+  }
+
+  let finalText = '';
+
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalText += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    const display = finalText + (interim ? ' <i style="color:#999;">' + interim + '</i>' : '');
+    if (resultEl) {
+      resultEl.className = 'mic-result listening';
+      resultEl.innerHTML = '🎤 ' + (display || '正在聆听...');
+    }
+  };
+
+  recognition.onend = () => {
+    srRecognition = null;
+    if (micBtn) micBtn.classList.remove('listening');
+    if (finalText && resultEl) {
+      checkSpokenSentence(finalText.trim(), resultEl, micBtn);
+    } else if (resultEl) {
+      resultEl.className = 'mic-result nomatch';
+      resultEl.innerHTML = '⚠️ 未识别到语音，请再试一次';
+    }
+  };
+
+  recognition.onerror = (e) => {
+    srRecognition = null;
+    if (micBtn) micBtn.classList.remove('listening');
+    if (resultEl) {
+      resultEl.className = 'mic-result nomatch';
+      resultEl.innerHTML = '⚠️ ' + (e.error === 'no-speech' ? '未检测到声音，请大声朗读' : '识别出错，请重试');
+    }
+  };
+
+  recognition.start();
+}
+
+function checkSpokenSentence(spoken, resultEl, micBtn) {
+  const mod = MODULES[activeModule];
+  const curIdx = window._curSentIdx || 0;
+  const model = mod.sentences[curIdx].model;
+
+  // Compare words
+  const sWords = spoken.toLowerCase().replace(/[.,;!?—]/g, '').split(/\s+/).filter(Boolean);
+  const mWords = model.toLowerCase().replace(/[.,;!?—]/g, '').split(/\s+/).filter(Boolean);
+  const mSet = new Set(mWords);
+  let matched = 0;
+  sWords.forEach(w => { if (mSet.has(w)) matched++; });
+  const pct = mWords.length > 0 ? Math.round(matched / mWords.length * 100) : 0;
+
+  // Build highlighted comparison
+  let compareHTML = '';
+  mWords.forEach(w => {
+    if (sWords.includes(w)) {
+      compareHTML += '<span class="match-word">' + w + '</span> ';
+    } else {
+      compareHTML += '<span class="miss-word">' + w + '</span> ';
+    }
+  });
+
+  if (pct >= 50) {
+    // Count as successful read
+    if (!state.readCounts) state.readCounts = {};
+    if (!state.readCounts[activeModule]) state.readCounts[activeModule] = {};
+    const prev = state.readCounts[activeModule][curIdx] || 0;
+    state.readCounts[activeModule][curIdx] = prev + 1;
+    saveState();
+
+    if (resultEl) {
+      resultEl.className = 'mic-result match';
+      resultEl.innerHTML = '✅ 匹配 ' + pct + '% — 你说的是：<i>' + esc(spoken) + '</i><br><small>标准对比：' + compareHTML + '</small>';
+    }
+    if (micBtn) {
+      micBtn.classList.add('success');
+      setTimeout(() => micBtn.classList.remove('success'), 1500);
+    }
+    updateReadCounter();
+
+    const cnt = getReadCount();
+    if (cnt >= 3 && resultEl) {
+      resultEl.innerHTML += '<br><b>🎉 已完成3次朗读，可以进入下一步！</b>';
+    }
+  } else {
+    if (resultEl) {
+      resultEl.className = 'mic-result nomatch';
+      resultEl.innerHTML = '❌ 匹配 ' + pct + '%（需≥50%）— 你说的是：<i>' + esc(spoken) + '</i><br><small>标准对比：' + compareHTML + '</small><br>请再试一次';
+    }
+  }
+
+  updateReadCounter();
 }
 
 function getReadCount() {
