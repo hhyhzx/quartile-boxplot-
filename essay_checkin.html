@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>5大作文模板 · 10天句型熟记</title>
+<title>5大作文模板 · 模块化学习</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -20,18 +20,43 @@
   h1 .icon { font-size: 1.3em; }
   .sub { text-align: center; color: rgba(255,255,255,0.7); font-size: 0.8em; margin-bottom: 10px; }
 
-  /* Day navigator */
-  .day-nav {
-    display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;
+  /* Module tabs */
+  .module-tabs {
+    display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding: 2px 0; scrollbar-width: none;
+  }
+  .module-tabs::-webkit-scrollbar { display: none; }
+  .module-tab {
+    flex: 0 0 auto; padding: 8px 14px; border-radius: 20px; font-size: 0.78em; font-weight: bold;
+    border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
+    background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7);
+    transition: all 0.2s; display: flex; align-items: center; gap: 4px;
+  }
+  .module-tab.active { background: #fff; color: #0f3460; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .module-tab.done { background: rgba(212,237,218,0.3); color: #d4edda; border: 1px solid rgba(212,237,218,0.5); }
+  .module-tab.done.active { background: #d4edda; color: #2d6a4f; }
+  .module-tab .tab-check { font-size: 0.85em; }
+
+  .module-nav-row {
+    display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px;
   }
   .nav-arrow {
-    background: rgba(255,255,255,0.15); border: none; color: #fff; width: 40px; height: 40px;
-    border-radius: 50%; font-size: 1em; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; transition: background 0.2s;
+    background: rgba(255,255,255,0.15); border: none; color: #fff; width: 36px; height: 36px;
+    border-radius: 50%; font-size: 0.9em; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: background 0.2s; flex-shrink: 0;
   }
   .nav-arrow:hover { background: rgba(255,255,255,0.3); }
   .nav-arrow:disabled { opacity: 0.3; cursor: default; }
-  .day-label { color: #fff; font-size: 0.95em; font-weight: bold; }
+  .module-progress {
+    color: rgba(255,255,255,0.8); font-size: 0.78em; text-align: center; margin-bottom: 4px;
+  }
+  .module-progress .prog-bar {
+    display: inline-block; width: 60px; height: 4px; background: rgba(255,255,255,0.2);
+    border-radius: 2px; margin: 0 6px; vertical-align: middle; overflow: hidden;
+  }
+  .module-progress .prog-fill {
+    display: block; height: 100%; background: #4facfe; border-radius: 2px; transition: width 0.3s;
+  }
 
   /* Card */
   .card { background: #fff; border-radius: 16px; padding: 18px; margin-bottom: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
@@ -259,12 +284,13 @@
 
 <div class="container">
   <h1><span class="icon">📝</span> 5大作文模板万能句</h1>
-  <div class="sub">10天熟记20个万能句型 · 建议信 / 议论文 / 记叙文 / 人物 / 通知</div>
+  <div class="sub">5个模块完整学习 · 逐个攻破 · 建议信 / 议论文 / 记叙文 / 人物 / 通知</div>
 
-  <div class="day-nav" id="dayNav">
-    <button class="nav-arrow" id="btnPrev" title="前一天">◀</button>
-    <span class="day-label" id="dayLabel">第 1/10 天</span>
-    <button class="nav-arrow" id="btnNext" title="后一天">▶</button>
+  <div class="module-tabs" id="moduleTabs"></div>
+  <div class="module-progress" id="moduleProgress"></div>
+  <div class="module-nav-row">
+    <button class="nav-arrow" id="btnPrevModule" title="上一个模块">◀</button>
+    <button class="nav-arrow" id="btnNextModule" title="下一个模块">▶</button>
   </div>
 
   <div class="card" id="taskCard">
@@ -277,12 +303,11 @@
 // ==================== 10-DAY PLAN DATA ====================
 // Each sentence: cn (中文), model (英文), chunks (分块记忆), blanks (挖空词), role (首段/主体/结尾等)
 
-const DAYS = [
-  // ===== Day 1: 建议信 — 首段/主体 =====
+const MODULES = [
+  // ===== Module 1: 建议信 =====
   {
-    topic: '模板1 · 建议信（上）', template: '建议信',
-    goal: '背熟建议信的开头和主体句型：如何回应来信 + 如何分条给建议',
-    type: 'sentences',
+    name: '建议信', icon: '💌',
+    goal: '学会建议信的完整结构：回应来信 → 分条给建议 → 结尾祝福。掌握 I'm glad to receive your letter / you'd better / why not / I hope / As long as 等核心句型。',
     sentences: [
       { cn: '很高兴收到你的来信，询问如何学好英语的建议。',
         pattern: "I'm sorry to hear that... / I'm glad to receive your letter...",
@@ -296,15 +321,6 @@ const DAYS = [
         chunks: ["First of all,", "you'd better listen to English songs.", "Secondly, why not", "read some simple English stories?"],
         blanks: ['First of all', 'better', 'Secondly', 'simple'],
         role: '主体' },
-    ],
-  },
-
-  // ===== Day 2: 建议信 — 结尾（巩固）=====
-  {
-    topic: '模板1 · 建议信（下）', template: '建议信',
-    goal: '背熟建议信结尾句型，复习前一天的句型。',
-    type: 'sentences',
-    sentences: [
       { cn: '希望我的建议对你有帮助。',
         pattern: 'I hope my advice will be helpful.',
         model: 'I hope my advice will be helpful.',
@@ -318,14 +334,12 @@ const DAYS = [
         blanks: ['As long as', 'keep', 'practicing', 'progress'],
         role: '结尾' },
     ],
-    reviewDays: [0],
   },
 
-  // ===== Day 3: 议论文 — 首段/正方/反方 =====
+  // ===== Module 2: 议论文 =====
   {
-    topic: '模板2 · 议论文（上）', template: '议论文',
-    goal: '背熟议论文的开头、正方和反方句型，学会"先陈述观点再反驳"的结构。',
-    type: 'sentences',
+    name: '议论文', icon: '⚖️',
+    goal: '学会议论文的完整结构：引出话题 → 陈述正方观点 → 陈述反方观点 → 表达自己的观点。掌握 These days / Some people think / However, others argue / As far as I'm concerned 等核心句型。',
     sentences: [
       { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
         pattern: 'These days, ... has become a hot topic.',
@@ -345,37 +359,26 @@ const DAYS = [
         chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
         blanks: ['However', 'argue', 'distract', 'study'],
         role: '反方' },
-    ],
-  },
-
-  // ===== Day 4: 议论文-己见 + 记叙文-开头 =====
-  {
-    topic: '模板2+3 · 议论文（下）+ 记叙文（上）', template: '议论文+记叙文',
-    goal: '议论文收尾句型 + 记叙文开头句型，学会引出自己的经历。',
-    type: 'sentences',
-    sentences: [
       { cn: '就我而言，学生可以使用手机，但必须在严格规定下。',
         pattern: "In my opinion / As far as I'm concerned, I agree with...",
         model: "As far as I'm concerned, students can use phones, but only under strict rules.",
         chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
         blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
         role: '己见' },
+    ],
+  },
+
+  // ===== Module 3: 记叙文 =====
+  {
+    name: '记叙文', icon: '📖',
+    goal: '学会记叙文的完整结构：引出经历 → 按时间顺序描述经过 → 总结感悟。掌握 I still remember / At first...Then...After that...Finally / I learned a lot from 等核心句型。',
+    sentences: [
       { cn: '我仍然记得我第一次参加篮球比赛的那一天。',
         pattern: 'Last..., I had an unforgettable experience. / I still remember the day when...',
         model: 'I still remember the day when I took part in a basketball game for the first time.',
         chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
         blanks: ['remember', 'took part in', 'basketball', 'first time'],
         role: '首段' },
-    ],
-    reviewDays: [2],
-  },
-
-  // ===== Day 5: 记叙文 — 经过/结尾 =====
-  {
-    topic: '模板3 · 记叙文（下）', template: '记叙文',
-    goal: '背熟记叙文的经过和结尾句型，学会按时间顺序描述经历。',
-    type: 'sentences',
-    sentences: [
       { cn: '一开始我很紧张。然后，队友们鼓励了我。之后我越打越好，最后我们赢了！',
         pattern: 'At first, ... Then, ... After that, ... Finally, ...',
         model: 'At first, I was very nervous. Then, my teammates encouraged me. After that, I played better and better. Finally, we won!',
@@ -389,14 +392,12 @@ const DAYS = [
         blanks: ['learned', 'experience', 'teamwork', 'impossible'],
         role: '结尾' },
     ],
-    reviewDays: [3],
   },
 
-  // ===== Day 6: 人物描写 — 开头/性格/事迹 =====
+  // ===== Module 4: 人物描写 =====
   {
-    topic: '模板4 · 人物描写（上）', template: '人物描写',
-    goal: '背熟人物描写的开头和性格句式，学会 not only...but also 和 What impresses me 等高级表达。',
-    type: 'sentences',
+    name: '人物描写', icon: '🌟',
+    goal: '学会人物描写的完整结构：介绍人物 → 性格特征 → 具体事迹 → 影响与感悟。掌握 The person I admire most / not only...but also / What impresses me most / has a great influence on me / It is...who 等高级表达。',
     sentences: [
       { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
         pattern: 'The person I admire most is..., who is not only...but also...',
@@ -410,16 +411,6 @@ const DAYS = [
         chunks: ['She is a warm-hearted person.', 'What impresses me most is that', 'she never complains about her hard work.'],
         blanks: ['warm-hearted', 'impresses', 'complains', 'hard work'],
         role: '主体' },
-    ],
-    reviewDays: [0, 2],
-  },
-
-  // ===== Day 7: 人物描写 — 事迹/影响 =====
-  {
-    topic: '模板4 · 人物描写（下）', template: '人物描写',
-    goal: '学会用具体事迹支撑人物形象，并用"It is...who..."强调句型收尾。',
-    type: 'sentences',
-    sentences: [
       { cn: '她曾经彻夜不眠地照顾一位重症病人。',
         pattern: 'He/She once... For example, ...',
         model: 'She once stayed up the whole night to take care of a seriously ill patient.',
@@ -433,14 +424,12 @@ const DAYS = [
         blanks: ['influence', 'realize', 'responsibility', 'quality'],
         role: '结尾' },
     ],
-    reviewDays: [5],
   },
 
-  // ===== Day 8: 活动通知 — 开头/内容/注意事项 =====
+  // ===== Module 5: 活动通知 =====
   {
-    topic: '模板5 · 活动通知（上）', template: '活动通知',
-    goal: '背熟活动通知的完整结构：开头说明目的、中间列活动内容、结尾提醒注意事项。',
-    type: 'sentences',
+    name: '活动通知', icon: '📢',
+    goal: '学会活动通知的完整结构：开头说明目的 → 中间列活动安排 → 结尾提醒注意事项+期待。掌握 I'm writing to tell you about / To begin with...Then...Besides / Please remember to / Looking forward to 等核心句型。',
     sentences: [
       { cn: '我写信是要告诉你下周日我们班去科技馆参观的安排。',
         pattern: "I'm writing to tell you about... / Here is the plan for...",
@@ -460,112 +449,24 @@ const DAYS = [
         chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
         blanks: ['remember', 'comfortable', 'bring', 'bottle'],
         role: '结尾' },
-    ],
-    reviewDays: [1, 4],
-  },
-
-  // ===== Day 9: 活动通知-结尾 + 前四个模板复习 =====
-  {
-    topic: '模板5 · 活动通知（下）+ 综合复习', template: '活动通知+复习',
-    goal: '学完最后一个结尾句型，然后回顾模板1-4的3个核心句型，查漏补缺。',
-    type: 'sentences',
-    sentences: [
       { cn: '我相信我们会玩得很开心。期待你的到来！',
         pattern: "I'm sure we will have a great time. / Looking forward to your coming.",
         model: "I'm sure we will have a great time. Looking forward to your coming!",
         chunks: ["I'm sure we will have a great time.", 'Looking forward to your coming!'],
         blanks: ['sure', 'great time', 'Looking forward', 'coming'],
         role: '结尾' },
-      { cn: '（复习·建议信）很高兴收到你的来信，询问如何学好英语的建议。',
-        pattern: "I'm sorry to hear that... / I'm glad to receive your letter...",
-        model: "I'm glad to receive your letter asking for advice on how to learn English well.",
-        chunks: ["I'm glad to receive your letter", "asking for advice on", "how to learn English well."],
-        blanks: ['glad', 'receive', 'advice', 'learn'],
-        role: '首段' },
-      { cn: '（复习·议论文）就我而言，学生可以使用手机，但必须在严格规定下。',
-        pattern: "In my opinion / As far as I'm concerned, I agree with...",
-        model: "As far as I'm concerned, students can use phones, but only under strict rules.",
-        chunks: ["As far as I'm concerned,", "students can use phones,", "but only under strict rules."],
-        blanks: ['As far as', 'concerned', 'phones', 'strict rules'],
-        role: '己见' },
-      { cn: '（复习·记叙文）我仍然记得我第一次参加篮球比赛的那一天。',
-        pattern: 'Last..., I had an unforgettable experience. / I still remember the day when...',
-        model: 'I still remember the day when I took part in a basketball game for the first time.',
-        chunks: ['I still remember the day', 'when I took part in a basketball game', 'for the first time.'],
-        blanks: ['remember', 'took part in', 'basketball', 'first time'],
-        role: '首段' },
     ],
-    reviewDays: [7],
   },
-
-  // ===== Day 10: 终极大检测 — 随机8句 =====
-  {
-    topic: '终极大检测 · 全5个模板', template: '综合检测',
-    goal: '从20个万能句型中随机抽取8句默写。全部通过才算完成挑战！',
-    type: 'sentences',
-    sentences: [
-      { cn: '只要你坚持练习，你一定会进步的。',
-        pattern: 'As long as you..., you will...',
-        model: 'As long as you keep practicing, you will make progress.',
-        chunks: ['As long as you keep practicing,', 'you will make progress.'],
-        blanks: ['As long as', 'keep', 'practicing', 'progress'],
-        role: '结尾' },
-      { cn: '如今，学生是否应该使用手机已经成为一个热门话题。',
-        pattern: 'These days, ... has become a hot topic.',
-        model: 'These days, whether students should use mobile phones has become a hot topic.',
-        chunks: ['These days,', 'whether students should use mobile phones', 'has become a hot topic.'],
-        blanks: ['These days', 'whether', 'mobile phones', 'hot topic'],
-        role: '首段' },
-      { cn: '但也有人争辩说，手机会分散学生的学习注意力。',
-        pattern: 'However, others hold the opposite view. They argue that...',
-        model: 'However, others argue that mobile phones may distract students from their study.',
-        chunks: ['However, others argue that', 'mobile phones may distract students', 'from their study.'],
-        blanks: ['However', 'argue', 'distract', 'study'],
-        role: '反方' },
-      { cn: '我从这次经历中学到了很多——团队合作可以让不可能变为可能。',
-        pattern: 'I learned a lot from this experience. / This is really a day to remember.',
-        model: 'I learned a lot from this experience — teamwork can make the impossible possible.',
-        chunks: ['I learned a lot from this experience', '— teamwork can make', 'the impossible possible.'],
-        blanks: ['learned', 'experience', 'teamwork', 'impossible'],
-        role: '结尾' },
-      { cn: '我最敬佩的人是我妈妈，她不仅是一位勤奋的护士，也是一位充满关爱的母亲。',
-        pattern: 'The person I admire most is..., who is not only...but also...',
-        model: 'The person I admire most is my mother, who is not only a hardworking nurse but also a caring mother.',
-        chunks: ['The person I admire most is my mother,', 'who is not only a hardworking nurse', 'but also a caring mother.'],
-        blanks: ['admire', 'not only', 'but also', 'caring'],
-        role: '首段' },
-      { cn: '她对我影响很大。正是她让我意识到，责任感是最重要的品质。',
-        pattern: 'He/She has a great influence on me. It is he/she who...',
-        model: 'She has a great influence on me. It is she who makes me realize that responsibility is the most important quality.',
-        chunks: ['She has a great influence on me.', 'It is she who makes me realize', 'that responsibility is the most important quality.'],
-        blanks: ['influence', 'realize', 'responsibility', 'quality'],
-        role: '结尾' },
-      { cn: '首先，我们早上8点在校门口集合。然后，我们坐大巴去那里。此外，我们还将在附近公园野餐。',
-        pattern: 'To begin with, we will... Then, we are going to... Besides, ...',
-        model: 'To begin with, we will meet at the school gate at 8:00 a.m. Then, we are going to take a bus there. Besides, we will have a picnic lunch in the park nearby.',
-        chunks: ['To begin with, we will meet at the school gate at 8:00 a.m.', 'Then, we are going to take a bus there.', 'Besides, we will have a picnic lunch in the park nearby.'],
-        blanks: ['To begin with', 'meet', 'take a bus', 'Besides', 'picnic'],
-        role: '主体' },
-      { cn: '请记得穿舒适的鞋子并带一瓶水。',
-        pattern: "Please remember to... / Don't forget to...",
-        model: 'Please remember to wear comfortable shoes and bring a bottle of water.',
-        chunks: ['Please remember to', 'wear comfortable shoes', 'and bring a bottle of water.'],
-        blanks: ['remember', 'comfortable', 'bring', 'bottle'],
-        role: '结尾' },
-    ],
-    reviewDays: [0, 2, 3, 5, 6, 7, 8],
-  },
-];
-
-// ==================== STATE ====================
-const STORAGE_KEY = 'essay_checkin_10day_v1';
+];// ==================== STATE ====================
+const STORAGE_KEY = 'essay_checkin_modules_v2';
 let state = loadState();
 
 function defaultState() {
   return {
-    completed: {},
-    sentences: {},
-    sentenceDone: {},
+    completed: {},    // module index → timestamp
+    sentences: {},    // module index → [typed answers]
+    sentenceDone: {}, // module index → { sentence index: true }
+    handwriting: {},  // module index → [dataURLs]
   };
 }
 
@@ -579,57 +480,84 @@ function saveState() {
 }
 
 // ==================== RENDER ====================
-let activeDay = null;
+let activeModule = 0;
 let activeStepIndex = 0;
 const STEP_LABELS = ['📖 背诵记忆', '🧩 填空练习', '✍️ 默写输出', '✅ 核对答案'];
-const TOTAL_DAYS = 10;
+const TOTAL_MODULES = 5;
 
-// ==================== DAY NAVIGATION ====================
-function goToDay(index) {
-  if (index < 0 || index >= TOTAL_DAYS) return;
-  activeDay = index;
+// ==================== MODULE NAVIGATION ====================
+function goToModule(index) {
+  if (index < 0 || index >= TOTAL_MODULES) return;
+  activeModule = index;
   activeStepIndex = 0;
   window._curSentIdx = 0;
-  renderDayNav();
-  renderTask(index);
+  renderModuleNav();
+  renderModule();
 }
 
-function renderDayNav() {
-  document.getElementById('dayLabel').textContent = '第 ' + (activeDay + 1) + '/' + TOTAL_DAYS + ' 天';
-  document.getElementById('btnPrev').disabled = activeDay <= 0;
-  document.getElementById('btnNext').disabled = activeDay >= TOTAL_DAYS - 1;
+function renderModuleNav() {
+  // Render module tabs
+  let tabsHTML = '';
+  MODULES.forEach((m, i) => {
+    let cls = 'module-tab';
+    if (i === activeModule) cls += ' active';
+    if (state.completed[i]) cls += ' done';
+    tabsHTML += `<button class="${cls}" onclick="goToModule(${i})">`;
+    if (state.completed[i]) tabsHTML += `<span class="tab-check">✅</span>`;
+    tabsHTML += `${m.icon} ${m.name}</button>`;
+  });
+  document.getElementById('moduleTabs').innerHTML = tabsHTML;
+
+  // Scroll active tab into view
+  setTimeout(() => {
+    const tabs = document.querySelectorAll('.module-tab');
+    if (tabs[activeModule]) tabs[activeModule].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, 100);
+
+  // Progress
+  const m = MODULES[activeModule];
+  const total = m.sentences.length;
+  const doneCount = state.sentenceDone[activeModule] ? Object.keys(state.sentenceDone[activeModule]).length : 0;
+  const pct = total > 0 ? Math.round(doneCount / total * 100) : 0;
+  document.getElementById('moduleProgress').innerHTML = `
+    第 ${activeModule + 1}/${TOTAL_MODULES} 模块 · 句型 ${doneCount}/${total}
+    <span class="prog-bar"><span class="prog-fill" style="width:${pct}%"></span></span>
+    ${pct}%
+  `;
+
+  // Nav arrows
+  document.getElementById('btnPrevModule').disabled = activeModule <= 0;
+  document.getElementById('btnNextModule').disabled = activeModule >= TOTAL_MODULES - 1;
 }
 
-// ==================== TASK RENDERING ====================
-function renderTask(index) {
-  const day = DAYS[index];
-  const done = !!state.completed[index];
+// ==================== MODULE RENDERING ====================
+function renderModule() {
+  const mod = MODULES[activeModule];
+  const done = !!state.completed[activeModule];
   const card = document.getElementById('taskCard');
-  document.getElementById('taskTitle').textContent = 'Day ' + (index + 1) + ' · ' + day.topic;
+  document.getElementById('taskTitle').textContent = mod.icon + ' ' + mod.name + ' · 模块 ' + (activeModule + 1);
 
-  let html = `<div class="tag">${day.template}</div>`;
-  html += `<div class="goal">🎯 ${day.goal}</div>`;
+  let html = `<div class="tag">${mod.name}</div>`;
+  html += `<div class="goal">🎯 ${mod.goal}</div>`;
 
   if (done) {
-    html += doneView(index);
+    html += doneView(activeModule);
   } else {
-    if (day.reviewDays && day.reviewDays.length > 0) {
-      html += renderReview(day.reviewDays);
-    }
-    html += renderSentenceStudy(index, day);
+    html += renderSentenceStudy(activeModule, mod);
   }
 
   document.getElementById('taskContent').innerHTML = html;
-  bindEvents(index, day);
+  bindEvents(activeModule, mod);
 }
 
 function doneView(index) {
+  const mod = MODULES[index];
   const hwData = state.handwriting && state.handwriting[index];
   let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
-    ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
-    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];delete state.handwriting[${index}];saveState();goToDay(${index})">🔁 重新练习</button>
+    ✅ 模块完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];delete state.sentenceDone[${index}];delete state.handwriting[${index}];saveState();goToModule(${index})">🔁 重新练习</button>
   </div>`;
-  const sentences = DAYS[index].sentences;
+  const sentences = mod.sentences;
   // Show handwriting images
   if (hwData && hwData.some(img => img)) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
@@ -644,7 +572,7 @@ function doneView(index) {
   // Show typed answers
   if (state.sentences[index]) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
-      <h4 style="font-size:0.82em;color:#0f3460;">📝 你的默写：</h4>`;
+      <h4 style="font-size:0.82em;color:#0f3460;">📝 我的默写：</h4>`;
     sentences.forEach((s, si) => {
       const usr = (state.sentences[index] || [])[si] || '';
       if (usr) {
@@ -656,31 +584,8 @@ function doneView(index) {
   return h;
 }
 
-// ==================== REVIEW ====================
-function renderReview(dayIndices) {
-  let reviewSentences = [];
-  dayIndices.forEach(di => {
-    if (DAYS[di] && DAYS[di].sentences) {
-      DAYS[di].sentences.forEach(s => reviewSentences.push(s));
-    }
-  });
-  if (reviewSentences.length === 0) return '';
-
-  let h = `<div style="background:#fff8e1;border-radius:10px;padding:10px;margin-bottom:10px;border-left:4px solid #f6d365;">
-    <h4 style="font-size:0.8em;color:#856404;margin-bottom:6px;">📚 复习已背句型（点击查看答案）</h4>`;
-  reviewSentences.forEach((s, i) => {
-    h += `<div class="review-item" id="review_${i}">
-      <div class="r-cn">${roleBadge(s.role)}${s.cn}</div>
-      <div class="r-en" id="reviewEn_${i}" style="display:none;">${esc(s.model)}</div>
-      <button class="btn btn-outline btn-sm" style="margin-top:4px;" onclick="document.getElementById('reviewEn_${i}').style.display='block';this.style.display='none';">👀 显示答案</button>
-    </div>`;
-  });
-  h += `</div>`;
-  return h;
-}
-
 // ==================== SENTENCE STUDY ====================
-function renderSentenceStudy(index, day) {
+function renderSentenceStudy(activeModule, mod) {
   let h = '';
 
   // Step tabs
@@ -689,7 +594,7 @@ function renderSentenceStudy(index, day) {
     let cls = 'mem-step-tab';
     if (si === activeStepIndex) cls += ' active';
     if (si < activeStepIndex) cls += ' done';
-    h += `<div class="${cls}" onclick="activeStepIndex=${si};renderTask(${index})">${l}</div>`;
+    h += `<div class="${cls}" onclick="activeStepIndex=${si};renderModule()">${l}</div>`;
   });
   h += `</div>`;
 
@@ -717,8 +622,12 @@ function renderSentenceStudy(index, day) {
 
   // Navigation
   h += `<div class="btn-row">`;
+  // Show sentence completion status
+  if (state.sentenceDone[activeModule] && state.sentenceDone[activeModule][curIdx]) {
+    h += `<div style="text-align:center;color:#2d6a4f;font-size:0.75em;margin-top:4px;">✅ 本句已完成</div>`;
+  }
   if (curIdx > 0) {
-    h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderTask(${index})">⬅ 上一句</button>`;
+    h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderModule()">⬅ 上一句</button>`;
   }
   h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${index}, ${curIdx})" id="btnAdvance">${
     activeStepIndex === 3 ? '➡ 下一句' : '下一步 ➡'
@@ -836,8 +745,8 @@ function renderDictation(s, index, curIdx) {
 }
 
 function renderCompare(s, index, curIdx) {
-  const userAnswer = (state.sentences[index] || [])[curIdx] || '';
-  const hwImg = (state.handwriting && state.handwriting[index]) ? state.handwriting[index][curIdx] : null;
+  const userAnswer = (state.sentences[activeModule] || [])[curIdx] || '';
+  const hwImg = (state.handwriting && state.handwriting[activeModule]) ? state.handwriting[activeModule][curIdx] : null;
 
   // Show handwriting image if available
   if (hwImg) {
@@ -908,8 +817,8 @@ function highlightPhrase(text) {
 }
 
 function advanceStep(index, curIdx) {
-  const day = DAYS[index];
-  const maxSent = day.sentences.length;
+  const mod = MODULES[activeModule];
+  const maxSent = mod.sentences.length;
 
   // === PASS GATE: check current step before advancing ===
 
@@ -930,7 +839,7 @@ function advanceStep(index, curIdx) {
       return;
     }
     // Check handwriting data
-    const hasHW = state.handwriting && state.handwriting[index] && state.handwriting[index][curIdx];
+    const hasHW = state.handwriting && state.handwriting[activeModule] && state.handwriting[activeModule][curIdx];
     // Check typing data
     const slot = document.getElementById('textAreaSlot');
     const ta = document.getElementById('dictText');
@@ -940,8 +849,8 @@ function advanceStep(index, curIdx) {
     if (hasHW) {
       // Already saved via overlay - proceed
     } else if (hasTyped) {
-      if (!state.sentences[index]) state.sentences[index] = [];
-      state.sentences[index][curIdx] = ta.value.trim();
+      if (!state.sentences[activeModule]) state.sentences[activeModule] = [];
+      state.sentences[activeModule][curIdx] = ta.value.trim();
       saveState();
     } else if (slotVisible) {
       // Typing mode visible but empty
@@ -954,38 +863,52 @@ function advanceStep(index, curIdx) {
     }
   }
 
-  // Step 3 (compare): must have reasonable score for typing
+  // Step 3 (compare): mark sentence as done & check score
   if (activeStepIndex === 3) {
-    const userAnswer = (state.sentences[index] || [])[curIdx] || '';
-    const hasHW = state.handwriting && state.handwriting[index] && state.handwriting[index][curIdx];
+    const userAnswer = (state.sentences[activeModule] || [])[curIdx] || '';
+    const hasHW = state.handwriting && state.handwriting[activeModule] && state.handwriting[activeModule][curIdx];
     if (!hasHW && userAnswer) {
-      const s = day.sentences[curIdx];
+      const s = mod.sentences[curIdx];
       const score = simpleScore(userAnswer, s.model);
       if (score < 50) {
         showToast('相似度低于50%，建议返回重新背诵或默写');
         return;
       }
     }
-    // Handwriting: user manually compares, always allowed through
+    // Mark sentence as done
+    if (!state.sentenceDone[activeModule]) state.sentenceDone[activeModule] = {};
+    state.sentenceDone[activeModule][curIdx] = true;
+    saveState();
+
+    // Check if all sentences in module are done
+    const allDone = mod.sentences.every((_, si) => state.sentenceDone[activeModule] && state.sentenceDone[activeModule][si]);
+    if (allDone) {
+      completeModule(activeModule);
+      return;
+    }
   }
 
   if (activeStepIndex < 3) {
     activeStepIndex++;
-    renderTask(index);
+    renderModule();
   } else {
     if (curIdx < maxSent - 1) {
       window._curSentIdx = curIdx + 1;
       activeStepIndex = 0;
-      renderTask(index);
+      renderModule();
     } else {
-      completeDay(index);
+      // Loop back to first undone sentence
+      const firstUndone = mod.sentences.findIndex((_, si) => !state.sentenceDone[activeModule] || !state.sentenceDone[activeModule][si]);
+      window._curSentIdx = firstUndone >= 0 ? firstUndone : 0;
+      activeStepIndex = 0;
+      renderModule();
     }
   }
 }
 
 function advanceStepDirect() {
   activeStepIndex++;
-  renderTask(activeDay);
+  renderModule();
 }
 
 // ==================== UTILS ====================
@@ -1165,8 +1088,8 @@ function closeHWOverlay(save) {
     const ctx = window._hwCtx;
     if (ctx) {
       if (!state.handwriting) state.handwriting = {};
-      if (!state.handwriting[ctx.index]) state.handwriting[ctx.index] = [];
-      state.handwriting[ctx.index][ctx.curIdx] = hwOverlayCanvas.toDataURL('image/png');
+      if (!state.handwriting[activeModule]) state.handwriting[activeModule] = [];
+      state.handwriting[activeModule][ctx.curIdx] = hwOverlayCanvas.toDataURL('image/png');
       saveState();
     }
   }
@@ -1189,7 +1112,7 @@ function closeHWOverlay(save) {
   // Advance to compare step if saved
   if (save && window._hwCtx) {
     const ctx = window._hwCtx;
-    advanceStep(ctx.index, ctx.curIdx);
+    advanceStep(activeModule, ctx.curIdx);
   }
 }
 
@@ -1271,7 +1194,7 @@ function isEmptyCanvas(canvas) {
 }
 
 // ==================== EVENT BINDING ====================
-function bindEvents(index, day) {
+function bindEvents(index, mod) {
   if (state.completed[index]) return;
 
   const peekBtn = document.getElementById('btnPeek');
@@ -1279,11 +1202,9 @@ function bindEvents(index, day) {
   const checkBtn = document.getElementById('btnCheckDict');
   if (checkBtn) checkBtn.onclick = () => { advanceStep(index, window._curSentIdx || 0); };
 
-  // Start handwriting overlay button
   const startHW = document.getElementById('btnStartHW');
   if (startHW) startHW.onclick = () => openHWOverlay();
 
-  // Toggle typing mode
   const toggleBtn = document.getElementById('btnSwitchTyping');
   if (toggleBtn) {
     toggleBtn.onclick = () => {
@@ -1302,9 +1223,10 @@ function bindEvents(index, day) {
     };
   }
 
-  // Restore previous handwriting image if any
+  // Restore previous handwriting thumbnail
   if (activeStepIndex === 2) {
-    const hwImg = state.handwriting && state.handwriting[index] ? state.handwriting[index][window._curSentIdx || 0] : null;
+    const curIdx = window._curSentIdx || 0;
+    const hwImg = state.handwriting && state.handwriting[activeModule] ? state.handwriting[activeModule][curIdx] : null;
     if (hwImg) {
       const trigger = document.getElementById('btnStartHW');
       if (trigger) {
@@ -1316,21 +1238,25 @@ function bindEvents(index, day) {
   }
 }
 
-function completeDay(index) {
+function completeModule(index) {
   state.completed[index] = Date.now();
+  // Mark all sentences done
+  const mod = MODULES[index];
+  if (!state.sentenceDone[index]) state.sentenceDone[index] = {};
+  mod.sentences.forEach((_, si) => { state.sentenceDone[index][si] = true; });
   saveState();
-  // Reset handwriting stack
   hwUndoStack = [];
-  renderTask(index);
+  renderModule();
+  renderModuleNav();
   launchConfetti();
 }
 
 // ==================== INIT ====================
 function init() {
   window._curSentIdx = 0;
-  document.getElementById('btnPrev').onclick = () => goToDay(activeDay - 1);
-  document.getElementById('btnNext').onclick = () => goToDay(activeDay + 1);
-  goToDay(0);
+  document.getElementById('btnPrevModule').onclick = () => goToModule(activeModule - 1);
+  document.getElementById('btnNextModule').onclick = () => goToModule(activeModule + 1);
+  goToModule(0);
 }
 init();
 </script>
