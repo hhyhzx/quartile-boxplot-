@@ -1030,10 +1030,15 @@ function startSpeechRecog() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('浏览器不支持语音识别，请用Chrome打开'); return; }
 
-  // Stop any ongoing recognition, then restart
+  // If already listening, stop (toggle off) — don't process result
   if (srRecognition) {
     srRecognition.stop();
     srRecognition = null;
+    const mb = document.getElementById('micBtn');
+    const re = document.getElementById('micResult');
+    if (mb) mb.classList.remove('listening');
+    if (re) { re.className = 'mic-result'; re.innerHTML = ''; }
+    return;
   }
 
   const micBtn = document.getElementById('micBtn');
