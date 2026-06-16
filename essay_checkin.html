@@ -939,19 +939,21 @@ function esc(s) {
 
 function speakSentence(btnEl) {
   if (!('speechSynthesis' in window)) return;
-  // Get text from data attribute (HTML-decoded by browser)
+  const synth = window.speechSynthesis;
+
+  // Decode HTML entities from data-text attribute
   const rawText = btnEl.getAttribute('data-text');
-  // Decode HTML entities to plain text
   const txt = document.createElement('textarea');
   txt.innerHTML = rawText;
   const text = txt.value;
   if (!text) return;
 
-  const synth = window.speechSynthesis;
-  synth.cancel();
+  // Remove speaking state from other buttons
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
 
-  // Ensure voices are loaded (important on mobile)
+  // Cancel any ongoing speech before starting new one (enables replay on re-click)
+  synth.cancel();
+
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-GB';
   utter.rate = 0.85;
@@ -961,15 +963,8 @@ function speakSentence(btnEl) {
   utter.onend = () => btnEl.classList.remove('speaking');
   utter.onerror = () => btnEl.classList.remove('speaking');
 
-  // Mobile Safari workaround: sometimes needs a delay
-  if (synth.getVoices().length === 0) {
-    synth.onvoiceschanged = () => {
-      synth.onvoiceschanged = null;
-      synth.speak(utter);
-    };
-  } else {
-    synth.speak(utter);
-  }
+  // Speak immediately — must be synchronous from user click for iOS
+  synth.speak(utter);
 }
 
 function showToast(msg) {
@@ -1305,6 +1300,11 @@ function init() {
   window._curSentIdx = 0;
   document.getElementById('btnPrevModule').onclick = () => goToModule(activeModule - 1);
   document.getElementById('btnNextModule').onclick = () => goToModule(activeModule + 1);
+  // Pre-warm speech synthesis engine for mobile
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.onvoiceschanged = null; };
+  }
   goToModule(0);
 }
 init();
