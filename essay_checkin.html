@@ -481,6 +481,7 @@ function defaultState() {
     sentences: {},    // module index → [typed answers]
     sentenceDone: {}, // module index → { sentence index: true }
     handwriting: {},  // module index → [dataURLs]
+    readCounts: {},   // module index → { sentence index: count }
   };
 }
 
@@ -643,8 +644,9 @@ function renderSentenceStudy(idx, mod) {
   if (curIdx > 0) {
     h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderModule()">⬅ 上一句</button>`;
   }
-  h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${idx}, ${curIdx})" id="btnAdvance">${
-    activeStepIndex === 3 ? '➡ 下一句' : '下一步 ➡'
+  const step0Locked = activeStepIndex === 0 && getReadCount() < 3;
+  h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${idx}, ${curIdx})" id="btnAdvance"${step0Locked ? ' disabled' : ''}>${
+    activeStepIndex === 3 ? '➡ 下一句' : (step0Locked ? '🔒 需听3遍' : '下一步 ➡')
   }</button>`;
   h += `</div>`;
 
@@ -670,7 +672,12 @@ function renderMemorize(s) {
     s.chunks.forEach(c => { h += `<div class="chunk">${esc(c)}</div>`; });
     h += `</div>`;
   }
-  h += `<p style="text-align:center;font-size:0.75em;color:#999;margin-top:8px;">👆 大声朗读3遍，试着盖住英文，看中文说出英文句。</p>`;
+  const rc = getReadCount();
+  const done = rc >= 3;
+  h += `<div id="readCounter" style="text-align:center;font-size:0.8em;margin-top:6px;${done ? 'color:#2d6a4f;' : 'color:#e67e22;'}">${
+    done ? '✅ 已读 ' + rc + '/3 遍' : '🔊 已听 <b>' + rc + '</b>/<b>3</b> 遍（需听3遍）'
+  }</div>`;
+  h += `<p style="text-align:center;font-size:0.75em;color:#999;margin-top:4px;">👆 点击🔊听3遍，大声跟读英文句子。</p>`;
   return h;
 }
 
@@ -836,6 +843,15 @@ function advanceStep(index, curIdx) {
 
   // === PASS GATE: check current step before advancing ===
 
+  // Step 0 (memorize): must listen 3 times
+  if (activeStepIndex === 0) {
+    const cnt = getReadCount();
+    if (cnt < 3) {
+      showToast('请先点击🔊听读3遍英文句子');
+      return;
+    }
+  }
+
   // Step 1 (fill-blank): all blanks must be filled
   if (activeStepIndex === 1) {
     const unfilled = document.querySelectorAll('.fb-blank:not(.reveal)');
@@ -954,6 +970,15 @@ function speakSentence(btnEl) {
   // Cancel any ongoing speech before starting new one (enables replay on re-click)
   synth.cancel();
 
+  // Track read count
+  const curIdx = window._curSentIdx || 0;
+  if (!state.readCounts) state.readCounts = {};
+  if (!state.readCounts[activeModule]) state.readCounts[activeModule] = {};
+  const prev = state.readCounts[activeModule][curIdx] || 0;
+  state.readCounts[activeModule][curIdx] = prev + 1;
+  saveState();
+  updateReadCounter();
+
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-GB';
   utter.rate = 0.85;
@@ -965,6 +990,26 @@ function speakSentence(btnEl) {
 
   // Speak immediately — must be synchronous from user click for iOS
   synth.speak(utter);
+}
+
+function getReadCount() {
+  const curIdx = window._curSentIdx || 0;
+  return (state.readCounts && state.readCounts[activeModule] && state.readCounts[activeModule][curIdx]) || 0;
+}
+
+function updateReadCounter() {
+  const el = document.getElementById('readCounter');
+  const btn = document.getElementById('btnAdvance');
+  if (!el) return;
+  const cnt = getReadCount();
+  const need = 3;
+  if (cnt >= need) {
+    el.innerHTML = '<span style="color:#2d6a4f;">✅ 已读 ' + cnt + '/' + need + ' 遍</span>';
+    if (btn) { btn.disabled = false; btn.textContent = '下一步 ➡'; }
+  } else {
+    el.innerHTML = '🔊 已听 <b>' + cnt + '</b>/<b>' + need + '</b> 遍（需听3遍）';
+    if (btn) { btn.disabled = true; btn.textContent = '🔒 需听3遍'; }
+  }
 }
 
 function showToast(msg) {
