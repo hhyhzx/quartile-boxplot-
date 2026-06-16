@@ -513,8 +513,79 @@ function defaultState() {
 }
 
 function loadState() {
+  // Try new key first
   try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
+  // Try migrating from old 10-day key
+  try {
+    const oldRaw = localStorage.getItem('essay_checkin_10day_v1');
+    if (oldRaw) {
+      const old = JSON.parse(oldRaw);
+      const migrated = migrateOldState(old);
+      if (migrated) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+    }
+  } catch(e) {}
   return defaultState();
+}
+
+function migrateOldState(old) {
+  // Old 10-day → new 5-module mapping: [dayIndex, sentIndex] → [moduleIndex, sentIndex]
+  const map = [
+    [[0,0],[0,0]], [[0,1],[0,1]], // Day0 建议信→Mod0 sent0-1
+    [[1,0],[0,2]], [[1,1],[0,3]], // Day1 建议信→Mod0 sent2-3
+    [[2,0],[1,0]], [[2,1],[1,1]], [[2,2],[1,2]], // Day2 议论文→Mod1 sent0-2
+    [[3,0],[1,3]], [[3,1],[2,0]], // Day3 议论文+记叙文→Mod1 sent3, Mod2 sent0
+    [[4,0],[2,1]], [[4,1],[2,2]], // Day4 记叙文→Mod2 sent1-2
+    [[5,0],[3,0]], [[5,1],[3,1]], // Day5 人物→Mod3 sent0-1
+    [[6,0],[3,2]], [[6,1],[3,3]], // Day6 人物→Mod3 sent2-3
+    [[7,0],[4,0]], [[7,1],[4,1]], [[7,2],[4,2]], // Day7 通知→Mod4 sent0-2
+    [[8,0],[4,3]], // Day8 通知→Mod4 sent3 (skip review sentences)
+  ];
+
+  const s = defaultState();
+  let hasData = false;
+
+  map.forEach(([from, to]) => {
+    const [odi, osi] = from;
+    const [nmi, nsi] = to;
+
+    // Migrate typed answers
+    if (old.sentences && old.sentences[odi] && old.sentences[odi][osi]) {
+      if (!s.sentences[nmi]) s.sentences[nmi] = [];
+      s.sentences[nmi][nsi] = old.sentences[odi][osi];
+      hasData = true;
+    }
+
+    // Migrate handwriting
+    if (old.handwriting && old.handwriting[odi] && old.handwriting[odi][osi]) {
+      if (!s.handwriting[nmi]) s.handwriting[nmi] = [];
+      s.handwriting[nmi][nsi] = old.handwriting[odi][osi];
+      hasData = true;
+    }
+
+    // If old day was completed, mark sentence as done
+    if (old.completed && old.completed[odi]) {
+      if (!s.sentenceDone[nmi]) s.sentenceDone[nmi] = {};
+      s.sentenceDone[nmi][nsi] = true;
+      hasData = true;
+    }
+  });
+
+  // Check if all sentences in a module are done → mark module complete
+  MODULES.forEach((mod, mi) => {
+    if (s.sentenceDone[mi] && mod.sentences.every((_, si) => s.sentenceDone[mi][si])) {
+      // Find latest timestamp from old completed days that map to this module
+      const latestTs = Math.max(
+        ...map.filter(([from, to]) => to[0] === mi && old.completed && old.completed[from[0]])
+          .map(([from]) => old.completed[from[0]] || 0)
+      );
+      if (latestTs > 0) s.completed[mi] = latestTs;
+    }
+  });
+
+  return hasData ? s : null;
 }
 
 function saveState() {
