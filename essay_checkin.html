@@ -134,6 +134,36 @@
   }
   textarea:focus { border-color: #0f3460; }
 
+  /* Handwriting canvas */
+  .hw-wrap {
+    position: relative; background: #fff; border: 2px solid #c0c0c0; border-radius: 10px;
+    overflow: hidden; margin: 8px 0; box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    touch-action: none;
+  }
+  .hw-canvas {
+    display: block; width: 100%; cursor: crosshair;
+  }
+  .hw-tools {
+    display: flex; gap: 8px; align-items: center; justify-content: center; padding: 6px 10px;
+    background: #f8f9fa; border-top: 1px solid #eee; flex-wrap: wrap;
+  }
+  .hw-tools .hw-btn {
+    background: #fff; border: 1px solid #ddd; border-radius: 16px; padding: 6px 14px;
+    font-size: 0.72em; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px;
+    transition: all 0.15s;
+  }
+  .hw-tools .hw-btn:hover { background: #e8f0fe; border-color: #0f3460; }
+  .hw-tools .hw-btn.danger:hover { background: #ffe0e0; border-color: #e63946; }
+  .hw-tools .pen-size-label { font-size: 0.68em; color: #666; }
+  .hw-tools input[type=range] { width: 60px; accent-color: #0f3460; }
+  .hw-toggle-row {
+    text-align: center; margin-top: 6px;
+  }
+  .hw-toggle-row button {
+    background: none; border: none; color: #0f3460; font-size: 0.72em; cursor: pointer;
+    text-decoration: underline; font-family: inherit;
+  }
+
   /* Buttons */
   .btn {
     display: inline-block; padding: 10px 22px; border-radius: 24px; font-size: 0.82em;
@@ -532,16 +562,32 @@ function renderTask(index) {
 }
 
 function doneView(index) {
+  const hwData = state.handwriting && state.handwriting[index];
   let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
     ✅ 已完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
-    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];saveState();goToDay(${index})">🔁 重新练习</button>
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];delete state.handwriting[${index}];saveState();goToDay(${index})">🔁 重新练习</button>
   </div>`;
+  const sentences = DAYS[index].sentences;
+  // Show handwriting images
+  if (hwData && hwData.some(img => img)) {
+    h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
+      <h4 style="font-size:0.82em;color:#0f3460;">✍️ 我的手写：</h4>`;
+    sentences.forEach((s, si) => {
+      if (hwData[si]) {
+        h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${roleBadge(s.role)}${s.cn}</span><br><img src="${hwData[si]}" style="max-width:100%;border:1px solid #ddd;border-radius:6px;background:#fff;" alt="handwriting ${si+1}"></div>`;
+      }
+    });
+    h += `</div>`;
+  }
+  // Show typed answers
   if (state.sentences[index]) {
     h += `<div style="margin-top:8px;background:#f8f9fa;border-radius:10px;padding:10px;">
       <h4 style="font-size:0.82em;color:#0f3460;">📝 你的默写：</h4>`;
-    DAYS[index].sentences.forEach((s, si) => {
+    sentences.forEach((s, si) => {
       const usr = (state.sentences[index] || [])[si] || '';
-      h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${roleBadge(s.role)}${s.cn}</span><br><span style="font-family:'Times New Roman',serif;font-size:0.78em;">${esc(usr)}</span></div>`;
+      if (usr) {
+        h += `<div style="margin-bottom:6px;"><span style="color:#999;font-size:0.7em;">${si+1}. ${roleBadge(s.role)}${s.cn}</span><br><span style="font-family:'Times New Roman',serif;font-size:0.78em;">${esc(usr)}</span></div>`;
+      }
     });
     h += `</div>`;
   }
@@ -699,7 +745,21 @@ function renderDictation(s, index, curIdx) {
     });
     h += `</div>`;
   }
-  h += `<textarea id="dictText" placeholder="不看原文，凭记忆写出英文句子..."></textarea>`;
+  h += `<div class="hw-wrap" id="hwWrap">
+    <canvas class="hw-canvas" id="hwCanvas"></canvas>
+    <div class="hw-tools">
+      <button class="hw-btn" id="hwUndo" title="撤销">↩ 撤销</button>
+      <button class="hw-btn danger" id="hwClear" title="清除">🗑 清除</button>
+      <span class="pen-size-label">笔粗</span>
+      <input type="range" id="hwPenSize" min="1" max="6" value="3" step="0.5">
+      <span class="pen-size-label"><span id="hwSizeLabel">3</span>px</span>
+      <button class="hw-btn" id="hwPenColor" title="切换颜色" style="width:24px;height:24px;border-radius:50%;background:#1a1a2e;padding:0;min-width:0;"></button>
+    </div>
+  </div>`;
+  h += `<div class="hw-toggle-row"><button id="btnSwitchTyping">⌨ 切换到打字模式</button></div>`;
+  h += `<div id="textAreaSlot" style="display:none;margin-top:8px;">
+    <textarea id="dictText" placeholder="不看原文，凭记忆写出英文句子..."></textarea>
+  </div>`;
   h += `<div class="btn-row">
     <button class="btn btn-outline btn-sm" id="btnPeek">偷偷看一眼 👀</button>
     <button class="btn btn-primary btn-sm" id="btnCheckDict">✅ 提交核对</button>
@@ -714,6 +774,22 @@ function renderDictation(s, index, curIdx) {
 
 function renderCompare(s, index, curIdx) {
   const userAnswer = (state.sentences[index] || [])[curIdx] || '';
+  const hwImg = (state.handwriting && state.handwriting[index]) ? state.handwriting[index][curIdx] : null;
+
+  // Show handwriting image if available
+  if (hwImg) {
+    let h = `<div style="text-align:center;margin-bottom:8px;">
+      <h5 style="font-size:0.82em;color:#666;margin-bottom:4px;">✍️ 我的手写</h5>
+      <img src="${hwImg}" style="max-width:100%;border:2px solid #c0c0c0;border-radius:10px;background:#fff;" alt="handwriting">
+    </div>`;
+    h += `<div class="model-card" style="margin-top:8px;">
+      <div class="cn">📋 标准答案 ${roleBadge(s.role)}</div>
+      <div class="en">${esc(s.model)}</div>
+    </div>`;
+    return h;
+  }
+
+  // Text comparison (fallback)
   let h = `<div class="compare">
     <div class="compare-col my">
       <h5>✏️ 我的默写</h5>
@@ -773,12 +849,21 @@ function advanceStep(index, curIdx) {
   const maxSent = day.sentences.length;
 
   if (activeStepIndex === 2) {
+    // Save handwriting canvas as image
+    const canvas = document.getElementById('hwCanvas');
+    if (canvas && !isEmptyCanvas(canvas)) {
+      if (!state.handwriting) state.handwriting = {};
+      if (!state.handwriting[index]) state.handwriting[index] = [];
+      state.handwriting[index][curIdx] = canvas.toDataURL('image/png');
+    }
+    // Also save textarea if visible
+    const slot = document.getElementById('textAreaSlot');
     const ta = document.getElementById('dictText');
-    if (ta) {
+    if (slot && slot.style.display !== 'none' && ta) {
       if (!state.sentences[index]) state.sentences[index] = [];
       state.sentences[index][curIdx] = ta.value.trim();
-      saveState();
     }
+    saveState();
   }
 
   if (activeStepIndex < 3) {
@@ -826,6 +911,168 @@ function launchConfetti() {
   setTimeout(() => container.remove(), 3000);
 }
 
+// ==================== HANDWRITING ====================
+let hwUndoStack = [];
+let hwDrawing = false;
+let hwPenColor = '#1a1a2e';
+let hwPenSize = 3;
+
+function initHandwriting() {
+  const canvas = document.getElementById('hwCanvas');
+  if (!canvas) return;
+
+  // Reset undo stack for new sentence
+  hwUndoStack = [];
+
+  const wrap = document.getElementById('hwWrap');
+  const w = wrap.clientWidth - 4;
+  const h = 180;
+  canvas.width = w * window.devicePixelRatio;
+  canvas.height = h * window.devicePixelRatio;
+  canvas.style.height = h + 'px';
+
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  drawPaperLines(ctx, w, h);
+  saveSnapshot(canvas);
+
+  canvas.addEventListener('pointerdown', (e) => {
+    hwDrawing = true;
+    saveSnapshot(canvas);
+    const pos = getCanvasPos(canvas, e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!hwDrawing) return;
+    e.preventDefault();
+    const pos = getCanvasPos(canvas, e);
+    ctx.strokeStyle = hwPenColor;
+    ctx.lineWidth = hwPenSize;
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  });
+
+  canvas.addEventListener('pointerup', () => { hwDrawing = false; });
+  canvas.addEventListener('pointerleave', () => { hwDrawing = false; });
+  canvas.addEventListener('pointercancel', () => { hwDrawing = false; });
+
+  // Toolbar buttons
+  document.getElementById('hwUndo').onclick = () => undoStroke(canvas);
+  document.getElementById('hwClear').onclick = () => {
+    clearCanvas(canvas);
+    saveSnapshot(canvas);
+  };
+  document.getElementById('hwPenSize').oninput = (e) => {
+    hwPenSize = parseFloat(e.target.value);
+    document.getElementById('hwSizeLabel').textContent = hwPenSize;
+  };
+  document.getElementById('hwPenColor').onclick = function() {
+    const colors = ['#1a1a2e', '#e63946', '#2d6a4f', '#1d5fa3'];
+    const cur = colors.indexOf(hwPenColor);
+    hwPenColor = colors[(cur + 1) % colors.length];
+    this.style.background = hwPenColor;
+  };
+
+  // Toggle typing mode
+  document.getElementById('btnSwitchTyping').onclick = () => {
+    const wrap = document.getElementById('hwWrap');
+    const slot = document.getElementById('textAreaSlot');
+    const btn = document.getElementById('btnSwitchTyping');
+    if (wrap.style.display === 'none') {
+      wrap.style.display = 'block';
+      slot.style.display = 'none';
+      btn.innerHTML = '⌨ 切换到打字模式';
+      initHandwriting();
+    } else {
+      wrap.style.display = 'none';
+      slot.style.display = 'block';
+      btn.innerHTML = '✍️ 切换到手写模式';
+    }
+  };
+}
+
+function getCanvasPos(canvas, e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left) * (canvas.width / window.devicePixelRatio / rect.width),
+    y: (e.clientY - rect.top) * (canvas.height / window.devicePixelRatio / rect.height),
+  };
+}
+
+function drawPaperLines(ctx, w, h) {
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = '#c8e0f0';
+  ctx.lineWidth = 1;
+  const lineSpacing = 28;
+  for (let y = lineSpacing; y < h; y += lineSpacing) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  // Red margin line
+  ctx.strokeStyle = '#f4a0a0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(28, 0);
+  ctx.lineTo(28, h);
+  ctx.stroke();
+}
+
+function saveSnapshot(canvas) {
+  hwUndoStack.push(canvas.toDataURL());
+  if (hwUndoStack.length > 30) hwUndoStack.shift();
+}
+
+function undoStroke(canvas) {
+  if (hwUndoStack.length <= 1) return;
+  hwUndoStack.pop();
+  const img = new Image();
+  img.onload = () => {
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width / window.devicePixelRatio;
+    const h = canvas.height / window.devicePixelRatio;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    ctx.drawImage(img, 0, 0, w, h);
+  };
+  img.src = hwUndoStack[hwUndoStack.length - 1];
+}
+
+function clearCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width / window.devicePixelRatio;
+  const h = canvas.height / window.devicePixelRatio;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  drawPaperLines(ctx, w, h);
+}
+
+function isEmptyCanvas(canvas) {
+  const ctx = canvas.getContext('2d');
+  const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  // Check if any non-white, non-line pixel exists
+  for (let i = 0; i < pixelData.length; i += 4) {
+    const r = pixelData[i], g = pixelData[i+1], b = pixelData[i+2];
+    // Skip white bg and light blue lines and red margin
+    if (r === 255 && g === 255 && b === 255) continue;
+    if (r >= 190 && g >= 220 && b >= 235) continue; // light blue lines
+    if (r >= 235 && g >= 150 && b >= 150 && r <= 250) continue; // red margin
+    return false;
+  }
+  return true;
+}
+
 // ==================== EVENT BINDING ====================
 function bindEvents(index, day) {
   if (state.completed[index]) return;
@@ -834,11 +1081,18 @@ function bindEvents(index, day) {
   if (peekBtn) peekBtn.onclick = () => { document.getElementById('peekArea').style.display = 'block'; };
   const checkBtn = document.getElementById('btnCheckDict');
   if (checkBtn) checkBtn.onclick = () => { advanceStep(index, window._curSentIdx || 0); };
+
+  // Init handwriting canvas if visible
+  if (activeStepIndex === 2 && document.getElementById('hwCanvas')) {
+    initHandwriting();
+  }
 }
 
 function completeDay(index) {
   state.completed[index] = Date.now();
   saveState();
+  // Reset handwriting stack
+  hwUndoStack = [];
   renderTask(index);
   launchConfetti();
 }
