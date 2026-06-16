@@ -945,7 +945,7 @@ function speakSentence(text, btnEl) {
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
 
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
+  utter.lang = 'en-GB';
   utter.rate = 0.85;
   utter.pitch = 1;
 
