@@ -1034,11 +1034,10 @@ function startSpeechRecog() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { showToast('浏览器不支持语音识别，请用Chrome打开'); return; }
 
-  // Stop if already listening
+  // Stop any ongoing recognition, then restart
   if (srRecognition) {
     srRecognition.stop();
     srRecognition = null;
-    return;
   }
 
   const micBtn = document.getElementById('micBtn');
@@ -1076,6 +1075,7 @@ function startSpeechRecog() {
   };
 
   recognition.onend = () => {
+    if (srRecognition !== recognition) return; // stale callback
     srRecognition = null;
     if (micBtn) micBtn.classList.remove('listening');
     if (finalText && resultEl) {
@@ -1087,6 +1087,7 @@ function startSpeechRecog() {
   };
 
   recognition.onerror = (e) => {
+    if (srRecognition !== recognition) return; // stale callback
     srRecognition = null;
     if (micBtn) micBtn.classList.remove('listening');
     if (resultEl) {
