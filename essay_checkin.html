@@ -662,7 +662,7 @@ function renderMemorize(s) {
   }
   h += `<div class="model-card">
     <div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>
-    <div class="en">${highlightPhrase(esc(s.model))}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div>
+    <div class="en">${highlightPhrase(esc(s.model))}<button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button></div>
   </div>`;
   if (s.chunks) {
     h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">📦 分块记忆：</div>`;
@@ -751,7 +751,7 @@ function renderDictation(s, index, curIdx) {
     <button class="btn btn-primary btn-sm" id="btnCheckDict">✅ 提交核对</button>
   </div>`;
   h += `<div id="peekArea" style="display:none;margin-top:8px;">
-    <div class="model-card"><div class="en">${esc(s.model)}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div></div>
+    <div class="model-card"><div class="en">${esc(s.model)}<button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button></div></div>
   </div>`;
   h += `<div id="dictResult"></div>`;
   h += `</div>`;
@@ -770,7 +770,7 @@ function renderCompare(s, index, curIdx) {
     </div>`;
     h += `<div class="model-card" style="margin-top:8px;">
       <div class="cn">📋 标准答案 ${roleBadge(s.role)}</div>
-      <div class="en">${esc(s.model)}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div>
+      <div class="en">${esc(s.model)}<button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="朗读">🔊</button></div>
     </div>`;
     return h;
   }
@@ -783,7 +783,7 @@ function renderCompare(s, index, curIdx) {
     </div>
     <div class="compare-col model">
       <h5>📋 标准答案 ${roleBadge(s.role)}</h5>
-      <div>${esc(s.model)} <button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读" style="width:28px;height:28px;font-size:0.75em;">🔊</button></div>
+      <div>${esc(s.model)} <button class="speak-btn" data-text="${esc(s.model)}" onclick="event.stopPropagation();speakSentence(this)" title="朗读" style="width:28px;height:28px;font-size:0.75em;">🔊</button></div>
     </div>
   </div>`;
   if (userAnswer) {
@@ -937,23 +937,39 @@ function esc(s) {
   const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
-function speakSentence(text, btnEl) {
+function speakSentence(btnEl) {
   if (!('speechSynthesis' in window)) return;
-  // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
-  // Remove speaking class from all buttons
+  // Get text from data attribute (HTML-decoded by browser)
+  const rawText = btnEl.getAttribute('data-text');
+  // Decode HTML entities to plain text
+  const txt = document.createElement('textarea');
+  txt.innerHTML = rawText;
+  const text = txt.value;
+  if (!text) return;
+
+  const synth = window.speechSynthesis;
+  synth.cancel();
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
 
+  // Ensure voices are loaded (important on mobile)
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-GB';
   utter.rate = 0.85;
   utter.pitch = 1;
 
-  if (btnEl) btnEl.classList.add('speaking');
-  utter.onend = () => { if (btnEl) btnEl.classList.remove('speaking'); };
-  utter.onerror = () => { if (btnEl) btnEl.classList.remove('speaking'); };
+  btnEl.classList.add('speaking');
+  utter.onend = () => btnEl.classList.remove('speaking');
+  utter.onerror = () => btnEl.classList.remove('speaking');
 
-  window.speechSynthesis.speak(utter);
+  // Mobile Safari workaround: sometimes needs a delay
+  if (synth.getVoices().length === 0) {
+    synth.onvoiceschanged = () => {
+      synth.onvoiceschanged = null;
+      synth.speak(utter);
+    };
+  } else {
+    synth.speak(utter);
+  }
 }
 
 function showToast(msg) {
