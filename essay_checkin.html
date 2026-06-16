@@ -85,6 +85,20 @@
   }
   .model-card .en .hl { background: #f6d365; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
 
+  /* Speaker button */
+  .speak-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; border: 2px solid #0f3460;
+    background: #fff; cursor: pointer; font-size: 0.9em; transition: all 0.15s;
+    vertical-align: middle; margin-left: 6px; flex-shrink: 0;
+  }
+  .speak-btn:active { background: #e8f0fe; }
+  .speak-btn.speaking { background: #0f3460; animation: speakPulse 0.6s ease-in-out infinite; }
+  @keyframes speakPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(15,52,96,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(15,52,96,0); }
+  }
+
   /* Role badge */
   .role-badge {
     display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7em;
@@ -648,7 +662,7 @@ function renderMemorize(s) {
   }
   h += `<div class="model-card">
     <div class="cn">${roleBadge(s.role)}🇨🇳 ${s.cn}</div>
-    <div class="en">${highlightPhrase(esc(s.model))}</div>
+    <div class="en">${highlightPhrase(esc(s.model))}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div>
   </div>`;
   if (s.chunks) {
     h += `<div style="text-align:center;font-size:0.72em;color:#999;margin:4px 0;">📦 分块记忆：</div>`;
@@ -737,7 +751,7 @@ function renderDictation(s, index, curIdx) {
     <button class="btn btn-primary btn-sm" id="btnCheckDict">✅ 提交核对</button>
   </div>`;
   h += `<div id="peekArea" style="display:none;margin-top:8px;">
-    <div class="model-card"><div class="en">${esc(s.model)}</div></div>
+    <div class="model-card"><div class="en">${esc(s.model)}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div></div>
   </div>`;
   h += `<div id="dictResult"></div>`;
   h += `</div>`;
@@ -756,7 +770,7 @@ function renderCompare(s, index, curIdx) {
     </div>`;
     h += `<div class="model-card" style="margin-top:8px;">
       <div class="cn">📋 标准答案 ${roleBadge(s.role)}</div>
-      <div class="en">${esc(s.model)}</div>
+      <div class="en">${esc(s.model)}<button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读">🔊</button></div>
     </div>`;
     return h;
   }
@@ -769,7 +783,7 @@ function renderCompare(s, index, curIdx) {
     </div>
     <div class="compare-col model">
       <h5>📋 标准答案 ${roleBadge(s.role)}</h5>
-      <div>${esc(s.model)}</div>
+      <div>${esc(s.model)} <button class="speak-btn" onclick="event.stopPropagation();speakSentence('${esc(s.model).replace(/'/g, "\'")}', this)" title="朗读" style="width:28px;height:28px;font-size:0.75em;">🔊</button></div>
     </div>
   </div>`;
   if (userAnswer) {
@@ -921,6 +935,25 @@ function roleBadge(role) {
 
 function esc(s) {
   const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function speakSentence(text, btnEl) {
+  if (!('speechSynthesis' in window)) return;
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  // Remove speaking class from all buttons
+  document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.pitch = 1;
+
+  if (btnEl) btnEl.classList.add('speaking');
+  utter.onend = () => { if (btnEl) btnEl.classList.remove('speaking'); };
+  utter.onerror = () => { if (btnEl) btnEl.classList.remove('speaking'); };
+
+  window.speechSynthesis.speak(utter);
 }
 
 function showToast(msg) {
