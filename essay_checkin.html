@@ -585,7 +585,7 @@ function doneView(index) {
 }
 
 // ==================== SENTENCE STUDY ====================
-function renderSentenceStudy(activeModule, mod) {
+function renderSentenceStudy(idx, mod) {
   let h = '';
 
   // Step tabs
@@ -598,9 +598,9 @@ function renderSentenceStudy(activeModule, mod) {
   });
   h += `</div>`;
 
-  const totalS = day.sentences.length;
+  const totalS = mod.sentences.length;
   const curIdx = window._curSentIdx || 0;
-  const s = day.sentences[curIdx];
+  const s = mod.sentences[curIdx];
 
   h += `<div style="text-align:center;font-size:0.75em;color:#999;margin-bottom:8px;">
     共 ${totalS} 个句型 | ${roleBadge(s.role)} 当前第 ${curIdx + 1} 个
@@ -611,11 +611,11 @@ function renderSentenceStudy(activeModule, mod) {
   if (activeStepIndex === 0) {
     h += renderMemorize(s);
   } else if (activeStepIndex === 1) {
-    h += renderFillBlank(s, index, curIdx);
+    h += renderFillBlank(s, idx, curIdx);
   } else if (activeStepIndex === 2) {
-    h += renderDictation(s, index, curIdx);
+    h += renderDictation(s, idx, curIdx);
   } else if (activeStepIndex === 3) {
-    h += renderCompare(s, index, curIdx);
+    h += renderCompare(s, idx, curIdx);
   }
 
   h += `</div>`;
@@ -629,7 +629,7 @@ function renderSentenceStudy(activeModule, mod) {
   if (curIdx > 0) {
     h += `<button class="btn btn-outline btn-sm" onclick="_curSentIdx=${curIdx-1};activeStepIndex=0;renderModule()">⬅ 上一句</button>`;
   }
-  h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${index}, ${curIdx})" id="btnAdvance">${
+  h += `<button class="btn btn-primary btn-sm" onclick="advanceStep(${idx}, ${curIdx})" id="btnAdvance">${
     activeStepIndex === 3 ? '➡ 下一句' : '下一步 ➡'
   }</button>`;
   h += `</div>`;
