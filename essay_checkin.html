@@ -668,7 +668,7 @@ function doneView(index) {
   const hwData = state.handwriting && state.handwriting[index];
   let h = `<div style="background:#d4edda;border-radius:12px;padding:14px;text-align:center;color:#2d6a4f;">
     ✅ 模块完成！${new Date(state.completed[index]).toLocaleString('zh-CN')}
-    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];delete state.sentenceDone[${index}];delete state.handwriting[${index}];saveState();goToModule(${index})">🔁 重新练习</button>
+    <br><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="delete state.completed[${index}];delete state.sentences[${index}];delete state.sentenceDone[${index}];delete state.handwriting[${index}];delete state.readCounts[${index}];saveState();goToModule(${index})">🔁 重新练习</button>
   </div>`;
   const sentences = mod.sentences;
   // Show handwriting images
