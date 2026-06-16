@@ -992,6 +992,13 @@ function speakSentence(btnEl) {
   if (!('speechSynthesis' in window)) return;
   const synth = window.speechSynthesis;
 
+  // If already speaking, stop it (toggle off)
+  if (btnEl.classList.contains('speaking')) {
+    synth.cancel();
+    btnEl.classList.remove('speaking');
+    return;
+  }
+
   // Decode HTML entities from data-text attribute
   const rawText = btnEl.getAttribute('data-text');
   const txt = document.createElement('textarea');
@@ -999,20 +1006,9 @@ function speakSentence(btnEl) {
   const text = txt.value;
   if (!text) return;
 
-  // Remove speaking state from other buttons
+  // Remove speaking state from other buttons and cancel any ongoing speech
   document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
-
-  // Cancel any ongoing speech before starting new one (enables replay on re-click)
   synth.cancel();
-
-  // Track read count
-  const curIdx = window._curSentIdx || 0;
-  if (!state.readCounts) state.readCounts = {};
-  if (!state.readCounts[activeModule]) state.readCounts[activeModule] = {};
-  const prev = state.readCounts[activeModule][curIdx] || 0;
-  state.readCounts[activeModule][curIdx] = prev + 1;
-  saveState();
-  updateReadCounter();
 
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'en-GB';
