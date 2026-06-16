@@ -232,6 +232,21 @@
   .review-item .r-en { font-size: 0.82em; font-family: 'Times New Roman', serif; color: #1a1a2e; }
 
   /* Responsive */
+  /* Toast notification */
+  .toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: #e63946; color: #fff; padding: 12px 24px; border-radius: 24px;
+    font-size: 0.85em; font-weight: bold; z-index: 3000;
+    box-shadow: 0 4px 16px rgba(230,57,70,0.4);
+    animation: toastIn 0.3s ease-out, toastOut 0.3s 2.0s ease-out forwards;
+    pointer-events: none; max-width: 90%; text-align: center;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes fall {
+    to { transform: translateY(100vh); opacity: 0; }
+  }
+
   @media (max-width: 400px) {
     .card { padding: 12px; }
     .compare { grid-template-columns: 1fr; }
@@ -753,6 +768,7 @@ function renderFillBlank(s, index, curIdx) {
     h += `<span class="wb-word" data-word="${esc(w)}" onclick="fillBlank(this)">${esc(w)}</span>`;
   });
   h += `</div>`;
+  h += `<div style="text-align:center;font-size:0.7em;color:#999;margin-top:2px;" id="fbProgress">请填写所有 <b>${words.length}</b> 个空格（剩余 <b id="fbRemain">${words.length}</b> 个）</div>`;
   h += `<div style="text-align:center;margin-top:8px;"><button class="btn btn-outline btn-sm" onclick="revealAllBlanks()">👀 显示答案</button></div>`;
   return h;
 }
@@ -765,7 +781,11 @@ function fillBlank(el) {
       b.textContent = word;
       b.classList.add('reveal');
       el.classList.add('used');
-      if (document.querySelectorAll('.fb-blank:not(.reveal)').length === 0) {
+      // Update progress
+      const remain = document.querySelectorAll('.fb-blank:not(.reveal)').length;
+      const remainEl = document.getElementById('fbRemain');
+      if (remainEl) remainEl.textContent = remain;
+      if (remain === 0) {
         setTimeout(() => { if (confirm('全部填完！太棒了！✅ 准备进入默写了吗？')) advanceStepDirect(); }, 300);
       }
       return;
@@ -891,21 +911,62 @@ function advanceStep(index, curIdx) {
   const day = DAYS[index];
   const maxSent = day.sentences.length;
 
+  // === PASS GATE: check current step before advancing ===
+
+  // Step 1 (fill-blank): all blanks must be filled
+  if (activeStepIndex === 1) {
+    const unfilled = document.querySelectorAll('.fb-blank:not(.reveal)');
+    if (unfilled.length > 0) {
+      showToast('请先完成所有填空再进入下一步');
+      return;
+    }
+  }
+
+  // Step 2 (dictation): must have content
   if (activeStepIndex === 2) {
-    // Handwriting is saved via overlay close -> saveHWAndAdvance
-    // If overlay is still open, close it first (triggers save)
+    // Handwriting: overlay still open, close it (triggers save and re-call)
     if (document.getElementById('hwOverlay')) {
       closeHWOverlay(true);
-      return; // closeHWOverlay will call advanceStep again
+      return;
     }
-    // Save textarea if visible
+    // Check handwriting data
+    const hasHW = state.handwriting && state.handwriting[index] && state.handwriting[index][curIdx];
+    // Check typing data
     const slot = document.getElementById('textAreaSlot');
     const ta = document.getElementById('dictText');
-    if (slot && slot.style.display !== 'none' && ta && ta.value.trim()) {
+    const slotVisible = slot && slot.style.display !== 'none';
+    const hasTyped = slotVisible && ta && ta.value.trim();
+
+    if (hasHW) {
+      // Already saved via overlay - proceed
+    } else if (hasTyped) {
       if (!state.sentences[index]) state.sentences[index] = [];
       state.sentences[index][curIdx] = ta.value.trim();
+      saveState();
+    } else if (slotVisible) {
+      // Typing mode visible but empty
+      showToast('请先输入英文句子或切换到全屏手写');
+      return;
+    } else {
+      // Handwriting trigger visible but not used
+      showToast('请先点击"开始手写"写句子，或切换到打字模式');
+      return;
     }
-    saveState();
+  }
+
+  // Step 3 (compare): must have reasonable score for typing
+  if (activeStepIndex === 3) {
+    const userAnswer = (state.sentences[index] || [])[curIdx] || '';
+    const hasHW = state.handwriting && state.handwriting[index] && state.handwriting[index][curIdx];
+    if (!hasHW && userAnswer) {
+      const s = day.sentences[curIdx];
+      const score = simpleScore(userAnswer, s.model);
+      if (score < 50) {
+        showToast('相似度低于50%，建议返回重新背诵或默写');
+        return;
+      }
+    }
+    // Handwriting: user manually compares, always allowed through
   }
 
   if (activeStepIndex < 3) {
@@ -937,6 +998,16 @@ function roleBadge(role) {
 
 function esc(s) {
   const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { if (t.parentNode) t.remove(); }, 2500);
 }
 
 // ==================== CONFETTI ====================
@@ -1083,9 +1154,14 @@ function onHWPointerMove(e) {
 function onHWPointerUp() { hwDrawing = false; }
 
 function closeHWOverlay(save) {
+  if (save && hwOverlayCanvas && isEmptyCanvas(hwOverlayCanvas)) {
+    showToast('请先在纸上写出英文句子再点完成 ✍️');
+    return;
+  }
+
   document.body.style.overflow = '';
 
-  if (save && hwOverlayCanvas && !isEmptyCanvas(hwOverlayCanvas)) {
+  if (save && hwOverlayCanvas) {
     const ctx = window._hwCtx;
     if (ctx) {
       if (!state.handwriting) state.handwriting = {};
